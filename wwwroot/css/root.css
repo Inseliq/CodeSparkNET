@@ -1,0 +1,188 @@
+* {
+  margin: 0;
+  outline: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+}
+
+@font-face {
+  font-family: 'Jost__static';
+  src: url('~/fonts/Jost-VariableFont_wght.ttf');
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Jost__static';
+  src: url('~/fonts/Jost-Italic-VariableFont_wght.ttf');
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Motserrat__static';
+  src: url('~/fonts/Montserrat-VariableFont_wght.ttf');
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Motserrat__static';
+  src: url('~/fonts/Montserrat-Italic-VariableFont_wght.ttf');
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Roboto__static';
+  src: url('~/fonts/Roboto-VariableFont_wdth.ttf');
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roboto__static';
+  src: url('~/fonts/Roboto-Italic-VariableFont_wdth.ttf');
+  font-style: italic;
+}
+
+html[cross-browser] {
+  --fs-body: clamp(0.75rem, 0.6519rem + 0.2901vw, 1rem);
+  --fs-p: clamp(0.75rem, 0.6519rem + 0.2901vw, 1rem);
+  --fs-h1: clamp(1.875rem, 1.6298rem + 0.7252vw, 2.5rem);
+  --fs-h2: clamp(1.25rem, 1.0538rem + 0.5801vw, 1.75rem);
+  --fs-h3: clamp(1rem, 0.8529rem + 0.4351vw, 1.375rem);
+  --fs-btn: clamp(0.75rem, 0.6519rem + 0.2901vw, 1rem);
+  --fs-small: clamp(0.6875rem, 0.6139rem + 0.2175vw, 0.875rem);
+
+  --lh-body: 1.55;
+  --lh-heading: 1.15;
+  --letterspace-heading: -0.02em;
+
+  --sb-width: clamp(0.375rem, 0.2079rem + 0.495vw, 1rem);
+  --sb-radius: 999px;
+
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  font-family: 'Jost__static', sans-serif;
+  cursor: default;
+
+  body {
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+span,
+p,
+label,
+code,
+samp,
+kbd,
+var,
+pre {
+  font-size: var(--fs-p);
+  line-height: var(--lh-body);
+}
+
+h1 {
+  font-size: var(--fs-h1);
+  line-height: var(--lh-heading);
+  letter-spacing: var(--letterspace-heading);
+  font-weight: 700;
+}
+
+h2 {
+  font-size: var(--fs-h2);
+  line-height: var(--lh-heading);
+  font-weight: 600;
+}
+
+h3 {
+  font-size: var(--fs-h3);
+  line-height: var(--lh-heading);
+  font-weight: 500;
+}
+
+button,
+a,
+select {
+  font-size: var(--fs-btn);
+  line-height: 1;
+  cursor: pointer;
+}
+
+small,
+[caption] {
+  font-size: var(--fs-small);
+  opacity: 0.9;
+}
+
+code,
+input,
+textarea {
+  cursor: text;
+}
+
+@media screen and (min-width: 1920px) {
+  html[cross-browser] {
+    --fs-body: clamp(1.375rem, 0.625rem + 0.625vw, 1.625rem);
+    --fs-p: clamp(1.375rem, 0.625rem + 0.625vw, 1.625rem);
+    --fs-h1: clamp(4.5rem, 3rem + 1.25vw, 5rem);
+    --fs-h2: clamp(3rem, 1.5rem + 1.25vw, 3.5rem);
+    --fs-h3: clamp(2.125rem, 1.75rem + 0.3125vw, 2.25rem);
+    --fs-btn: clamp(1.75rem, 1rem + 0.625vw, 2rem);
+    --fs-small: clamp(1.125rem, 0.375rem + 0.625vw, 1.375rem);
+
+    --letterspace-heading: -0.01em;
+  }
+}
+
+@media screen and (max-width: 1920px) {
+  html[cross-browser] {
+    --fs-body: clamp(0.75rem, 0.6519rem + 0.2901vw, 1rem);
+    --fs-p: clamp(0.75rem, 0.6519rem + 0.2901vw, 1rem);
+    --fs-h1: clamp(1.875rem, 1.6298rem + 0.7252vw, 2.5rem);
+    --fs-h2: clamp(1.25rem, 1.0538rem + 0.5801vw, 1.75rem);
+    --fs-h3: clamp(1rem, 0.8529rem + 0.4351vw, 1.375rem);
+    --fs-btn: clamp(0.75rem, 0.6519rem + 0.2901vw, 1rem);
+    --fs-small: clamp(0.6875rem, 0.6139rem + 0.2175vw, 0.875rem);
+  }
+}
+
+@media screen and (max-width: 880px) {
+  html[cross-browser] {
+    --fs-body: clamp(0.75rem, 0.3529rem + 1.1765vw, 1rem);
+    --fs-p: clamp(0.75rem, 0.3529rem + 1.1765vw, 1rem);
+    --fs-h1: clamp(1.875rem, 1.4779rem + 1.1765vw, 2.125rem);
+    --fs-h2: clamp(1.375rem, 0.9779rem + 1.1765vw, 1.625rem);
+    --fs-h3: clamp(1rem, 0.6029rem + 1.1765vw, 1.25rem);
+    --fs-btn: clamp(0.75rem, 0.3529rem + 1.1765vw, 1rem);
+    --fs-small: clamp(0.75rem, 0.5515rem + 0.5882vw, 0.875rem);
+  }
+}
+
+@media screen and (max-width: 540px) {
+  html[cross-browser] {
+    --fs-body: clamp(0.75rem, 0.4313rem + 1.5vw, 0.9375rem);
+    --fs-p: clamp(0.75rem, 0.4313rem + 1.5vw, 0.9375rem);
+    --fs-h1: clamp(1.5rem, 1.075rem + 2vw, 1.75rem);
+    --fs-h2: clamp(1.1875rem, 0.8688rem + 1.5vw, 1.375rem);
+    --fs-h3: clamp(0.9375rem, 0.6188rem + 1.5vw, 1.125rem);
+    --fs-btn: clamp(0.75rem, 0.4313rem + 1.5vw, 0.9375rem);
+    --fs-small: clamp(0.6875rem, 0.475rem + 1vw, 0.8125rem);
+  }
+}
+
+@media screen and (max-width: 320px) {
+  html[cross-browser] {
+    --fs-body: clamp(0.625rem, 0.4464rem + 1.4286vw, 0.75rem);
+    --fs-p: clamp(0.5625rem, 0.3839rem + 1.4286vw, 0.6875rem);
+    --fs-h1: clamp(1.125rem, 0.9464rem + 1.4286vw, 1.25rem);
+    --fs-h2: clamp(0.875rem, 0.6964rem + 1.4286vw, 1rem);
+    --fs-h3: clamp(0.75rem, 0.5714rem + 1.4286vw, 0.875rem);
+    --fs-btn: clamp(0.625rem, 0.4464rem + 1.4286vw, 0.75rem);
+    --fs-small: clamp(0.5rem, 0.3214rem + 1.4286vw, 0.625rem);
+  }
+}

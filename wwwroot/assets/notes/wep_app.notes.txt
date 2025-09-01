@@ -1,0 +1,30 @@
+#parametrs
+  data-theme-color="$"
+    $dark //тёмная
+    $white //светлая
+
+  data-device="$"
+    $default //преконнект
+    $desktop //пк версия
+    $mobile //мобильная версия
+
+  custom-scroll
+    //кастомный скролл
+
+  cross-browser
+    //кросс браузерность
+
+  web-app="$"
+    $site //стандартный лендинг
+    $video-app //Веб-приложение
+    $code-spark //Наше веб-приложение
+    $monts-app //Монтажка
+
+  data-layout="header"
+    //шапка
+
+  data-layout="main" role="main"
+    //главная страница
+
+  data-layout="footer"
+    //подвал

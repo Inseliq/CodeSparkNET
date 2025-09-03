@@ -25,6 +25,10 @@
       "PackagePath": "staticwebassets\\assets\\fonts\\Roboto-VariableFont_wdth.ttf"
     },
     {
+      "Id": "E:\\Project\\CodeSparkNET\\wwwroot\\assets\\icon\\footer_site.ru-fg.svg",
+      "PackagePath": "staticwebassets\\assets\\icon\\footer_site.ru-fg.svg"
+    },
+    {
       "Id": "E:\\Project\\CodeSparkNET\\wwwroot\\assets\\icon\\logo.png",
       "PackagePath": "staticwebassets\\assets\\icon\\logo.png"
     },

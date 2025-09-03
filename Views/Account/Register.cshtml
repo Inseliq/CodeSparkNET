@@ -1,0 +1,62 @@
+<head>
+  @{
+    ViewData["Title"] = "Регистрация";
+  }
+  <link rel="stylesheet" href="~/css/style/register.css">
+</head>
+
+<div class="__container">
+  <header>
+
+  </header>
+
+  <form action="Login" method="post" class="form_controller">
+    <div class="description">
+      <h2></h2>
+      <h3>Уже есть аккаунт <a href="@Url.Action("Login", "Account")" login>Войти</a></h3>
+    </div>
+    <span class="error_message_reg_form"></span>
+    <div class="input_block">
+      <div class="names-block">
+        <label for="names"></label>
+        <input name="names" id="names" type="text" required>
+      </div>
+      <div class="email-block">
+        <label for="email"></label>
+        <input name="email" id="email" type="text" required>
+      </div>
+      <div class="password-block">
+        <label for="password"></label>
+        <input name="password" id="password" type="password" required>
+      </div>
+      <div class="confirm_password-block">
+        <label for="confirm_password"></label>
+        <input name="confirm_password" id="confirm_password" type="password" required>
+      </div>
+      <div class="req_checkbox_pp-block">
+        <label for="req_checkbox_pp">
+          <input name="req_checkbox_pp" type="checkbox" required>
+          Я принимаю условия <a href="">Лицензионного соглашения</a>, <a href="">Политики конфиденциальности</a> и даю согласие на обработку данных обо
+          мне.
+        </label>
+      </div>
+      <div class="req_checkbox_ads-block">
+        <label for="req_checkbox_ads">
+          <input name="req_checkbox_ads" type="checkbox">
+          Я даю согласие на получение рекламных сообщений и индивидуальных предложений.
+        </label>
+      </div>
+    </div>
+    <button type="submit" data-style="hb">Войти</button>
+  </form>
+
+  <footer>
+    <section btn>
+      <a href="">Лицензионное соглашение</a>
+      <a href="">Политика конфиденциальности</a>
+    </section>
+    <section>
+      © Code Spark, 2025. Все права на объекты прав третьих лиц принадлежат их законным правообладателям.
+    </section>
+  </footer>
+</div>

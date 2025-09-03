@@ -28,3 +28,7 @@
 
   data-layout="footer"
     //подвал
+
+  #controllers
+    InfoController
+    //Общая информация

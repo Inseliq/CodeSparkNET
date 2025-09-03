@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Daniil\\Documents\\GitHub\\CodeSparkNET\\CodeSparkNET.csproj": {}
+    "E:\\Project\\CodeSparkNET\\CodeSparkNET.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Daniil\\Documents\\GitHub\\CodeSparkNET\\CodeSparkNET.csproj": {
+    "E:\\Project\\CodeSparkNET\\CodeSparkNET.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Daniil\\Documents\\GitHub\\CodeSparkNET\\CodeSparkNET.csproj",
+        "projectUniqueName": "E:\\Project\\CodeSparkNET\\CodeSparkNET.csproj",
         "projectName": "CodeSparkNET",
-        "projectPath": "C:\\Users\\Daniil\\Documents\\GitHub\\CodeSparkNET\\CodeSparkNET.csproj",
-        "packagesPath": "C:\\Users\\Daniil\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Daniil\\Documents\\GitHub\\CodeSparkNET\\obj\\",
+        "projectPath": "E:\\Project\\CodeSparkNET\\CodeSparkNET.csproj",
+        "packagesPath": "C:\\Users\\1\\.nuget\\packages\\",
+        "outputPath": "E:\\Project\\CodeSparkNET\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Daniil\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\1\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],

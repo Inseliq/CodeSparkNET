@@ -7,12 +7,12 @@
 
 <div class="__container">
   <header>
-
+    <a href="@Url.Action("Index", "Home")" banner></a>
   </header>
 
   <form action="Login" method="post" class="form_controller">
     <div class="description">
-      <h2></h2>
+      <h2>Зарегистрируйся!</h2>
       <h3>Уже есть аккаунт <a href="@Url.Action("Login", "Account")" login>Войти</a></h3>
     </div>
     <span class="error_message_reg_form"></span>
@@ -40,22 +40,22 @@
           мне.
         </label>
       </div>
-      <div class="req_checkbox_ads-block">
-        <label for="req_checkbox_ads">
-          <input name="req_checkbox_ads" type="checkbox">
+      <div class="checkbox_ads-block">
+        <label for="checkbox_ads">
+          <input name="checkbox_ads" type="checkbox">
           Я даю согласие на получение рекламных сообщений и индивидуальных предложений.
         </label>
       </div>
     </div>
-    <button type="submit" data-style="hb">Войти</button>
+    <button type="submit" data-style="hb">Зарегистрироваться</button>
   </form>
 
   <footer>
     <section btn>
-      <a href="">Лицензионное соглашение</a>
-      <a href="">Политика конфиденциальности</a>
+      <a href="@Url.Action("", "")">Лицензионное соглашение</a>
+      <a href="@Url.Action("", "")">Политика конфиденциальности</a>
     </section>
-    <section>
+    <section footer>
       © Code Spark, 2025. Все права на объекты прав третьих лиц принадлежат их законным правообладателям.
     </section>
   </footer>

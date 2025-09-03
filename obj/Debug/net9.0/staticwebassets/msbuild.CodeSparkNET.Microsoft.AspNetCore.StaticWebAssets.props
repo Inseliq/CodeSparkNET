@@ -108,6 +108,42 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\assets\fonts\Roboto-VariableFont_wdth.ttf'))</OriginalItemSpec>
     </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\assets\icon\nav_site.enter.svg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>CodeSparkNET</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/CodeSparkNET</BasePath>
+      <RelativePath>assets/icon/nav_site.enter.svg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>5vbucegumz</Fingerprint>
+      <Integrity>b2RzdSiCeH22oXr+q/Wn3dkRMCgkqGsJlHI+pfMDJOg=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\assets\icon\nav_site.enter.svg'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\assets\icon\nav_site.help.svg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>CodeSparkNET</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/CodeSparkNET</BasePath>
+      <RelativePath>assets/icon/nav_site.help.svg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>axqlvwfye0</Fingerprint>
+      <Integrity>chWdAk8IEfqlAIM+95hAA/Eie6MkCZH7nsoQ0uWdz/4=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\assets\icon\nav_site.help.svg'))</OriginalItemSpec>
+    </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\assets\notes\wep_app.notes.txt'))">
       <SourceType>Package</SourceType>
       <SourceId>CodeSparkNET</SourceId>
@@ -156,8 +192,8 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>kvj7zy5fxs</Fingerprint>
-      <Integrity>YDsStbWSq98ofX0ot+EjA6ez+Vtjo/obeMDR4bR2JY0=</Integrity>
+      <Fingerprint>l7v41qtwn0</Fingerprint>
+      <Integrity>/2/KqE4ivG+HXKCPJ7HjegC94HbGB+g08Aqo5O66hWE=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\layout.css'))</OriginalItemSpec>

@@ -99,5 +99,7 @@ E:\Project\CodeSparkNET\obj\Debug\net9.0\CodeSparkNET.genruntimeconfig.cache
 E:\Project\CodeSparkNET\obj\Debug\net9.0\ref\CodeSparkNET.dll
 E:\Project\CodeSparkNET\obj\Debug\net9.0\compressed\ufq4mxtlwf-hxin60ggjh.gz
 E:\Project\CodeSparkNET\obj\Debug\net9.0\compressed\ay8zw8ji8p-43ejs6a6il.gz
-E:\Project\CodeSparkNET\obj\Debug\net9.0\compressed\p2bdbhxtgh-kvj7zy5fxs.gz
 E:\Project\CodeSparkNET\obj\Debug\net9.0\compressed\1vxntj65ya-q1p9x41rmd.gz
+E:\Project\CodeSparkNET\obj\Debug\net9.0\compressed\g9tw4yybuy-5vbucegumz.gz
+E:\Project\CodeSparkNET\obj\Debug\net9.0\compressed\cum84rjd81-axqlvwfye0.gz
+E:\Project\CodeSparkNET\obj\Debug\net9.0\compressed\p2bdbhxtgh-l7v41qtwn0.gz

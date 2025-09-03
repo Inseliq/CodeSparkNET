@@ -1,23 +1,48 @@
 ﻿<!DOCTYPE html>
-<html lang="ru" data-theme-color="dark" data-device="default" custom-scroll cross-browser>
+<html lang="ru" data-theme-color="dark" data-device="desktop" custom-scroll cross-browser>
 
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="" title="" description="" content="">
     <title>@ViewData["Title"] - CodeSpark</title>
     <link rel="stylesheet" href="~/css/assemble.site.css">
     <script src="~/js/app/get.info_about_device.js" defer></script>
     <script src="~/js/app/assemble.app.js" defer></script>
     <script src="~/js/style/animation_mobile_button.js" defer></script>
+    <noscript title="keyword"></noscript>
 </head>
 
-<body web-app="site">
+<body>
     <header data-layout="header">
         <nav class="__container" data-layout="navbar-site">
-            <a logo>CodeSpark</a>
-            
-            <div class="block">
-
+            <div class="l_block">
+                <a logo></a>
+                <button select-btn-app>Приложения
+                    <span title="arrow">‹</span>
+                </button>
+                <button select-btn-service>Сервисы
+                    <span title="arrow">‹</span>
+                </button>
+                <div js-window-select-app class="js-window hidden">
+                    <div window>
+                        <button>It-Cubic</button>
+                        <button>Code Spark</button>
+                        <button>Монтажка</button>
+                    </div>
+                </div>
+                <div js-window-select-service class="js-window hidden">
+                    <div window>
+                        <button>Каталог товаров</button>
+                        <button>Курсовые работы</button>
+                        <button>Главная страница</button>
+                        <button>Центр знаний</button>
+                        <button>Премиум подписка</button>
+                    </div>
+                </div>
+            </div>
+            <div class="r-block">
+                <partial name="_SignNavHTML" />
             </div>
         </nav>
     </header>

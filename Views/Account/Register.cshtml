@@ -1,50 +1,59 @@
-<head>
-  @{
-    ViewData["Title"] = "Регистрация";
-  }
+@model CodeSparkNET.Dtos.Account.RegisterDto
+
+@{
+  ViewData["Title"] = "Регистрация";
+}
+
+@section Styles {
   <link rel="stylesheet" href="~/css/style/register.css">
-</head>
+}
 
 <div class="__container">
   <header>
     <a href="@Url.Action("Index", "Home")" banner></a>
   </header>
 
-  <form action="Login" method="post" class="form_controller">
+  <form asp-action="Register" asp-controller="Account" method="post" class="form_controller">
+    @Html.AntiForgeryToken()
+
     <div class="description">
       <h2>Зарегистрируйся!</h2>
       <h3>Уже есть аккаунт <a href="@Url.Action("Login", "Account")" login>Войти</a></h3>
     </div>
-    <span class="error_message_reg_form"></span>
+    <span asp-validation-summary="ModelOnly" class="error_message_reg_form"></span>
     <div class="input_block">
       <div class="names-block">
-        <label for="names"></label>
-        <input name="names" id="names" type="text" required>
+        <span asp-validation-for="UserName"></span>
+        <label asp-for="UserName">Имя пользователя</label>
+        <input asp-for="UserName" id="names" type="text" required>
       </div>
       <div class="email-block">
-        <label for="email"></label>
-        <input name="email" id="email" type="text" required>
+        <span asp-validation-for="Email"></span>
+        <label asp-for="Email">Email</label>
+        <input asp-for="Email" id="email" type="email" required>
       </div>
       <div class="password-block">
-        <label for="password"></label>
-        <input name="password" id="password" type="password" required>
+        <span asp-validation-for="Password"></span>
+        <label asp-for="Password">Пароль</label>
+        <input asp-for="Password" id="password" type="password" required>
       </div>
       <div class="confirm_password-block">
-        <label for="confirm_password"></label>
-        <input name="confirm_password" id="confirm_password" type="password" required>
+        <span asp-validation-for="ConfirmPassword"></span>
+        <label asp-for="ConfirmPassword">Подтверждение пароля</label>
+        <input asp-for="ConfirmPassword" id="confirm_password" type="password" required>
       </div>
       <div class="req_checkbox_pp-block">
-        <label for="req_checkbox_pp">
-          <input name="req_checkbox_pp" type="checkbox" required>
-          Я принимаю условия <a href="">Лицензионного соглашения</a>, <a href="">Политики конфиденциальности</a> и даю согласие на обработку данных обо
-          мне.
+        <span asp-validation-for="ConfirmToS"></span>
+        <input asp-for="ConfirmToS" type="checkbox" required>
+        <label asp-for="ConfirmToS" class="form-check-label">
+          Я принимаю условия <a href="@Url.Action("License", "Home")">Лицензионного соглашения</a>,
+          <a href="@Url.Action("Privacy", "Home")">Политики конфиденциальности</a> и даю согласие на обработку данных.
         </label>
       </div>
       <div class="checkbox_ads-block">
-        <label for="checkbox_ads">
-          <input name="checkbox_ads" type="checkbox">
-          Я даю согласие на получение рекламных сообщений и индивидуальных предложений.
-        </label>
+        <input asp-for="ConfirmAd" type="checkbox">
+        <label asp-for="ConfirmAd" class="form-check-label">Я даю согласие на получение рекламных сообщений и
+          предложений.</label>
       </div>
     </div>
     <button type="submit" data-style="hb">Зарегистрироваться</button>
@@ -52,11 +61,17 @@
 
   <footer>
     <section btn>
-      <a href="@Url.Action("", "")">Лицензионное соглашение</a>
-      <a href="@Url.Action("", "")">Политика конфиденциальности</a>
+      <a href="@Url.Action("License", "Home")">Лицензионное соглашение</a>
+      <a href="@Url.Action("Privacy", "Home")">Политика конфиденциальности</a>
     </section>
     <section footer>
       © Code Spark, 2025. Все права на объекты прав третьих лиц принадлежат их законным правообладателям.
     </section>
   </footer>
 </div>
+
+@section Scripts {
+  @{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+  }
+}

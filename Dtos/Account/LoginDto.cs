@@ -8,14 +8,14 @@ namespace CodeSparkNET.Dtos.Account
 {
     public class LoginDto
     {
-        [Required]
-        [EmailAddress]
+        [Required(ErrorMessage = "Email обязателен")]
+        [EmailAddress(ErrorMessage = "Неверный формат email")]
         public string? Email { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = "Пароль обязателен")]
+        [DataType(DataType.Password)]
         public string? Password { get; set; }
-        [Required]
-        [Compare("Password", ErrorMessage = "Пароли не совпадают.")]
-        public string? ConfirmPassword { get; set; }
-        public bool? RememberMe { get; set; }
+
+        public bool RememberMe { get; set; }
     }
 }

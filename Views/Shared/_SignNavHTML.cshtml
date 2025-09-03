@@ -1,10 +1,25 @@
-@* Если зареган то комент, если нет то оринг *@
-<a help>Поддержка</a>
-<a login href="@Url.Action("Login", "Account")">Войти</a>
-<button theme-color></button>
-@*
-Ник img(профиля)
-<a logout>Выйти</a>
-<a profile>Профиль</a>
-Уведомления
- *@
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<AppUser> UserManager
+@{
+    var userName = User.Identity.Name;
+}
+
+@if (!User?.Identity?.IsAuthenticated == true)
+{
+    <a help>Поддержка</a>
+    <a login href="@Url.Action("Login", "Account")">Войти</a>
+    <button theme-color></button>
+}
+else
+{
+    @* Ник img(профиля) *@
+    <span class="welcome">Привет, @userName</span>
+
+    <form asp-action="Logout" asp-controller="Account" method="post" class="logout-form">
+        @Html.AntiForgeryToken()
+
+        <button type="submit" class="logout-btn">Выйти</button>
+    </form>
+    <a asp-action="Profile" asp-controller="Account">Профиль</a>
+    @* Уведомления *@
+}

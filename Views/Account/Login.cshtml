@@ -1,38 +1,45 @@
-<head>
-  @{
-    ViewData["Title"] = "Регистрация";
-  }
+@model CodeSparkNET.Dtos.Account.LoginDto
+
+@{
+  ViewData["Title"] = "Регистрация";
+}
+
+@section Styles {
   <link rel="stylesheet" href="~/css/style/login.css">
-</head>
+}
 
 <div class="__container">
   <header>
     <a href="@Url.Action("Index", "Home")" banner></a>
   </header>
 
-  <form action="Login" method="post" class="form_controller">
+  <form asp-action="Login" asp-controller="Account" method="post" class="form_controller">
+    @Html.AntiForgeryToken()
+
     <div class="description">
       <h2>Войти</h2>
       <h3>Нет аккаунта? <a href="@Url.Action("Register", "Account")" login>Создать аккаунт</a></h3>
     </div>
-    <span class="error_message_reg_form"></span>
+    <span asp-validation-summary="ModelOnly" class="error_message_reg_form"></span>
     <div class="input_block">
       <div class="email-block">
-        <label for="email"></label>
-        <input name="email" id="email" type="text" required>
+        <span asp-validation-for="Email"></span>
+        <label asp-for="Email"></label>
+        <input asp-for="Email" id="email" type="text" required>
       </div>
       <div class="password-block">
-        <label for="password"></label>
-        <input name="password" id="password" type="password" required>
+        <span asp-validation-for="Password"></span>
+        <label asp-for="Password"></label>
+        <input asp-for="Password" id="password" type="password" required>
       </div>
       <div class="checkbox_rm-block">
-        <label for="checkbox_rm">
-          <input name="checkbox_rm" type="checkbox">
+        <label asp-for="RememberMe">
+          <input asp-for="RememberMe" type="checkbox">
           Запомнить меня.
         </label>
       </div>
     </div>
-    <button type="submit" data-style="hb">Зарегистрироваться</button>
+    <button type="submit" data-style="hb">Войти</button>
   </form>
 
   <footer>
@@ -45,3 +52,9 @@
     </section>
   </footer>
 </div>
+
+@section Scripts {
+  @{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+  }
+}

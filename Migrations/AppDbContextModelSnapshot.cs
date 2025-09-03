@@ -112,6 +112,29 @@ namespace CodeSparkNET.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "a3f9c6d2-1f4b-4b8e-9f2a-111111111111",
+                            ConcurrencyStamp = "c1f9c6d2-1f4b-4b8e-9f2a-111111111111",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = "b4f9c6d2-2f4b-4b8e-9f2a-222222222222",
+                            ConcurrencyStamp = "d2f9c6d2-2f4b-4b8e-9f2a-222222222222",
+                            Name = "User",
+                            NormalizedName = "USER"
+                        },
+                        new
+                        {
+                            Id = "c5f9c6d2-3f4b-4b8e-9f2a-333333333333",
+                            ConcurrencyStamp = "e3f9c6d2-3f4b-4b8e-9f2a-333333333333",
+                            Name = "Prime",
+                            NormalizedName = "PRIME"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

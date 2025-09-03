@@ -108,6 +108,24 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\assets\fonts\Roboto-VariableFont_wdth.ttf'))</OriginalItemSpec>
     </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\assets\icon\footer_site.ru-fg.svg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>CodeSparkNET</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/CodeSparkNET</BasePath>
+      <RelativePath>assets/icon/footer_site.ru-fg.svg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>xu7g1oi16w</Fingerprint>
+      <Integrity>yew3k4tSV/9/iLCBtnsUw1XRHebvMoCjQRnuNXcA0Qs=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\assets\icon\footer_site.ru-fg.svg'))</OriginalItemSpec>
+    </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\assets\icon\logo.png'))">
       <SourceType>Package</SourceType>
       <SourceId>CodeSparkNET</SourceId>
@@ -246,8 +264,8 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>hxin60ggjh</Fingerprint>
-      <Integrity>a3qJdjfHcZPtJ97BdWEAhAt2J7C1y2hqcEC8gpi0GXQ=</Integrity>
+      <Fingerprint>66toup7ek4</Fingerprint>
+      <Integrity>rnsxLfXIXt84bmtcewbJqAz5sUnSgCvgCOEGnW6c1gg=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\assets\notes\wep_app.notes.txt'))</OriginalItemSpec>
@@ -282,8 +300,8 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>b3i5tugyp7</Fingerprint>
-      <Integrity>198kQUWjJGtjRRdA/usf5SBEmZXn+XXkN6tgnZ5WLGM=</Integrity>
+      <Fingerprint>c83anvg0a9</Fingerprint>
+      <Integrity>JH7y7w2Df+TvLOXejYYaO66y+uQfpvljdU/5ukvNxtg=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\layout.css'))</OriginalItemSpec>

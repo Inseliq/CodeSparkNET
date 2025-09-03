@@ -13,7 +13,11 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CodeSparkNET")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+<<<<<<< HEAD
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3318f4899ea6b504469d9c28a5ce06d79c67e6a3")]
+=======
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f25d61c76cbc5b600e1b5c2f0a65072bc6b9334f")]
+>>>>>>> 55e78eca3cfbe3a90564bb6d8e726e3cd7f4cae6
 [assembly: System.Reflection.AssemblyProductAttribute("CodeSparkNET")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CodeSparkNET")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

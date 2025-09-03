@@ -25,7 +25,15 @@
       "PackagePath": "staticwebassets\\assets\\fonts\\Roboto-VariableFont_wdth.ttf"
     },
     {
+<<<<<<< HEAD
       "Id": "C:\\Users\\Daniil\\Documents\\GitHub\\CodeSparkNET\\wwwroot\\assets\\icon\\logo.png",
+=======
+      "Id": "E:\\Project\\CodeSparkNET\\wwwroot\\assets\\icon\\footer_site.ru-fg.svg",
+      "PackagePath": "staticwebassets\\assets\\icon\\footer_site.ru-fg.svg"
+    },
+    {
+      "Id": "E:\\Project\\CodeSparkNET\\wwwroot\\assets\\icon\\logo.png",
+>>>>>>> 55e78eca3cfbe3a90564bb6d8e726e3cd7f4cae6
       "PackagePath": "staticwebassets\\assets\\icon\\logo.png"
     },
     {

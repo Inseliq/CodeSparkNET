@@ -1,0 +1,47 @@
+<head>
+  @{
+    ViewData["Title"] = "Регистрация";
+  }
+  <link rel="stylesheet" href="~/css/style/login.css">
+</head>
+
+<div class="__container">
+  <header>
+    <a href="@Url.Action("Index", "Home")" banner></a>
+  </header>
+
+  <form action="Login" method="post" class="form_controller">
+    <div class="description">
+      <h2>Войти</h2>
+      <h3>Нет аккаунта? <a href="@Url.Action("Register", "Account")" login>Создать аккаунт</a></h3>
+    </div>
+    <span class="error_message_reg_form"></span>
+    <div class="input_block">
+      <div class="email-block">
+        <label for="email"></label>
+        <input name="email" id="email" type="text" required>
+      </div>
+      <div class="password-block">
+        <label for="password"></label>
+        <input name="password" id="password" type="password" required>
+      </div>
+      <div class="checkbox_rm-block">
+        <label for="checkbox_rm">
+          <input name="checkbox_rm" type="checkbox">
+          Запомнить меня.
+        </label>
+      </div>
+    </div>
+    <button type="submit" data-style="hb">Зарегистрироваться</button>
+  </form>
+
+  <footer>
+    <section btn>
+      <a href="@Url.Action("", "")">Лицензионное соглашение</a>
+      <a href="@Url.Action("", "")">Политика конфиденциальности</a>
+    </section>
+    <section footer>
+      © Code Spark, 2025. Все права на объекты прав третьих лиц принадлежат их законным правообладателям.
+    </section>
+  </footer>
+</div>

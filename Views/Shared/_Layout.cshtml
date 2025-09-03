@@ -17,8 +17,8 @@
     <header data-layout="header">
         <nav class="__container" data-layout="navbar-site">
             <div class="l_block">
-                <a logo></a>
-                <button select-btn-app>Приложения
+                <a logo href="@Url.Action("Index", "Home")"></a>
+                <button select-btn-app>Платформы
                     <span title="arrow">‹</span>
                 </button>
                 <button select-btn-service>Сервисы
@@ -48,14 +48,19 @@
     </header>
 
     <main data-layout="main" role="main">
-        <div class="__container">
-            @RenderBody()
-        </div>
+        @RenderBody()
     </main>
 
-    <footer data-layout="header">
+    <footer data-layout="footer">
         <div class="__container">
-
+            <div class="l_block">
+                <a privacy_policy href="@Url.Action("Privacy", "Info")">политика конфиденциальности</a>
+                <a user_guide href="@Url.Action("UserGuide", "Info")">Руководство пользователя</a>
+            </div>
+            <div class="r_block">
+                <a about href="@Url.Action("About", "Info")">О нас</a>
+                <span lang>русский</span>
+            </div>
         </div>
     </footer>
     @await RenderSectionAsync("Scripts", required: false)

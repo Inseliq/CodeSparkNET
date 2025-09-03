@@ -17,57 +17,69 @@ build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = CodeSparkNET
 build_property.RootNamespace = CodeSparkNET
-build_property.ProjectDir = C:\Users\Daniil\Documents\GitHub\CodeSparkNET\
+build_property.ProjectDir = E:\Project\CodeSparkNET\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 9.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Users\Daniil\Documents\GitHub\CodeSparkNET
+build_property.MSBuildProjectDirectory = E:\Project\CodeSparkNET
 build_property._RazorSourceGeneratorDebug = 
 build_property.EffectiveAnalysisLevelStyle = 9.0
 build_property.EnableCodeStyleSeverity = 
 
-[C:/Users/Daniil/Documents/GitHub/CodeSparkNET/Views/Home/Index.cshtml]
+[E:/Project/CodeSparkNET/Views/Account/FogotPassword.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxGb2dvdFBhc3N3b3JkLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Project/CodeSparkNET/Views/Account/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxMb2dpbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Project/CodeSparkNET/Views/Account/Register.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxSZWdpc3Rlci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Project/CodeSparkNET/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Daniil/Documents/GitHub/CodeSparkNET/Views/Home/Privacy.cshtml]
+[E:/Project/CodeSparkNET/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Daniil/Documents/GitHub/CodeSparkNET/Views/Shared/Error.cshtml]
+[E:/Project/CodeSparkNET/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Daniil/Documents/GitHub/CodeSparkNET/Views/Shared/_Layout.cshtml]
+[E:/Project/CodeSparkNET/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Daniil/Documents/GitHub/CodeSparkNET/Views/Shared/_SignNavHTML.cshtml]
+[E:/Project/CodeSparkNET/Views/Shared/_SignNavHTML.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9TaWduTmF2SFRNTC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Daniil/Documents/GitHub/CodeSparkNET/Views/Shared/_ValidationScriptsPartial.cshtml]
+[E:/Project/CodeSparkNET/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Daniil/Documents/GitHub/CodeSparkNET/Views/Shared/_WebApp_CodeSpark.cshtml]
+[E:/Project/CodeSparkNET/Views/Shared/_WebApp_CodeSpark.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9XZWJBcHBfQ29kZVNwYXJrLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Daniil/Documents/GitHub/CodeSparkNET/Views/Shared/_WebApp_MontsApp.cshtml]
+[E:/Project/CodeSparkNET/Views/Shared/_WebApp_MontsApp.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9XZWJBcHBfTW9udHNBcHAuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Daniil/Documents/GitHub/CodeSparkNET/Views/Shared/_WebApp_VideoApp.cshtml]
+[E:/Project/CodeSparkNET/Views/Shared/_WebApp_VideoApp.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9XZWJBcHBfVmlkZW9BcHAuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Daniil/Documents/GitHub/CodeSparkNET/Views/_ViewImports.cshtml]
+[E:/Project/CodeSparkNET/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Daniil/Documents/GitHub/CodeSparkNET/Views/_ViewStart.cshtml]
+[E:/Project/CodeSparkNET/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 

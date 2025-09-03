@@ -1,6 +1,10 @@
 {
   "Version": 1,
+<<<<<<< HEAD
   "Hash": "TuCPd8r3MKEQLcKAi/OqLa3TpKgzQqx6QNi9pfaEhjA=",
+=======
+  "Hash": "dQgchBqw1ILj8A80MbQDZff0jb5fZjbtlobs/p7mEsI=",
+>>>>>>> 55e78eca3cfbe3a90564bb6d8e726e3cd7f4cae6
   "Source": "CodeSparkNET",
   "BasePath": "_content/CodeSparkNET",
   "Mode": "Default",
@@ -773,7 +777,32 @@
       "OriginalItemSpec": "C:\\Users\\Daniil\\Documents\\GitHub\\CodeSparkNET\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js"
     },
     {
+<<<<<<< HEAD
       "Identity": "C:\\Users\\Daniil\\Documents\\GitHub\\CodeSparkNET\\obj\\Debug\\net9.0\\compressed\\h89lrtry5p-t1cqhe9u97.gz",
+=======
+      "Identity": "E:\\Project\\CodeSparkNET\\obj\\Debug\\net9.0\\compressed\\gzqvkub6fz-xu7g1oi16w.gz",
+      "SourceId": "CodeSparkNET",
+      "SourceType": "Discovered",
+      "ContentRoot": "E:\\Project\\CodeSparkNET\\obj\\Debug\\net9.0\\compressed\\",
+      "BasePath": "_content/CodeSparkNET",
+      "RelativePath": "assets/icon/footer_site.ru-fg#[.{fingerprint=xu7g1oi16w}]?.svg.gz",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Alternative",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "E:\\Project\\CodeSparkNET\\wwwroot\\assets\\icon\\footer_site.ru-fg.svg",
+      "AssetTraitName": "Content-Encoding",
+      "AssetTraitValue": "gzip",
+      "Fingerprint": "ssd9bilaag",
+      "Integrity": "5A47JBTxkMDLXnCE2uH8I5wgs8+PsUnxLmH/vmU2vNE=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "E:\\Project\\CodeSparkNET\\wwwroot\\assets\\icon\\footer_site.ru-fg.svg"
+    },
+    {
+      "Identity": "E:\\Project\\CodeSparkNET\\obj\\Debug\\net9.0\\compressed\\h89lrtry5p-bqjiyaj88i.gz",
+>>>>>>> 55e78eca3cfbe3a90564bb6d8e726e3cd7f4cae6
       "SourceId": "CodeSparkNET",
       "SourceType": "Discovered",
       "ContentRoot": "C:\\Users\\Daniil\\Documents\\GitHub\\CodeSparkNET\\obj\\Debug\\net9.0\\compressed\\",
@@ -1004,12 +1033,16 @@
       "OriginalItemSpec": "C:\\Users\\Daniil\\Documents\\GitHub\\CodeSparkNET\\wwwroot\\js\\app\\get.info_about_device.js"
     },
     {
+<<<<<<< HEAD
       "Identity": "C:\\Users\\Daniil\\Documents\\GitHub\\CodeSparkNET\\obj\\Debug\\net9.0\\compressed\\p2bdbhxtgh-b3i5tugyp7.gz",
+=======
+      "Identity": "E:\\Project\\CodeSparkNET\\obj\\Debug\\net9.0\\compressed\\p2bdbhxtgh-c83anvg0a9.gz",
+>>>>>>> 55e78eca3cfbe3a90564bb6d8e726e3cd7f4cae6
       "SourceId": "CodeSparkNET",
       "SourceType": "Discovered",
       "ContentRoot": "C:\\Users\\Daniil\\Documents\\GitHub\\CodeSparkNET\\obj\\Debug\\net9.0\\compressed\\",
       "BasePath": "_content/CodeSparkNET",
-      "RelativePath": "css/layout#[.{fingerprint=b3i5tugyp7}]?.css.gz",
+      "RelativePath": "css/layout#[.{fingerprint=c83anvg0a9}]?.css.gz",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Alternative",
@@ -1018,8 +1051,8 @@
       "RelatedAsset": "C:\\Users\\Daniil\\Documents\\GitHub\\CodeSparkNET\\wwwroot\\css\\layout.css",
       "AssetTraitName": "Content-Encoding",
       "AssetTraitValue": "gzip",
-      "Fingerprint": "1krgy70wqc",
-      "Integrity": "fzIQU/hG/PbhaD9o3w9fSLZU2E9i8rwspzaojKb0Iao=",
+      "Fingerprint": "twq9uibukn",
+      "Integrity": "fYaIkE/3sC0sp3bZ/17/uAaIDatccyM7RYRbhMNitYM=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "C:\\Users\\Daniil\\Documents\\GitHub\\CodeSparkNET\\wwwroot\\css\\layout.css"
@@ -1298,12 +1331,16 @@
       "OriginalItemSpec": "C:\\Users\\Daniil\\Documents\\GitHub\\CodeSparkNET\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.min.js"
     },
     {
+<<<<<<< HEAD
       "Identity": "C:\\Users\\Daniil\\Documents\\GitHub\\CodeSparkNET\\obj\\Debug\\net9.0\\compressed\\ufq4mxtlwf-hxin60ggjh.gz",
+=======
+      "Identity": "E:\\Project\\CodeSparkNET\\obj\\Debug\\net9.0\\compressed\\ufq4mxtlwf-66toup7ek4.gz",
+>>>>>>> 55e78eca3cfbe3a90564bb6d8e726e3cd7f4cae6
       "SourceId": "CodeSparkNET",
       "SourceType": "Discovered",
       "ContentRoot": "C:\\Users\\Daniil\\Documents\\GitHub\\CodeSparkNET\\obj\\Debug\\net9.0\\compressed\\",
       "BasePath": "_content/CodeSparkNET",
-      "RelativePath": "assets/notes/wep_app.notes#[.{fingerprint=hxin60ggjh}]?.txt.gz",
+      "RelativePath": "assets/notes/wep_app.notes#[.{fingerprint=66toup7ek4}]?.txt.gz",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Alternative",
@@ -1312,8 +1349,8 @@
       "RelatedAsset": "C:\\Users\\Daniil\\Documents\\GitHub\\CodeSparkNET\\wwwroot\\assets\\notes\\wep_app.notes.txt",
       "AssetTraitName": "Content-Encoding",
       "AssetTraitValue": "gzip",
-      "Fingerprint": "y1t1l8rw3x",
-      "Integrity": "Vk7G3wKENPlJgp5GGJ8gsH60KDER0lZvxVpKII7XHDk=",
+      "Fingerprint": "x0ewlwe69h",
+      "Integrity": "/9sEfUqb1J/3ZonvaFxUDul/Sla9Afqly+/bY5KVAnI=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "C:\\Users\\Daniil\\Documents\\GitHub\\CodeSparkNET\\wwwroot\\assets\\notes\\wep_app.notes.txt"
@@ -1718,7 +1755,32 @@
       "OriginalItemSpec": "wwwroot\\assets\\fonts\\Roboto-VariableFont_wdth.ttf"
     },
     {
+<<<<<<< HEAD
       "Identity": "C:\\Users\\Daniil\\Documents\\GitHub\\CodeSparkNET\\wwwroot\\assets\\icon\\logo.png",
+=======
+      "Identity": "E:\\Project\\CodeSparkNET\\wwwroot\\assets\\icon\\footer_site.ru-fg.svg",
+      "SourceId": "CodeSparkNET",
+      "SourceType": "Discovered",
+      "ContentRoot": "E:\\Project\\CodeSparkNET\\wwwroot\\",
+      "BasePath": "_content/CodeSparkNET",
+      "RelativePath": "assets/icon/footer_site.ru-fg#[.{fingerprint}]?.svg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "xu7g1oi16w",
+      "Integrity": "yew3k4tSV/9/iLCBtnsUw1XRHebvMoCjQRnuNXcA0Qs=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\assets\\icon\\footer_site.ru-fg.svg"
+    },
+    {
+      "Identity": "E:\\Project\\CodeSparkNET\\wwwroot\\assets\\icon\\logo.png",
+>>>>>>> 55e78eca3cfbe3a90564bb6d8e726e3cd7f4cae6
       "SourceId": "CodeSparkNET",
       "SourceType": "Discovered",
       "ContentRoot": "C:\\Users\\Daniil\\Documents\\GitHub\\CodeSparkNET\\wwwroot\\",
@@ -1879,8 +1941,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "hxin60ggjh",
-      "Integrity": "a3qJdjfHcZPtJ97BdWEAhAt2J7C1y2hqcEC8gpi0GXQ=",
+      "Fingerprint": "66toup7ek4",
+      "Integrity": "rnsxLfXIXt84bmtcewbJqAz5sUnSgCvgCOEGnW6c1gg=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\assets\\notes\\wep_app.notes.txt"
@@ -1921,8 +1983,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "b3i5tugyp7",
-      "Integrity": "198kQUWjJGtjRRdA/usf5SBEmZXn+XXkN6tgnZ5WLGM=",
+      "Fingerprint": "c83anvg0a9",
+      "Integrity": "JH7y7w2Df+TvLOXejYYaO66y+uQfpvljdU/5ukvNxtg=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\css\\layout.css"
@@ -3871,6 +3933,304 @@
       ]
     },
     {
+      "Route": "assets/icon/footer_site.ru-fg.svg",
+      "AssetFile": "E:\\Project\\CodeSparkNET\\obj\\Debug\\net9.0\\compressed\\gzqvkub6fz-xu7g1oi16w.gz",
+      "Selectors": [
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip",
+          "Quality": "0.003484320557"
+        }
+      ],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "286"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"5A47JBTxkMDLXnCE2uH8I5wgs8+PsUnxLmH/vmU2vNE=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 03 Sep 2025 13:40:09 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/svg+xml"
+        },
+        {
+          "Name": "ETag",
+          "Value": "W/\"yew3k4tSV/9/iLCBtnsUw1XRHebvMoCjQRnuNXcA0Qs=\""
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-yew3k4tSV/9/iLCBtnsUw1XRHebvMoCjQRnuNXcA0Qs="
+        }
+      ]
+    },
+    {
+      "Route": "assets/icon/footer_site.ru-fg.svg",
+      "AssetFile": "E:\\Project\\CodeSparkNET\\wwwroot\\assets\\icon\\footer_site.ru-fg.svg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "520"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/svg+xml"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"yew3k4tSV/9/iLCBtnsUw1XRHebvMoCjQRnuNXcA0Qs=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 03 Sep 2025 13:40:09 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-yew3k4tSV/9/iLCBtnsUw1XRHebvMoCjQRnuNXcA0Qs="
+        }
+      ]
+    },
+    {
+      "Route": "assets/icon/footer_site.ru-fg.svg.gz",
+      "AssetFile": "E:\\Project\\CodeSparkNET\\obj\\Debug\\net9.0\\compressed\\gzqvkub6fz-xu7g1oi16w.gz",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "286"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/svg+xml"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"5A47JBTxkMDLXnCE2uH8I5wgs8+PsUnxLmH/vmU2vNE=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 03 Sep 2025 13:40:09 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-5A47JBTxkMDLXnCE2uH8I5wgs8+PsUnxLmH/vmU2vNE="
+        }
+      ]
+    },
+    {
+      "Route": "assets/icon/footer_site.ru-fg.xu7g1oi16w.svg",
+      "AssetFile": "E:\\Project\\CodeSparkNET\\obj\\Debug\\net9.0\\compressed\\gzqvkub6fz-xu7g1oi16w.gz",
+      "Selectors": [
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip",
+          "Quality": "0.003484320557"
+        }
+      ],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "286"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"5A47JBTxkMDLXnCE2uH8I5wgs8+PsUnxLmH/vmU2vNE=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 03 Sep 2025 13:40:09 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/svg+xml"
+        },
+        {
+          "Name": "ETag",
+          "Value": "W/\"yew3k4tSV/9/iLCBtnsUw1XRHebvMoCjQRnuNXcA0Qs=\""
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "xu7g1oi16w"
+        },
+        {
+          "Name": "label",
+          "Value": "assets/icon/footer_site.ru-fg.svg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-yew3k4tSV/9/iLCBtnsUw1XRHebvMoCjQRnuNXcA0Qs="
+        }
+      ]
+    },
+    {
+      "Route": "assets/icon/footer_site.ru-fg.xu7g1oi16w.svg",
+      "AssetFile": "E:\\Project\\CodeSparkNET\\wwwroot\\assets\\icon\\footer_site.ru-fg.svg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "520"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/svg+xml"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"yew3k4tSV/9/iLCBtnsUw1XRHebvMoCjQRnuNXcA0Qs=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 03 Sep 2025 13:40:09 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "xu7g1oi16w"
+        },
+        {
+          "Name": "label",
+          "Value": "assets/icon/footer_site.ru-fg.svg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-yew3k4tSV/9/iLCBtnsUw1XRHebvMoCjQRnuNXcA0Qs="
+        }
+      ]
+    },
+    {
+      "Route": "assets/icon/footer_site.ru-fg.xu7g1oi16w.svg.gz",
+      "AssetFile": "E:\\Project\\CodeSparkNET\\obj\\Debug\\net9.0\\compressed\\gzqvkub6fz-xu7g1oi16w.gz",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "286"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/svg+xml"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"5A47JBTxkMDLXnCE2uH8I5wgs8+PsUnxLmH/vmU2vNE=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 03 Sep 2025 13:40:09 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "xu7g1oi16w"
+        },
+        {
+          "Name": "label",
+          "Value": "assets/icon/footer_site.ru-fg.svg.gz"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-5A47JBTxkMDLXnCE2uH8I5wgs8+PsUnxLmH/vmU2vNE="
+        }
+      ]
+    },
+    {
       "Route": "assets/icon/logo.06bkzzxdbh.png",
       "AssetFile": "C:\\Users\\Daniil\\Documents\\GitHub\\CodeSparkNET\\wwwroot\\assets\\icon\\logo.png",
       "Selectors": [],
@@ -5309,13 +5669,18 @@
       ]
     },
     {
+<<<<<<< HEAD
       "Route": "assets/notes/wep_app.notes.hxin60ggjh.txt",
       "AssetFile": "C:\\Users\\Daniil\\Documents\\GitHub\\CodeSparkNET\\obj\\Debug\\net9.0\\compressed\\ufq4mxtlwf-hxin60ggjh.gz",
+=======
+      "Route": "assets/notes/wep_app.notes.66toup7ek4.txt",
+      "AssetFile": "E:\\Project\\CodeSparkNET\\obj\\Debug\\net9.0\\compressed\\ufq4mxtlwf-66toup7ek4.gz",
+>>>>>>> 55e78eca3cfbe3a90564bb6d8e726e3cd7f4cae6
       "Selectors": [
         {
           "Name": "Content-Encoding",
           "Value": "gzip",
-          "Quality": "0.002518891688"
+          "Quality": "0.002267573696"
         }
       ],
       "ResponseHeaders": [
@@ -5325,15 +5690,19 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "396"
+          "Value": "440"
         },
         {
           "Name": "ETag",
-          "Value": "\"Vk7G3wKENPlJgp5GGJ8gsH60KDER0lZvxVpKII7XHDk=\""
+          "Value": "\"/9sEfUqb1J/3ZonvaFxUDul/Sla9Afqly+/bY5KVAnI=\""
         },
         {
           "Name": "Last-Modified",
+<<<<<<< HEAD
           "Value": "Wed, 03 Sep 2025 12:53:18 GMT"
+=======
+          "Value": "Wed, 03 Sep 2025 13:49:59 GMT"
+>>>>>>> 55e78eca3cfbe3a90564bb6d8e726e3cd7f4cae6
         },
         {
           "Name": "Cache-Control",
@@ -5353,13 +5722,13 @@
         },
         {
           "Name": "ETag",
-          "Value": "W/\"a3qJdjfHcZPtJ97BdWEAhAt2J7C1y2hqcEC8gpi0GXQ=\""
+          "Value": "W/\"rnsxLfXIXt84bmtcewbJqAz5sUnSgCvgCOEGnW6c1gg=\""
         }
       ],
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "hxin60ggjh"
+          "Value": "66toup7ek4"
         },
         {
           "Name": "label",
@@ -5367,13 +5736,18 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-a3qJdjfHcZPtJ97BdWEAhAt2J7C1y2hqcEC8gpi0GXQ="
+          "Value": "sha256-rnsxLfXIXt84bmtcewbJqAz5sUnSgCvgCOEGnW6c1gg="
         }
       ]
     },
     {
+<<<<<<< HEAD
       "Route": "assets/notes/wep_app.notes.hxin60ggjh.txt",
       "AssetFile": "C:\\Users\\Daniil\\Documents\\GitHub\\CodeSparkNET\\wwwroot\\assets\\notes\\wep_app.notes.txt",
+=======
+      "Route": "assets/notes/wep_app.notes.66toup7ek4.txt",
+      "AssetFile": "E:\\Project\\CodeSparkNET\\wwwroot\\assets\\notes\\wep_app.notes.txt",
+>>>>>>> 55e78eca3cfbe3a90564bb6d8e726e3cd7f4cae6
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -5382,7 +5756,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "718"
+          "Value": "795"
         },
         {
           "Name": "Content-Type",
@@ -5390,11 +5764,15 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"a3qJdjfHcZPtJ97BdWEAhAt2J7C1y2hqcEC8gpi0GXQ=\""
+          "Value": "\"rnsxLfXIXt84bmtcewbJqAz5sUnSgCvgCOEGnW6c1gg=\""
         },
         {
           "Name": "Last-Modified",
+<<<<<<< HEAD
           "Value": "Wed, 03 Sep 2025 12:53:18 GMT"
+=======
+          "Value": "Wed, 03 Sep 2025 13:49:59 GMT"
+>>>>>>> 55e78eca3cfbe3a90564bb6d8e726e3cd7f4cae6
         },
         {
           "Name": "Cache-Control",
@@ -5404,7 +5782,7 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "hxin60ggjh"
+          "Value": "66toup7ek4"
         },
         {
           "Name": "label",
@@ -5412,13 +5790,18 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-a3qJdjfHcZPtJ97BdWEAhAt2J7C1y2hqcEC8gpi0GXQ="
+          "Value": "sha256-rnsxLfXIXt84bmtcewbJqAz5sUnSgCvgCOEGnW6c1gg="
         }
       ]
     },
     {
+<<<<<<< HEAD
       "Route": "assets/notes/wep_app.notes.hxin60ggjh.txt.gz",
       "AssetFile": "C:\\Users\\Daniil\\Documents\\GitHub\\CodeSparkNET\\obj\\Debug\\net9.0\\compressed\\ufq4mxtlwf-hxin60ggjh.gz",
+=======
+      "Route": "assets/notes/wep_app.notes.66toup7ek4.txt.gz",
+      "AssetFile": "E:\\Project\\CodeSparkNET\\obj\\Debug\\net9.0\\compressed\\ufq4mxtlwf-66toup7ek4.gz",
+>>>>>>> 55e78eca3cfbe3a90564bb6d8e726e3cd7f4cae6
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -5427,7 +5810,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "396"
+          "Value": "440"
         },
         {
           "Name": "Content-Type",
@@ -5435,11 +5818,15 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"Vk7G3wKENPlJgp5GGJ8gsH60KDER0lZvxVpKII7XHDk=\""
+          "Value": "\"/9sEfUqb1J/3ZonvaFxUDul/Sla9Afqly+/bY5KVAnI=\""
         },
         {
           "Name": "Last-Modified",
+<<<<<<< HEAD
           "Value": "Wed, 03 Sep 2025 12:53:18 GMT"
+=======
+          "Value": "Wed, 03 Sep 2025 13:49:59 GMT"
+>>>>>>> 55e78eca3cfbe3a90564bb6d8e726e3cd7f4cae6
         },
         {
           "Name": "Cache-Control",
@@ -5457,7 +5844,7 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "hxin60ggjh"
+          "Value": "66toup7ek4"
         },
         {
           "Name": "label",
@@ -5465,18 +5852,22 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-Vk7G3wKENPlJgp5GGJ8gsH60KDER0lZvxVpKII7XHDk="
+          "Value": "sha256-/9sEfUqb1J/3ZonvaFxUDul/Sla9Afqly+/bY5KVAnI="
         }
       ]
     },
     {
       "Route": "assets/notes/wep_app.notes.txt",
+<<<<<<< HEAD
       "AssetFile": "C:\\Users\\Daniil\\Documents\\GitHub\\CodeSparkNET\\obj\\Debug\\net9.0\\compressed\\ufq4mxtlwf-hxin60ggjh.gz",
+=======
+      "AssetFile": "E:\\Project\\CodeSparkNET\\obj\\Debug\\net9.0\\compressed\\ufq4mxtlwf-66toup7ek4.gz",
+>>>>>>> 55e78eca3cfbe3a90564bb6d8e726e3cd7f4cae6
       "Selectors": [
         {
           "Name": "Content-Encoding",
           "Value": "gzip",
-          "Quality": "0.002518891688"
+          "Quality": "0.002267573696"
         }
       ],
       "ResponseHeaders": [
@@ -5486,15 +5877,19 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "396"
+          "Value": "440"
         },
         {
           "Name": "ETag",
-          "Value": "\"Vk7G3wKENPlJgp5GGJ8gsH60KDER0lZvxVpKII7XHDk=\""
+          "Value": "\"/9sEfUqb1J/3ZonvaFxUDul/Sla9Afqly+/bY5KVAnI=\""
         },
         {
           "Name": "Last-Modified",
+<<<<<<< HEAD
           "Value": "Wed, 03 Sep 2025 12:53:18 GMT"
+=======
+          "Value": "Wed, 03 Sep 2025 13:49:59 GMT"
+>>>>>>> 55e78eca3cfbe3a90564bb6d8e726e3cd7f4cae6
         },
         {
           "Name": "Cache-Control",
@@ -5514,13 +5909,13 @@
         },
         {
           "Name": "ETag",
-          "Value": "W/\"a3qJdjfHcZPtJ97BdWEAhAt2J7C1y2hqcEC8gpi0GXQ=\""
+          "Value": "W/\"rnsxLfXIXt84bmtcewbJqAz5sUnSgCvgCOEGnW6c1gg=\""
         }
       ],
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-a3qJdjfHcZPtJ97BdWEAhAt2J7C1y2hqcEC8gpi0GXQ="
+          "Value": "sha256-rnsxLfXIXt84bmtcewbJqAz5sUnSgCvgCOEGnW6c1gg="
         }
       ]
     },
@@ -5535,7 +5930,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "718"
+          "Value": "795"
         },
         {
           "Name": "Content-Type",
@@ -5543,11 +5938,15 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"a3qJdjfHcZPtJ97BdWEAhAt2J7C1y2hqcEC8gpi0GXQ=\""
+          "Value": "\"rnsxLfXIXt84bmtcewbJqAz5sUnSgCvgCOEGnW6c1gg=\""
         },
         {
           "Name": "Last-Modified",
+<<<<<<< HEAD
           "Value": "Wed, 03 Sep 2025 12:53:18 GMT"
+=======
+          "Value": "Wed, 03 Sep 2025 13:49:59 GMT"
+>>>>>>> 55e78eca3cfbe3a90564bb6d8e726e3cd7f4cae6
         },
         {
           "Name": "Cache-Control",
@@ -5557,13 +5956,17 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-a3qJdjfHcZPtJ97BdWEAhAt2J7C1y2hqcEC8gpi0GXQ="
+          "Value": "sha256-rnsxLfXIXt84bmtcewbJqAz5sUnSgCvgCOEGnW6c1gg="
         }
       ]
     },
     {
       "Route": "assets/notes/wep_app.notes.txt.gz",
+<<<<<<< HEAD
       "AssetFile": "C:\\Users\\Daniil\\Documents\\GitHub\\CodeSparkNET\\obj\\Debug\\net9.0\\compressed\\ufq4mxtlwf-hxin60ggjh.gz",
+=======
+      "AssetFile": "E:\\Project\\CodeSparkNET\\obj\\Debug\\net9.0\\compressed\\ufq4mxtlwf-66toup7ek4.gz",
+>>>>>>> 55e78eca3cfbe3a90564bb6d8e726e3cd7f4cae6
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -5572,7 +5975,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "396"
+          "Value": "440"
         },
         {
           "Name": "Content-Type",
@@ -5580,11 +5983,15 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"Vk7G3wKENPlJgp5GGJ8gsH60KDER0lZvxVpKII7XHDk=\""
+          "Value": "\"/9sEfUqb1J/3ZonvaFxUDul/Sla9Afqly+/bY5KVAnI=\""
         },
         {
           "Name": "Last-Modified",
+<<<<<<< HEAD
           "Value": "Wed, 03 Sep 2025 12:53:18 GMT"
+=======
+          "Value": "Wed, 03 Sep 2025 13:49:59 GMT"
+>>>>>>> 55e78eca3cfbe3a90564bb6d8e726e3cd7f4cae6
         },
         {
           "Name": "Cache-Control",
@@ -5602,7 +6009,7 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-Vk7G3wKENPlJgp5GGJ8gsH60KDER0lZvxVpKII7XHDk="
+          "Value": "sha256-/9sEfUqb1J/3ZonvaFxUDul/Sla9Afqly+/bY5KVAnI="
         }
       ]
     },
@@ -5905,13 +6312,18 @@
       ]
     },
     {
+<<<<<<< HEAD
       "Route": "css/layout.b3i5tugyp7.css",
       "AssetFile": "C:\\Users\\Daniil\\Documents\\GitHub\\CodeSparkNET\\obj\\Debug\\net9.0\\compressed\\p2bdbhxtgh-b3i5tugyp7.gz",
+=======
+      "Route": "css/layout.c83anvg0a9.css",
+      "AssetFile": "E:\\Project\\CodeSparkNET\\obj\\Debug\\net9.0\\compressed\\p2bdbhxtgh-c83anvg0a9.gz",
+>>>>>>> 55e78eca3cfbe3a90564bb6d8e726e3cd7f4cae6
       "Selectors": [
         {
           "Name": "Content-Encoding",
           "Value": "gzip",
-          "Quality": "0.000508130081"
+          "Quality": "0.000464900046"
         }
       ],
       "ResponseHeaders": [
@@ -5921,15 +6333,19 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "1967"
+          "Value": "2150"
         },
         {
           "Name": "ETag",
-          "Value": "\"fzIQU/hG/PbhaD9o3w9fSLZU2E9i8rwspzaojKb0Iao=\""
+          "Value": "\"fYaIkE/3sC0sp3bZ/17/uAaIDatccyM7RYRbhMNitYM=\""
         },
         {
           "Name": "Last-Modified",
+<<<<<<< HEAD
           "Value": "Wed, 03 Sep 2025 12:53:18 GMT"
+=======
+          "Value": "Wed, 03 Sep 2025 13:55:55 GMT"
+>>>>>>> 55e78eca3cfbe3a90564bb6d8e726e3cd7f4cae6
         },
         {
           "Name": "Cache-Control",
@@ -5949,13 +6365,13 @@
         },
         {
           "Name": "ETag",
-          "Value": "W/\"198kQUWjJGtjRRdA/usf5SBEmZXn+XXkN6tgnZ5WLGM=\""
+          "Value": "W/\"JH7y7w2Df+TvLOXejYYaO66y+uQfpvljdU/5ukvNxtg=\""
         }
       ],
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "b3i5tugyp7"
+          "Value": "c83anvg0a9"
         },
         {
           "Name": "label",
@@ -5963,13 +6379,18 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-198kQUWjJGtjRRdA/usf5SBEmZXn+XXkN6tgnZ5WLGM="
+          "Value": "sha256-JH7y7w2Df+TvLOXejYYaO66y+uQfpvljdU/5ukvNxtg="
         }
       ]
     },
     {
+<<<<<<< HEAD
       "Route": "css/layout.b3i5tugyp7.css",
       "AssetFile": "C:\\Users\\Daniil\\Documents\\GitHub\\CodeSparkNET\\wwwroot\\css\\layout.css",
+=======
+      "Route": "css/layout.c83anvg0a9.css",
+      "AssetFile": "E:\\Project\\CodeSparkNET\\wwwroot\\css\\layout.css",
+>>>>>>> 55e78eca3cfbe3a90564bb6d8e726e3cd7f4cae6
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -5978,7 +6399,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "12494"
+          "Value": "14429"
         },
         {
           "Name": "Content-Type",
@@ -5986,11 +6407,15 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"198kQUWjJGtjRRdA/usf5SBEmZXn+XXkN6tgnZ5WLGM=\""
+          "Value": "\"JH7y7w2Df+TvLOXejYYaO66y+uQfpvljdU/5ukvNxtg=\""
         },
         {
           "Name": "Last-Modified",
+<<<<<<< HEAD
           "Value": "Wed, 03 Sep 2025 12:53:18 GMT"
+=======
+          "Value": "Wed, 03 Sep 2025 13:55:55 GMT"
+>>>>>>> 55e78eca3cfbe3a90564bb6d8e726e3cd7f4cae6
         },
         {
           "Name": "Cache-Control",
@@ -6000,7 +6425,7 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "b3i5tugyp7"
+          "Value": "c83anvg0a9"
         },
         {
           "Name": "label",
@@ -6008,13 +6433,18 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-198kQUWjJGtjRRdA/usf5SBEmZXn+XXkN6tgnZ5WLGM="
+          "Value": "sha256-JH7y7w2Df+TvLOXejYYaO66y+uQfpvljdU/5ukvNxtg="
         }
       ]
     },
     {
+<<<<<<< HEAD
       "Route": "css/layout.b3i5tugyp7.css.gz",
       "AssetFile": "C:\\Users\\Daniil\\Documents\\GitHub\\CodeSparkNET\\obj\\Debug\\net9.0\\compressed\\p2bdbhxtgh-b3i5tugyp7.gz",
+=======
+      "Route": "css/layout.c83anvg0a9.css.gz",
+      "AssetFile": "E:\\Project\\CodeSparkNET\\obj\\Debug\\net9.0\\compressed\\p2bdbhxtgh-c83anvg0a9.gz",
+>>>>>>> 55e78eca3cfbe3a90564bb6d8e726e3cd7f4cae6
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -6023,7 +6453,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "1967"
+          "Value": "2150"
         },
         {
           "Name": "Content-Type",
@@ -6031,11 +6461,15 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"fzIQU/hG/PbhaD9o3w9fSLZU2E9i8rwspzaojKb0Iao=\""
+          "Value": "\"fYaIkE/3sC0sp3bZ/17/uAaIDatccyM7RYRbhMNitYM=\""
         },
         {
           "Name": "Last-Modified",
+<<<<<<< HEAD
           "Value": "Wed, 03 Sep 2025 12:53:18 GMT"
+=======
+          "Value": "Wed, 03 Sep 2025 13:55:55 GMT"
+>>>>>>> 55e78eca3cfbe3a90564bb6d8e726e3cd7f4cae6
         },
         {
           "Name": "Cache-Control",
@@ -6053,7 +6487,7 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "b3i5tugyp7"
+          "Value": "c83anvg0a9"
         },
         {
           "Name": "label",
@@ -6061,18 +6495,22 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-fzIQU/hG/PbhaD9o3w9fSLZU2E9i8rwspzaojKb0Iao="
+          "Value": "sha256-fYaIkE/3sC0sp3bZ/17/uAaIDatccyM7RYRbhMNitYM="
         }
       ]
     },
     {
       "Route": "css/layout.css",
+<<<<<<< HEAD
       "AssetFile": "C:\\Users\\Daniil\\Documents\\GitHub\\CodeSparkNET\\obj\\Debug\\net9.0\\compressed\\p2bdbhxtgh-b3i5tugyp7.gz",
+=======
+      "AssetFile": "E:\\Project\\CodeSparkNET\\obj\\Debug\\net9.0\\compressed\\p2bdbhxtgh-c83anvg0a9.gz",
+>>>>>>> 55e78eca3cfbe3a90564bb6d8e726e3cd7f4cae6
       "Selectors": [
         {
           "Name": "Content-Encoding",
           "Value": "gzip",
-          "Quality": "0.000508130081"
+          "Quality": "0.000464900046"
         }
       ],
       "ResponseHeaders": [
@@ -6082,15 +6520,19 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "1967"
+          "Value": "2150"
         },
         {
           "Name": "ETag",
-          "Value": "\"fzIQU/hG/PbhaD9o3w9fSLZU2E9i8rwspzaojKb0Iao=\""
+          "Value": "\"fYaIkE/3sC0sp3bZ/17/uAaIDatccyM7RYRbhMNitYM=\""
         },
         {
           "Name": "Last-Modified",
+<<<<<<< HEAD
           "Value": "Wed, 03 Sep 2025 12:53:18 GMT"
+=======
+          "Value": "Wed, 03 Sep 2025 13:55:55 GMT"
+>>>>>>> 55e78eca3cfbe3a90564bb6d8e726e3cd7f4cae6
         },
         {
           "Name": "Cache-Control",
@@ -6110,13 +6552,13 @@
         },
         {
           "Name": "ETag",
-          "Value": "W/\"198kQUWjJGtjRRdA/usf5SBEmZXn+XXkN6tgnZ5WLGM=\""
+          "Value": "W/\"JH7y7w2Df+TvLOXejYYaO66y+uQfpvljdU/5ukvNxtg=\""
         }
       ],
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-198kQUWjJGtjRRdA/usf5SBEmZXn+XXkN6tgnZ5WLGM="
+          "Value": "sha256-JH7y7w2Df+TvLOXejYYaO66y+uQfpvljdU/5ukvNxtg="
         }
       ]
     },
@@ -6131,7 +6573,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "12494"
+          "Value": "14429"
         },
         {
           "Name": "Content-Type",
@@ -6139,11 +6581,15 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"198kQUWjJGtjRRdA/usf5SBEmZXn+XXkN6tgnZ5WLGM=\""
+          "Value": "\"JH7y7w2Df+TvLOXejYYaO66y+uQfpvljdU/5ukvNxtg=\""
         },
         {
           "Name": "Last-Modified",
+<<<<<<< HEAD
           "Value": "Wed, 03 Sep 2025 12:53:18 GMT"
+=======
+          "Value": "Wed, 03 Sep 2025 13:55:55 GMT"
+>>>>>>> 55e78eca3cfbe3a90564bb6d8e726e3cd7f4cae6
         },
         {
           "Name": "Cache-Control",
@@ -6153,13 +6599,17 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-198kQUWjJGtjRRdA/usf5SBEmZXn+XXkN6tgnZ5WLGM="
+          "Value": "sha256-JH7y7w2Df+TvLOXejYYaO66y+uQfpvljdU/5ukvNxtg="
         }
       ]
     },
     {
       "Route": "css/layout.css.gz",
+<<<<<<< HEAD
       "AssetFile": "C:\\Users\\Daniil\\Documents\\GitHub\\CodeSparkNET\\obj\\Debug\\net9.0\\compressed\\p2bdbhxtgh-b3i5tugyp7.gz",
+=======
+      "AssetFile": "E:\\Project\\CodeSparkNET\\obj\\Debug\\net9.0\\compressed\\p2bdbhxtgh-c83anvg0a9.gz",
+>>>>>>> 55e78eca3cfbe3a90564bb6d8e726e3cd7f4cae6
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -6168,7 +6618,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "1967"
+          "Value": "2150"
         },
         {
           "Name": "Content-Type",
@@ -6176,11 +6626,15 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"fzIQU/hG/PbhaD9o3w9fSLZU2E9i8rwspzaojKb0Iao=\""
+          "Value": "\"fYaIkE/3sC0sp3bZ/17/uAaIDatccyM7RYRbhMNitYM=\""
         },
         {
           "Name": "Last-Modified",
+<<<<<<< HEAD
           "Value": "Wed, 03 Sep 2025 12:53:18 GMT"
+=======
+          "Value": "Wed, 03 Sep 2025 13:55:55 GMT"
+>>>>>>> 55e78eca3cfbe3a90564bb6d8e726e3cd7f4cae6
         },
         {
           "Name": "Cache-Control",
@@ -6198,7 +6652,7 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-fzIQU/hG/PbhaD9o3w9fSLZU2E9i8rwspzaojKb0Iao="
+          "Value": "sha256-fYaIkE/3sC0sp3bZ/17/uAaIDatccyM7RYRbhMNitYM="
         }
       ]
     },

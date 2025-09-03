@@ -25,12 +25,32 @@
       "PackagePath": "staticwebassets\\assets\\fonts\\Roboto-VariableFont_wdth.ttf"
     },
     {
+      "Id": "E:\\Project\\CodeSparkNET\\wwwroot\\assets\\icon\\logo.png",
+      "PackagePath": "staticwebassets\\assets\\icon\\logo.png"
+    },
+    {
+      "Id": "E:\\Project\\CodeSparkNET\\wwwroot\\assets\\icon\\logo.webp",
+      "PackagePath": "staticwebassets\\assets\\icon\\logo.webp"
+    },
+    {
       "Id": "E:\\Project\\CodeSparkNET\\wwwroot\\assets\\icon\\nav_site.enter.svg",
       "PackagePath": "staticwebassets\\assets\\icon\\nav_site.enter.svg"
     },
     {
       "Id": "E:\\Project\\CodeSparkNET\\wwwroot\\assets\\icon\\nav_site.help.svg",
       "PackagePath": "staticwebassets\\assets\\icon\\nav_site.help.svg"
+    },
+    {
+      "Id": "E:\\Project\\CodeSparkNET\\wwwroot\\assets\\icon\\nav_site.moon.svg",
+      "PackagePath": "staticwebassets\\assets\\icon\\nav_site.moon.svg"
+    },
+    {
+      "Id": "E:\\Project\\CodeSparkNET\\wwwroot\\assets\\icon\\nav_site.sun.svg",
+      "PackagePath": "staticwebassets\\assets\\icon\\nav_site.sun.svg"
+    },
+    {
+      "Id": "E:\\Project\\CodeSparkNET\\wwwroot\\assets\\img\\banner.png",
+      "PackagePath": "staticwebassets\\assets\\img\\banner.png"
     },
     {
       "Id": "E:\\Project\\CodeSparkNET\\wwwroot\\assets\\notes\\wep_app.notes.txt",

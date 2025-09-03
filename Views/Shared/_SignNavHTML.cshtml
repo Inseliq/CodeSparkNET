@@ -6,9 +6,8 @@
 
 @if (!User?.Identity?.IsAuthenticated == true)
 {
-    <a help>Поддержка</a>
-    <a login href="@Url.Action("Login", "Account")">Войти</a>
-    <button theme-color></button>
+    <a help data-style="on-hover" hover>Поддержка</a>
+    <a login href="@Url.Action("Login", "Account")" data-style="on-hover" hover>Войти</a>
 }
 else
 {

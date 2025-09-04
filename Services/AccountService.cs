@@ -7,7 +7,6 @@ using CodeSparkNET.Dtos.Account;
 using CodeSparkNET.Interfaces;
 using CodeSparkNET.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 
 namespace CodeSparkNET.Services
@@ -15,15 +14,76 @@ namespace CodeSparkNET.Services
     public class AccountService : IAccountService
     {
         private readonly UserManager<AppUser> _userManager;
+        private readonly SignInManager<AppUser> _signInManager;
         private readonly IEmailService _emailService;
         private readonly IConfiguration _configuration;
+        private readonly ILogger<AccountService> _logger;
 
-        public AccountService(UserManager<AppUser> userManager, IEmailService emailService, IConfiguration configuration)
+        public AccountService(
+            UserManager<AppUser> userManager,
+            SignInManager<AppUser> signInManager,
+            IEmailService emailService,
+            IConfiguration configuration,
+            ILogger<AccountService> logger)
         {
             _userManager = userManager;
+            _signInManager = signInManager;
             _emailService = emailService;
             _configuration = configuration;
+            _logger = logger;
         }
+
+        public async Task<IdentityResult> RegisterAsync(RegisterDto dto, string loginLink)
+        {
+            if (await _userManager.FindByEmailAsync(dto.Email) != null)
+                return IdentityResult.Failed(new IdentityError { Description = "Пользователь с таким email уже зарегистрирован." });
+
+            var user = new AppUser
+            {
+                UserName = dto.UserName,
+                Email = dto.Email
+            };
+
+            var createResult = await _userManager.CreateAsync(user, dto.Password);
+            if (!createResult.Succeeded)
+                return createResult;
+
+            var roleResult = await _userManager.AddToRoleAsync(user, "User");
+            if (!roleResult.Succeeded)
+            {
+                await _userManager.DeleteAsync(user);
+                return IdentityResult.Failed(new IdentityError { Description = "Не удалось назначить роль пользователю." });
+            }
+
+            try
+            {
+                if (!string.IsNullOrEmpty(loginLink))
+                {
+                    await _emailService.SendAccountCratedEmailAsync(user.Email!, user.UserName, loginLink);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Не удалось отправить welcome email для {Email}", user.Email);
+            }
+
+            return IdentityResult.Success;
+        }
+
+        public async Task<SignInResult> PasswordSignInAsync(LoginDto dto)
+        {
+            var user = await _userManager.FindByEmailAsync(dto.Email);
+            if (user == null)
+                return SignInResult.Failed;
+
+            return await _signInManager.PasswordSignInAsync(user.UserName, dto.Password, dto.RememberMe, lockoutOnFailure: false);
+        }
+
+        public async Task SignOutAsync()
+        {
+            await _signInManager.SignOutAsync();
+        }
+
 
         public async Task<IdentityResult> ResetPasswordAsync(ResetPasswordDto resetPasswordDto)
         {

@@ -13,17 +13,21 @@ namespace CodeSparkNET.Controllers
     public class AccountController : Controller
     {
         private readonly ILogger<AccountController> _logger;
-        private readonly UserManager<AppUser> _userManager;
-        private readonly SignInManager<AppUser> _signInManager;
+        private readonly IConfiguration _configuration;
 
         private readonly IAccountService _accountService;
+        private readonly IEmailService _emailService;
 
-        public AccountController(ILogger<AccountController> logger, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IAccountService accountService)
+        public AccountController(
+            ILogger<AccountController> logger, 
+            IConfiguration configuration, 
+            IAccountService accountService, 
+            IEmailService emailService)
         {
             _logger = logger;
-            _userManager = userManager;
-            _signInManager = signInManager;
+            _configuration = configuration;
             _accountService = accountService;
+            _emailService = emailService;
         }
 
         [HttpGet]
@@ -36,41 +40,26 @@ namespace CodeSparkNET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterDto registerDto)
         {
-            try
+            if (!ModelState.IsValid) return View(registerDto);
+
+            if (registerDto.ConfirmToS != true)
             {
-                if (registerDto.ConfirmToS != true)
-                {
-                    ModelState.AddModelError(string.Empty, "Вы не согласились с условиями использования.");
-                    return View(registerDto);
-                }
-
-                if (await _userManager.FindByEmailAsync(registerDto.Email) != null)
-                {
-                    ModelState.AddModelError(string.Empty, "Пользователь с таким email уже зарегистрирован.");
-                    return View(registerDto);
-                }
-
-                var user = new AppUser { UserName = registerDto.UserName, Email = registerDto.Email };
-                var createResult = await _userManager.CreateAsync(user, registerDto.Password);
-
-                if (!createResult.Succeeded)
-                {
-                    foreach (var err in createResult.Errors) ModelState.AddModelError(string.Empty, err.Description);
-                    return View(registerDto);
-                }
-
-                await _userManager.AddToRoleAsync(user, "User");
-
-                return RedirectToAction("Login", "Account");
-            }
-            catch (Exception ex)
-            {
-                _logger?.LogError(ex, "Ошибка при регистрации пользователя {UserName}", registerDto?.UserName);
-                ModelState.AddModelError(string.Empty, "Произошла ошибка при обработке регистрации. Попробуйте позже.");
+                ModelState.AddModelError(string.Empty, "Вы не согласились с условиями использования.");
                 return View(registerDto);
             }
-        }
 
+            var loginLink = Url.Action("Login", "Account", null, Request.Scheme);
+
+            var result = await _accountService.RegisterAsync(registerDto, loginLink);
+            if (!result.Succeeded)
+            {
+                foreach (var err in result.Errors)
+                    ModelState.AddModelError(string.Empty, err.Description);
+                return View(registerDto);
+            }
+
+            return RedirectToAction("Login", "Account");
+        }
 
         [HttpGet]
         public IActionResult Login()
@@ -82,55 +71,28 @@ namespace CodeSparkNET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginDto loginDto)
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid) return View(loginDto);
+
+            var signResult = await _accountService.PasswordSignInAsync(loginDto);
+            if (signResult.IsLockedOut)
             {
+                ModelState.AddModelError(string.Empty, "Ваша учетная запись временно заблокирована. Попробуйте позже.");
+                return View(loginDto);
+            }
+            if (!signResult.Succeeded)
+            {
+                ModelState.AddModelError(string.Empty, "Неверные данные для входа.");
                 return View(loginDto);
             }
 
-            try
-            {
-                var user = await _userManager.FindByEmailAsync(loginDto.Email);
-
-                if (user == null)
-                {
-                    ModelState.AddModelError(string.Empty, "Пользователь не найден.");
-                    return View(loginDto);
-                }
-
-                var signResult = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
-
-                if (signResult.IsLockedOut)
-                {
-                    _logger?.LogWarning("Пользователь{UserId} заблокирован.", user.Id);
-                    ModelState.AddModelError(string.Empty, "Ваша учетная запись временно заблокирована. Попробуйте позже.");
-                    return View(loginDto);
-                }
-
-                if (!signResult.Succeeded)
-                {
-                    ModelState.AddModelError(string.Empty, "Неверные данные для входа.");
-                    return View(loginDto);
-                }
-
-                await _signInManager.SignInAsync(user, loginDto.RememberMe == true ? true : false);
-
-                return RedirectToAction("Index", "Home");
-
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Ошибка при попытке входа пользователя {Login}", loginDto?.Email);
-                ModelState.AddModelError(string.Empty, "Произошла ошибка при входе. Попробуйте позже.");
-                return View(loginDto);
-            }
-
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
-            await _signInManager.SignOutAsync();
+            await _accountService.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
 

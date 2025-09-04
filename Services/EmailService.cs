@@ -11,16 +11,30 @@ namespace CodeSparkNET.Services
 {
     public class EmailService : IEmailService
     {
+        private readonly ILogger<EmailService> _logger;
         private readonly IConfiguration _configuration;
 
-        public EmailService(IConfiguration configuration)
+        public EmailService(ILogger<EmailService> logger, IConfiguration configuration)
         {
+            _logger = logger;
             _configuration = configuration;
         }
 
-        public Task SendAccountCratedEmailAsync(string toEmail, string firstEmail, string loginLink)
+        public async Task SendAccountCratedEmailAsync(string toEmail, string firstName, string loginLink)
         {
-            throw new NotImplementedException();
+            string html = $@"
+            <html>
+              <body style='font-family: Arial, sans-serif;'>
+                <h2>Добро пожаловать, {System.Net.WebUtility.HtmlEncode(firstName)}!</h2>
+                <p>Ваш аккаунт создан. Для входа перейдите по ссылке:</p>
+                <p><a href='{loginLink}'>Войти в аккаунт</a></p>
+                <p>Если вы не регистрировались — проигнорируйте это письмо.</p>
+                <hr />
+                <small>© Code Spark, {DateTime.UtcNow.Year}</small>
+              </body>
+            </html>";
+
+            await SendEmailAsync(toEmail, "Регистрация CodeSpark", html, true);
         }
 
         public async Task SendEmailAsync(string toEmail, string subject, string htmlMessage, bool isHtml = true)
@@ -35,12 +49,21 @@ namespace CodeSparkNET.Services
 
             msg.Body = body.ToMessageBody();
 
-            using var client = new SmtpClient();
-            await client.ConnectAsync(_configuration["Smtp:Host"], int.Parse(_configuration["Smtp:Port"] ?? "587"));
-            if (!string.IsNullOrEmpty(_configuration["Smtp:User"]))
-                await client.AuthenticateAsync(_configuration["Smtp:User"], _configuration["Smtp:Pass"]);
-            await client.SendAsync(msg);
-            await client.DisconnectAsync(true);
+            try
+            {
+                using var client = new SmtpClient();
+                await client.ConnectAsync(_configuration["Smtp:Host"], int.Parse(_configuration["Smtp:Port"] ?? "587"));
+                if (!string.IsNullOrEmpty(_configuration["Smtp:User"]))
+                    await client.AuthenticateAsync(_configuration["Smtp:User"], _configuration["Smtp:Pass"]);
+                await client.SendAsync(msg);
+                await client.DisconnectAsync(true);
+            } catch(Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка отправки письма при регистрации {Email}", toEmail);
+                throw; 
+            }
+
+
         }
 
         public async Task SendResetPasswordEmailAsync(string toEmail, string firstName, string resetLink)

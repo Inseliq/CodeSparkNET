@@ -37,21 +37,24 @@ namespace CodeSparkNET.Services
             var decodedToken = Encoding.UTF8.GetString(decodedBytes);
 
             // Attempt reset user password
-            var result = await _userManager.ChangePasswordAsync(user, decodedToken, resetPasswordDto.Password);
+            var result = await _userManager.ResetPasswordAsync(user, decodedToken, resetPasswordDto.Password);
 
             // If successful, update the Security Stamp to invalidate any active sessions or tokens
             if (result.Succeeded)
-                return await _userManager.UpdateSecurityStampAsync(user);
+            {
+                await _userManager.UpdateSecurityStampAsync(user);
+                return result;
+            }
 
             return result;
         }
 
         public async Task<bool> SendPasswordResetLinkAsync(string email)
         {
-            //Get User
+            //Get user
             var user = await _userManager.FindByEmailAsync(email);
 
-            if (user == null || (!await _userManager.IsEmailConfirmedAsync(user)))
+            if (user == null || (await _userManager.IsEmailConfirmedAsync(user)))
                 return false;
 
             //Generate unique token
@@ -61,8 +64,9 @@ namespace CodeSparkNET.Services
             var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
 
             //Constructing reset url link
-            var baseUrl = _configuration["AppSettings:BaseUrl"];
-            var resetLink = $"{baseUrl}/Account/ResetPassword/?email={user.Email}&token={encodedToken}";
+            var baseUrl = _configuration["AppSettings:BaseUrl"]?.TrimEnd('/');
+            var emailEscaped = System.Net.WebUtility.UrlEncode(user.Email);
+            var resetLink = $"{baseUrl}/Account/ResetPassword/?email={emailEscaped}&token={encodedToken}";
 
             await _emailService.SendResetPasswordEmailAsync(user.Email!, user.UserName, resetLink);
 

@@ -4,7 +4,9 @@ using CodeSparkNET.Interfaces;
 using CodeSparkNET.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace CodeSparkNET.Controllers
 {
@@ -140,14 +142,20 @@ namespace CodeSparkNET.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ForgotPassword(ForgotPasswordDto forgotPasswordDto)
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordDto model)
         {
             if (!ModelState.IsValid)
-                return View(forgotPasswordDto);
+            {
+                var modelErrors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToArray();
 
-            await _accountService.SendPasswordResetLinkAsync(forgotPasswordDto.Email);
+                return BadRequest(new { success = false, errors = modelErrors });
+            }
+            await _accountService.SendPasswordResetLinkAsync(model.Email);
 
-            return Ok();
+            return Json(new { success = true, message = "Проверьте вашу почту." });
         }
 
         [HttpGet]
@@ -155,7 +163,34 @@ namespace CodeSparkNET.Controllers
         {
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(token))
                 return BadRequest("Ошибка сброса пароля");
+
+            return View(new ResetPasswordDto { Email = email, Token = token });
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(ResetPasswordDto model)
+        {
+            if (!ModelState.IsValid)
+            {
+                var modelErrors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToArray();
+
+                return BadRequest(new { success = false, errors = modelErrors });
+            }
+
+            var result = await _accountService.ResetPasswordAsync(model);
+            if (result.Succeeded)
+            {
+                return Json(new { success = true, message = "Пароль успешно восстановлен." });
+            }
+
+            var errors = result.Errors.Select(e => e.Description).ToArray();
+            return BadRequest(new { success = false, errors });
+        }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

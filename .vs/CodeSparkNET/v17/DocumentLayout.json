@@ -1,7 +1,20 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "E:\\Project\\CodeSparkNET\\",
-  "Documents": [],
+  "WorkspaceRootPath": "C:\\Users\\shind\\Documents\\git\\CodeSparkNET\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{995FAB57-9B16-49E9-BC34-63943FD2B923}|CodeSparkNET.csproj|c:\\users\\shind\\documents\\git\\codesparknet\\services\\accountservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{995FAB57-9B16-49E9-BC34-63943FD2B923}|CodeSparkNET.csproj|solutionrelative:services\\accountservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{995FAB57-9B16-49E9-BC34-63943FD2B923}|CodeSparkNET.csproj|c:\\users\\shind\\documents\\git\\codesparknet\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{995FAB57-9B16-49E9-BC34-63943FD2B923}|CodeSparkNET.csproj|solutionrelative:controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{995FAB57-9B16-49E9-BC34-63943FD2B923}|CodeSparkNET.csproj|c:\\users\\shind\\documents\\git\\codesparknet\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{995FAB57-9B16-49E9-BC34-63943FD2B923}|CodeSparkNET.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,7 +22,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Bookmark",
@@ -22,6 +35,45 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{e1b7d1f8-9b3c-49b1-8f4f-bfc63a88835d}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "AccountService.cs",
+              "DocumentMoniker": "C:\\Users\\shind\\Documents\\git\\CodeSparkNET\\Services\\AccountService.cs",
+              "RelativeDocumentMoniker": "Services\\AccountService.cs",
+              "ToolTip": "C:\\Users\\shind\\Documents\\git\\CodeSparkNET\\Services\\AccountService.cs",
+              "RelativeToolTip": "Services\\AccountService.cs",
+              "ViewState": "AgIAABYAAAAAAAAAAAAwwDgAAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-04T12:20:21.573Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Accountcontroller.cs",
+              "DocumentMoniker": "C:\\Users\\shind\\Documents\\git\\CodeSparkNET\\Controllers\\Accountcontroller.cs",
+              "RelativeDocumentMoniker": "Controllers\\Accountcontroller.cs",
+              "ToolTip": "C:\\Users\\shind\\Documents\\git\\CodeSparkNET\\Controllers\\Accountcontroller.cs",
+              "RelativeToolTip": "Controllers\\Accountcontroller.cs",
+              "ViewState": "AgIAAHwAAAAAAAAAAAAcwJMAAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-04T12:19:15.604Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\shind\\Documents\\git\\CodeSparkNET\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Users\\shind\\Documents\\git\\CodeSparkNET\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-04T12:19:10.539Z",
+              "EditorCaption": ""
             }
           ]
         },

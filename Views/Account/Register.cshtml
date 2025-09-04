@@ -19,8 +19,8 @@
     @Html.AntiForgeryToken()
 
     <div class="description">
-      <h2>Зарегистрируйся!</h2>
-      <h3>Уже есть аккаунт? <a href="@Url.Action("Login", "Account")" data-style="link-new" login hover>Войти</a></h3>
+      <h2>Регистрируйся!</h2>
+      <h3>Уже есть аккаунт?<a href="@Url.Action("Login", "Account")" data-style="link-new" login hover>Войти</a></h3>
     </div>
     <span asp-validation-summary="ModelOnly" class="error_message_form"></span>
     <div class="input_block">
@@ -37,26 +37,28 @@
       <div class="password-block">
         <span asp-validation-for="Password"></span>
         <label asp-for="Password" for="password">Пароль</label>
-        <input asp-for="Password" name="password" id="password" type="password" required hover>
+        <input asp-for="Password" name="password" id="password" type="password" required hover autocomplete="new-password">
       </div>
       <div class="confirm_password-block">
         <span asp-validation-for="ConfirmPassword"></span>
         <label asp-for="ConfirmPassword">Подтверждение пароля</label>
-        <input asp-for="ConfirmPassword" id="confirm_password" type="password" required hover>
+        <input asp-for="ConfirmPassword" id="confirm_password" type="password" required hover autocomplete="new-password">
       </div>
       <div class="req_checkbox_pp-block cb-container">
         <span asp-validation-for="ConfirmToS"></span>
-        <label asp-for="ConfirmToS" class="form-check-label">
+        <label asp-for="ConfirmToS" class="form-check-label" hover>
           <input asp-for="ConfirmToS" type="checkbox" required hover>
           <span>
-            Я принимаю условия <a href="@Url.Action("License", "Documents")">Лицензионного соглашения</a>,
-            <a href="@Url.Action("Privacy", "Documents")">Политики конфиденциальности</a> и даю согласие на обработку данных.
+            Я принимаю условия <a href="@Url.Action("License", "Documents")" hover data-style="link">Лицензионного соглашения</a>, <br>
+            <a href="@Url.Action("Privacy", "Documents")" data-style="link" hover>Политики конфиденциальности</a> и даю согласие на обработку данных.
           </span>
         </label>
       </div>
       <div class="checkbox_ads-block cb-container">
-        <label asp-for="ConfirmAd" class="form-check-label">
-          <input asp-for="ConfirmAd" type="checkbox" checked hover>Я даю согласие на получение рекламных сообщений и предложений.</label>
+        <label asp-for="ConfirmAd" class="form-check-label" hover>
+          <input asp-for="ConfirmAd" type="checkbox" checked hover>
+          <span>Я даю согласие на получение рекламных сообщений и предложений.</span>
+        </label>
       </div>
     </div>
     <button type="submit" data-style="hyper-button" hover>Зарегистрироваться</button>

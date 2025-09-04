@@ -7,7 +7,26 @@
 @if (!User?.Identity?.IsAuthenticated == true)
 {
     <a help data-style="on-hover" hover>Поддержка</a>
-    <a login href="@Url.Action("Login", "Account")" data-style="on-hover" hover>Войти</a>
+    <a login-asynk href="@Url.Action("Login", "Account")" data-style="on-hover" hover>Войти</a>
+    <a register-asynk href="@Url.Action("Register", "Account")" data-style="on-hover" hover>Регистрация</a>
+    <script defer>
+        document.addEventListener('DOMContentLoaded', () => {
+            const hasLoginContainer = document.querySelector('.__container.login') !== null;
+
+            const loginLink = document.querySelector('a[login-asynk]');
+            const registerLink = document.querySelector('a[register-asynk]');
+
+            if (!loginLink || !registerLink) return;
+
+            if (hasLoginContainer) {
+                loginLink.style.display = 'none';
+                registerLink.style.display = 'flex';
+            } else {
+                loginLink.style.display = 'flex';
+                registerLink.style.display = 'none';
+            }
+        });
+    </script>
 }
 else
 {

@@ -1,0 +1,262 @@
+html[cross-browser] {
+  body {
+    main[data-layout="main"][role="main"] {
+      .__container.login {
+        padding: 0px 10px;
+        width: 100%;
+        height: auto;
+        justify-content: space-evenly;
+
+        header {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin-top: 35px;
+
+          a {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            img {
+              width: clamp(5.625rem, 3.0531rem + 13.7168vw, 25rem);
+              max-width: 400px;
+            }
+          }
+        }
+
+        .form_controller {
+          max-width: 500px;
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          position: relative;
+          padding: 0px clamp(0.625rem, 0.0463rem + 3.0864vw, 3.75rem);
+          margin-top: 55px;
+          margin-bottom: 55px;
+
+          &::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 2px var(--palette-second) solid;
+            width: calc(20px + 100% + 20px);
+            height: calc(20px + 100% + 20px);
+            box-shadow: 0px 0px 20px 5px #dd92d775;
+            border-radius: 15px;
+          }
+
+          .description {
+            z-index: 2;
+            width: 100%;
+            height: auto;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            position: relative;
+
+            &::before {
+              content: "";
+              position: absolute;
+              bottom: -15px;
+              width: 90%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+              height: 1px;
+              border-radius: 10px;
+              background: var(--palette-custom);
+            }
+
+            h2 {
+              font-weight: normal;
+              font-family: 'Motserrat__static', sans-serif;
+            }
+
+            h3 {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              font-size: var(--fs-btn);
+              gap: 5px;
+            }
+          }
+
+          .error_message_form {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: center;
+            text-align: left;
+            width: 100%;
+            color: var(--error-message-form);
+            font-weight: 600;
+            z-index: 2;
+            margin-top: 15px;
+          }
+
+          .input_block {
+            margin-bottom: 10px;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            justify-content: flex-start;
+            width: 100%;
+
+            .not_margin_top {
+              margin-top: 0;
+            }
+
+            div {
+              display: flex;
+              margin: 5px 0px;
+              flex-direction: column;
+              align-items: stretch;
+
+              span {
+                display: flex;
+                flex-direction: row;
+                justify-content: flex-start;
+                align-items: center;
+                text-align: left;
+                width: 100%;
+                color: var(--error-message-form);
+                font-weight: normal;
+                margin-bottom: 2.5px;
+              }
+
+              label {
+                color: var(--palette-text-inv);
+                opacity: 1;
+                transform: translate(5px);
+                font-size: calc(0.8 * var(--fs-h3));
+                font-weight: 600;
+              }
+
+              input[type="password"],
+              input[type="text"],
+              input[type="email"] {
+                display: flex;
+                justify-content: center;
+                align-items: stretch;
+                width: 100%;
+                padding: 10px 15px;
+                border-radius: 8px;
+                border: var(--palette-acient) 2px solid;
+                background: var(--palette-main);
+                color: var(--palette-text-inv);
+                transition: .3s ease;
+                font-weight: 600;
+                opacity: 0.7;
+                font-size: var(--fs-h3);
+                cursor: pointer;
+
+                &:focus {
+                  cursor: text;
+                  opacity: 1;
+                  box-shadow: 0px 0px 10px 1px var(--palette-custom);
+                }
+              }
+
+              input.hover {
+                opacity: 1;
+              }
+            }
+
+            .cb-container {
+              margin-top: 7px;
+
+              label {
+                transform: translateX(0px);
+                display: flex;
+                align-items: center;
+                flex-direction: row;
+                word-spacing: nowrap;
+
+                span {
+                  color: var(--palette-text-inv);
+                  margin-left: 10px;
+                  display: block;
+                  margin-bottom: 0;
+                  opacity: 0.7;
+                  transition: var(--transition-time);
+                }
+
+                a {
+                  opacity: 1;
+                  display: inline;
+                  word-spacing: nowrap;
+                  font-size: var(--fs-p);
+                }
+
+                input[type="checkbox"] {
+                  width: calc(1.1 * var(--fs-btn));
+                  height: calc(1.1 * var(--fs-btn));
+                  cursor: pointer;
+                }
+
+                input[type="checkbox"].hover {
+                  background: var(--palette-acient);
+                  opacity: 1;
+                }
+              }
+
+              label.hover {
+                span {
+                  opacity: 1;
+                }
+              }
+            }
+          }
+
+          button[type="submit"] {
+            margin-top: 1px;
+            z-index: 2;
+          }
+
+          .fogot-block {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            z-index: 2;
+            margin-top: 15px;
+            gap: 10px;
+
+            span {
+              opacity: 0.8;
+            }
+          }
+        }
+
+        footer {
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+          gap: 35px;
+          justify-content: center;
+          align-items: center;
+          margin-bottom: 35px;
+
+          section {
+            display: flex;
+            width: 100%;
+            justify-content: center;
+            align-items: center;
+
+            &:nth-child(1) {
+              flex-wrap: wrap;
+              gap: 25px;
+            }
+
+            &:nth-child(2) {
+              opacity: 0.8;
+            }
+          }
+        }
+      }
+    }
+  }
+}

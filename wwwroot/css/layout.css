@@ -181,11 +181,14 @@ html[cross-browser][data-theme-color="dark"] {
       &::after {
         content: "";
         position: absolute;
-        width: 100%;
-        height: 2px;
-        bottom: -0.5px;
-        left: 0;
-        background: var(--palette-acient);
+        width: 19px;
+        height: 19px;
+        top: 50%;
+        right: 0;
+        transform: translate(110%, -50%);
+        background-color: var(--palette-acient);
+        mask: url(../assets/icon/link.icon-cube.svg) center/cover no-repeat;
+        -webkit-mask: url(../assets/icon/link.icon-cube.svg) center/cover no-repeat;
         transition: var(--transition-time);
         /* cube */
       }
@@ -199,8 +202,8 @@ html[cross-browser][data-theme-color="dark"] {
         right: 0;
         transform: translate(110%, -50%);
         background-color: var(--palette-acient);
-        mask: url(../assets/icon/link.icon-old.svg) center/cover no-repeat;
-        -webkit-mask: url(../assets/icon/link.icon-old.svg) center/cover no-repeat;
+        mask: url(../assets/icon/link.icon-arrow.svg) center/cover no-repeat;
+        -webkit-mask: url(../assets/icon/link.icon-arrow.svg) center/cover no-repeat;
         transition: var(--transition-time);
         /* arrow */
       }
@@ -214,7 +217,7 @@ html[cross-browser][data-theme-color="dark"] {
       }
 
       &::before {
-        transform: translate(125%, -65%);
+        transform: translate(120%, -60%);
         background-color: var(--palette-custom);
       }
     }
@@ -415,6 +418,7 @@ html[cross-browser][data-theme-color="white"] {
 
 html[data-device="desktop"] {
   header[data-layout="header"] {
+    z-index: 10;
     background: var(--palette-nav-site);
     padding: 5px 0px;
     display: flex;
@@ -534,11 +538,20 @@ html[data-device="desktop"] {
           }
         }
 
-        a[login] {
+        a[login-asynk] {
           margin-left: 15px;
 
           &::after {
             background-image: url(../assets/icon/nav_site.enter.svg);
+            filter: invert(1);
+          }
+        }
+
+        a[register-asynk] {
+          margin-left: 15px;
+
+          &::after {
+            background-image: url(../assets/icon/nav_site.reg.svg);
             filter: invert(1);
           }
         }
@@ -579,6 +592,7 @@ html[data-device="desktop"] {
   }
 
   footer[data-layout="footer"] {
+    z-index: 10;
     display: flex;
     flex-direction: row;
     justify-content: center;

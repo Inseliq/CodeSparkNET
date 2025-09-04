@@ -1,7 +1,7 @@
 @model CodeSparkNET.Dtos.Account.LoginDto
 
 @{
-  ViewData["Title"] = "Регистрация";
+  ViewData["Title"] = "Вход";
 }
 
 @section Styles {
@@ -20,42 +20,43 @@
 
     <div class="description">
       <h2>Войти</h2>
-      <h3>Нет аккаунта? <a href="@Url.Action("Register", "Account")" login>Создать аккаунт</a></h3>
+      <h3>Нет аккаунта? <a href="@Url.Action("Register", "Account")" login hover data-style="link-new">Создать
+          аккаунт</a></h3>
     </div>
     <span asp-validation-summary="ModelOnly" class="error_message_form"></span>
     <div class="input_block">
       <div class="email-block">
         <span asp-validation-for="Email"></span>
         <label asp-for="Email"></label>
-        <input asp-for="Email" id="email" type="text" required>
+        <input asp-for="Email" id="email" type="text" required hover>
       </div>
       <div class="password-block">
         <span asp-validation-for="Password"></span>
-        <label asp-for="Password"></label>
-        <input asp-for="Password" id="password" type="password" required>
+        <label asp-for="Password">Пароль</label>
+        <input asp-for="Password" id="password" type="password" required hover>
       </div>
-      <div class="checkbox_rm-block">
-        <label asp-for="RememberMe">
+      <div class="checkbox_rm-block cb-container">
+        <label asp-for="RememberMe" hover>
           <input asp-for="RememberMe" type="checkbox">
-          Запомнить меня.
+          <span>Запомнить меня.</span>
         </label>
       </div>
     </div>
-    <button type="submit" data-style="hb">Войти</button>
+    <button type="submit" data-style="hyper-button" hover>Войти</button>
     <div class="fogot-block">
       <span>
         Не удаётся войти?
-        <a asp-action="ForgotPassword" asp-controller="Account">
-          Восстановить аккаунт
-        </a>
       </span>
+      <a asp-action="ForgotPassword" asp-controller="Account" hover data-style="link-underline">
+      Восстановить аккаунт
+      </a>
     </div>
   </form>
 
   <footer>
     <section>
-      <a href="@Url.Action("License", "Documents")">Лицензионное соглашение</a>
-      <a href="@Url.Action("Privacy", "Documents")">Политика конфиденциальности</a>
+      <a href="@Url.Action("License", "Documents")" hover data-style="link-new">Лицензионное соглашение</a>
+      <a href="@Url.Action("Privacy", "Documents")" hover data-style="link-new">Политика конфиденциальности</a>
     </section>
     <section>
       © Code Spark, 2025. Все права на объекты прав третьих лиц принадлежат их законным правообладателям.

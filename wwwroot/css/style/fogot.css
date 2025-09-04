@@ -1,7 +1,7 @@
 html[cross-browser] {
   body {
     main[data-layout="main"][role="main"] {
-      .__container.register {
+      .__container.fogot_password {
         padding: 0px 10px;
         width: 100%;
         height: auto;
@@ -36,16 +36,15 @@ html[cross-browser] {
           margin-bottom: 55px;
 
           &::after {
-            z-index: 1;
             content: "";
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            border: 2px var(--palette-custom) solid;
+            border: 2px var(--palette-second) solid;
             width: calc(20px + 100% + 20px);
             height: calc(20px + 100% + 20px);
-            box-shadow: 0px 0px 20px 5px #9780e575;
+            box-shadow: 0px 0px 20px 5px #dd92d775;
             border-radius: 15px;
           }
 
@@ -71,16 +70,43 @@ html[cross-browser] {
             }
 
             h2 {
-              font-weight: normal;
-              font-family: 'Motserrat__static', sans-serif;
-            }
-
-            h3 {
+              text-align: center;
+              width: 100%;
               display: flex;
               justify-content: center;
               align-items: center;
-              font-size: var(--fs-btn);
-              gap: 5px;
+              font-weight: normal;
+              font-family: 'Motserrat__static', sans-serif;
+              position: relative;
+              margin-top: 75px;
+              margin-bottom: 35px;
+
+              &::after {
+                content: "";
+                position: absolute;
+                top: -100%;
+                left: 50%;
+                transform: translate(-50%, -75%);
+                transition: var(--transition-time);
+                background-color: var(--palette-acient);
+                mask: url(../../../assets/icon/restore.password.webp) center/cover no-repeat;
+                -webkit-mask: url(../../../assets/icon/restore.password.webp) center/cover no-repeat;
+                width: 65px;
+                height: 65px;
+              }
+
+              &::before {
+                content: "Введите адрес электронной почты, указанный при регистрации, и мы отправим вам ссылку для сброса пароля.";
+                font-size: var(--fs-small);
+                width: 100%;
+                opacity: 0.6;
+                position: absolute;
+                bottom: -100%;
+                left: 50%;
+                transform: translate(-50%, 25%);
+                transition: var(--transition-time);
+                color: var(--palette-text-inv);
+              }
             }
           }
 
@@ -145,7 +171,7 @@ html[cross-browser] {
                 width: 100%;
                 padding: 10px 15px;
                 border-radius: 8px;
-                border: var(--palette-second) 2px solid;
+                border: var(--palette-acient) 2px solid;
                 background: var(--palette-main);
                 color: var(--palette-text-inv);
                 transition: .3s ease;
@@ -157,7 +183,7 @@ html[cross-browser] {
                 &:focus {
                   cursor: text;
                   opacity: 1;
-                  box-shadow: 0px 0px 10px 1px var(--palette-second);
+                  box-shadow: 0px 0px 10px 1px var(--palette-custom);
                 }
               }
 
@@ -167,6 +193,8 @@ html[cross-browser] {
             }
 
             .cb-container {
+              margin-top: 7px;
+
               label {
                 transform: translateX(0px);
                 display: flex;
@@ -211,9 +239,123 @@ html[cross-browser] {
           }
 
           button[type="submit"] {
-            margin-top: 10px;
+            margin-top: 1px;
             z-index: 2;
           }
+
+          .back_to_login-block {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            z-index: 2;
+            margin-top: 15px;
+            gap: 10px;
+          }
+        }
+
+        .form_controller.hover {
+          & .description {
+            & h2 {
+              &::after {
+                transform: translate(-50%, -80%);
+                background-color: var(--palette-custom);
+              }
+
+              &::before {
+                opacity: 0.9;
+              }
+            }
+          }
+        }
+
+        .js-window[js-window-restore-password] {
+          --color-fogot-form-asynk: #1E7F34;
+          position: fixed;
+          inset: 0;
+          background: #00000045;
+          z-index: 3;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          transition: var(--transition-time);
+
+          .description {
+            z-index: 4;
+            width: auto;
+            height: auto;
+            display: flex;
+            flex-direction: column;
+            padding-inline: 70px;
+            padding-top: 105px;
+            padding-bottom: 37.5px;
+            background: var(--palette-main);
+            transition: var(--transition-time);
+            border-radius: 15px;
+            border: var(--color-fogot-form-asynk) 2px solid;
+
+            h2 {
+              font-size: var(--fs-h2);
+              color: var(--color-fogot-form-asynk);
+              position: relative;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              transition: var(--transition-time);
+
+              &::after {
+                content: "";
+                position: absolute;
+                top: -100%;
+                left: 50%;
+                transform: translate(-50%, -75%);
+                transition: var(--transition-time);
+                background-color: var(--color-fogot-form-asynk);
+                mask: url(../../../assets/icon/message.sent.svg) center / cover no-repeat;
+                width: 67px;
+                height: 65px;
+              }
+
+              &::before {
+                content: "Пожалуйста, проверьте свой почтовый ящик (и папку со спамом)";
+                position: absolute;
+                bottom: -100%;
+                left: 50%;
+                transform: translate(-50%, 75%);
+                transition: var(--transition-time);
+                color: var(--palette-text-inv);
+                opacity: 0.8;
+                text-align: center;
+                font-weight: normal;
+                font-size: var(--fs-small);
+                width: 100%;
+              }
+            }
+
+            [data-style="hyper-button"] {
+              margin-top: 75px;
+
+              span {
+                z-index: 5;
+              }
+            }
+
+          }
+
+          .description.hover {
+            box-shadow: 0px 0px 20px 1px var(--color-fogot-form-asynk);
+            --color-fogot-form-asynk: #2ECC71;
+          }
+        }
+
+        .js-window[js-window-restore-password].hidden {
+          opacity: 0;
+          visibility: hidden;
+        }
+
+        .js-window[js-window-restore-password].visible {
+          opacity: 1;
+          visibility: visible;
         }
 
         footer {

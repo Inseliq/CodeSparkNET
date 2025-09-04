@@ -1,6 +1,8 @@
 using System.Numerics;
 using CodeSparkNET.Data;
+using CodeSparkNET.Interfaces;
 using CodeSparkNET.Models;
+using CodeSparkNET.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -49,6 +51,9 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
     // for production
     options.Secure = CookieSecurePolicy.Always;
 });
+
+//Add scoped
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 var app = builder.Build();
 

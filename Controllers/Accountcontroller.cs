@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using CodeSparkNET.Dtos.Account;
+using CodeSparkNET.Interfaces;
 using CodeSparkNET.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -13,11 +14,14 @@ namespace CodeSparkNET.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
 
-        public AccountController(ILogger<AccountController> logger, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
+        private readonly IAccountService _accountService;
+
+        public AccountController(ILogger<AccountController> logger, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IAccountService accountService)
         {
             _logger = logger;
             _userManager = userManager;
             _signInManager = signInManager;
+            _accountService = accountService;
         }
 
         [HttpGet]
@@ -30,9 +34,6 @@ namespace CodeSparkNET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterDto registerDto)
         {
-            if (!ModelState.IsValid)
-                return View(registerDto);
-
             try
             {
                 if (registerDto.ConfirmToS != true)
@@ -129,6 +130,31 @@ namespace CodeSparkNET.Controllers
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordDto forgotPasswordDto)
+        {
+            if (!ModelState.IsValid)
+                return View(forgotPasswordDto);
+
+            await _accountService.SendPasswordResetLinkAsync(forgotPasswordDto.Email);
+
+            return Ok();
+        }
+
+        [HttpGet]
+        public IActionResult ResetPassword(string email, string token)
+        {
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(token))
+                return BadRequest("Ошибка сброса пароля");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

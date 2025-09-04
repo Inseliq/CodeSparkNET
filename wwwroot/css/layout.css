@@ -20,6 +20,8 @@ html[data-theme-color="dark"] {
   --palette-custom: #b9aaee;
   --palette-color-tc: #636363;
   --palette-color-tc_hover: #909090;
+  --error-message-form: #db3b3b;
+  --error-message-form-input: var(--error-message-form);
 }
 
 html[cross-browser][data-theme-color="dark"] {

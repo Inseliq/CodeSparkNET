@@ -20,9 +20,9 @@
 
     <div class="description">
       <h2>Зарегистрируйся!</h2>
-      <h3>Уже есть аккаунт <a href="@Url.Action("Login", "Account")" login>Войти</a></h3>
+      <h3>Уже есть аккаунт? <a href="@Url.Action("Login", "Account")" data-style="link-new" login hover>Войти</a></h3>
     </div>
-    <span asp-validation-summary="ModelOnly" class="error_message_reg_form"></span>
+    <span asp-validation-summary="ModelOnly" class="error_message_form">123</span>
     <div class="input_block">
       <div class="names-block">
         <span asp-validation-for="UserName"></span>
@@ -59,7 +59,7 @@
           предложений.</label>
       </div>
     </div>
-    <button type="submit" data-style="hb">Зарегистрироваться</button>
+    <button type="submit" data-style="hyper-button" hover>Зарегистрироваться</button>
   </form>
 
   <footer>

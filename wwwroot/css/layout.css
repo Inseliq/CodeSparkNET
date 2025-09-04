@@ -38,39 +38,42 @@ html[cross-browser][data-theme-color="dark"] {
     --color-button: var(--palette-text-inv);
 
     [data-style="button"] {
-      background: var(--color-button) !important;
-      color: var(--color-button) !important;
+      width: 100%;
+      display: inline-block;
+      text-align: center;
+      background: var(--color-button);
+      color: var(--palette-acient);
       transition: .3s ease-in-out;
       padding: 10px 20px;
       border-radius: 10px;
       font-weight: 700;
       border: var(--border-button) 2px solid;
       word-spacing: nowrap;
+    }
 
-      &:hover {
-        background: var(--border-button);
-      }
+    [data-style="button"].hover {
+      color: var(--palette-text-inv);
+      background: var(--border-button);
     }
 
     [data-style="inv-button"] {
-      background: var(--border-button) !important;
-      color: var(--color-button) !important;
-      transition: .3s ease-in-out;
+      background: var(--border-button);
+      color: var(--color-button);
+      transition: var(--transition-time);
       padding: 10px 20px;
       border-radius: 10px;
+      display: inline-block;
+      width: 100%;
       font-weight: 700;
       border: var(--border-button) 2px solid;
       word-spacing: nowrap;
+      text-align: center;
+      margin-inline: 5px;
+    }
 
-      &:hover {
-        color: var(--border-button);
-        background: var(--palette-text-inv);
-      }
-
-      &:active {
-        color: var(--border-button);
-        background: var(--palette-text-inv);
-      }
+    [data-style="inv-button"].hover {
+      color: var(--palette-text-inv);
+      background: var(--palette-main);
     }
 
     [data-style="link"] {
@@ -182,6 +185,7 @@ html[cross-browser][data-theme-color="dark"] {
         left: 0;
         background: var(--palette-acient);
         transition: var(--transition-time);
+        /* cube */
       }
 
       &::before {
@@ -196,6 +200,7 @@ html[cross-browser][data-theme-color="dark"] {
         mask: url(../assets/icon/link.icon-old.svg) center/cover no-repeat;
         -webkit-mask: url(../assets/icon/link.icon-old.svg) center/cover no-repeat;
         transition: var(--transition-time);
+        /* arrow */
       }
     }
 
@@ -223,7 +228,7 @@ html[cross-browser][data-theme-color="dark"] {
       width: 100%;
       padding: 12.5px;
       transition:
-      --color-gradient-for-hyperbutton_start 0.4s, --color-gradient-for-hyperbutton_end 0.4s;
+        --color-gradient-for-hyperbutton_start 0.4s, --color-gradient-for-hyperbutton_end 0.4s;
       position: relative;
       overflow: hidden;
       border-radius: 3px;
@@ -280,6 +285,7 @@ html[cross-browser][data-theme-color="dark"] {
     button[theme-color].hover {
       border-color: var(--palette-color-tc_hover) !important;
       box-shadow: 0px 0px 10px 0px #ffffff40;
+
       &::before {
         border-color: var(--palette-color-tc_hover) !important;
       }

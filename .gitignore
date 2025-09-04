@@ -541,3 +541,5 @@ FodyWeavers.xsd
 /obj
 /bin
 /obj
+/bin/Debug
+/bin/Debug/net9.0

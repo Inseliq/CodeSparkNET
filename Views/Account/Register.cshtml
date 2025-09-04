@@ -22,41 +22,41 @@
       <h2>Зарегистрируйся!</h2>
       <h3>Уже есть аккаунт? <a href="@Url.Action("Login", "Account")" data-style="link-new" login hover>Войти</a></h3>
     </div>
-    <span asp-validation-summary="ModelOnly" class="error_message_form">123</span>
+    <span asp-validation-summary="ModelOnly" class="error_message_form"></span>
     <div class="input_block">
       <div class="names-block">
         <span asp-validation-for="UserName"></span>
         <label asp-for="UserName">Имя пользователя</label>
-        <input asp-for="UserName" id="names" type="text" required>
+        <input asp-for="UserName" id="names" type="text" required hover>
       </div>
-      <div class="email-block">
-        <span asp-validation-for="Email"></span>
+      <div class="email-block not_margin_top">
+        <span asp-validation-for="Email" class="not_margin_top"></span>
         <label asp-for="Email">Email</label>
-        <input asp-for="Email" id="email" type="email" required>
+        <input asp-for="Email" id="email" type="email" required hover>
       </div>
       <div class="password-block">
         <span asp-validation-for="Password"></span>
-        <label asp-for="Password">Пароль</label>
-        <input asp-for="Password" id="password" type="password" required>
+        <label asp-for="Password" for="password">Пароль</label>
+        <input asp-for="Password" name="password" id="password" type="password" required hover>
       </div>
       <div class="confirm_password-block">
         <span asp-validation-for="ConfirmPassword"></span>
         <label asp-for="ConfirmPassword">Подтверждение пароля</label>
-        <input asp-for="ConfirmPassword" id="confirm_password" type="password" required>
+        <input asp-for="ConfirmPassword" id="confirm_password" type="password" required hover>
       </div>
-      <div class="req_checkbox_pp-block">
+      <div class="req_checkbox_pp-block cb-container">
         <span asp-validation-for="ConfirmToS"></span>
         <label asp-for="ConfirmToS" class="form-check-label">
-          <input asp-for="ConfirmToS" type="checkbox" required>
-          Я принимаю условия <a href="@Url.Action("License", "Documents")">Лицензионного соглашения</a>,
-          <a href="@Url.Action("Privacy", "Documents")">Политики конфиденциальности</a> и даю согласие на обработку
-          данных.
+          <input asp-for="ConfirmToS" type="checkbox" required hover>
+          <span>
+            Я принимаю условия <a href="@Url.Action("License", "Documents")">Лицензионного соглашения</a>,
+            <a href="@Url.Action("Privacy", "Documents")">Политики конфиденциальности</a> и даю согласие на обработку данных.
+          </span>
         </label>
       </div>
-      <div class="checkbox_ads-block">
+      <div class="checkbox_ads-block cb-container">
         <label asp-for="ConfirmAd" class="form-check-label">
-          <input asp-for="ConfirmAd" type="checkbox">Я даю согласие на получение рекламных сообщений и
-          предложений.</label>
+          <input asp-for="ConfirmAd" type="checkbox" checked hover>Я даю согласие на получение рекламных сообщений и предложений.</label>
       </div>
     </div>
     <button type="submit" data-style="hyper-button" hover>Зарегистрироваться</button>

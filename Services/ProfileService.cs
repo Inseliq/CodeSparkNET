@@ -42,5 +42,18 @@ namespace CodeSparkNET.Services
                 Email = user.Email
             };
         }
+
+        public async Task<IdentityResult> UpdatePersonalProfileAsync(string email,UpdatePersonalProfileDto model)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user == null && model == null)
+                return null;
+
+            user.UserName = model.UserName;
+            user.Email = model.Email;
+
+            return await _userManager.UpdateAsync(user);
+        }
     }
 }

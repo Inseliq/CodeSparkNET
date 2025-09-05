@@ -22,7 +22,7 @@
       <h2>Регистрируйся!</h2>
       <h3>Уже есть аккаунт?<a href="@Url.Action("Login", "Account")" data-style="link-new" login hover>Войти</a></h3>
     </div>
-    <span asp-validation-summary="ModelOnly" class="error_message_form"></span>
+    <div asp-validation-summary="All" class="error_message_form"></div>
     <div class="input_block">
       <div class="names-block">
         <span asp-validation-for="UserName"></span>

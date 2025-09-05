@@ -55,6 +55,7 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
 //Add scoped
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IProfileService, ProfileService>();
 
 var app = builder.Build();
 

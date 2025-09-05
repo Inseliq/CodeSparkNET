@@ -145,7 +145,6 @@ namespace CodeSparkNET.Controllers
             return BadRequest(new { success = false, errors });
         }
 
-
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

@@ -1,4 +1,9 @@
+@using Microsoft.AspNetCore.Identity
 @model CodeSparkNET.Dtos.Profile.ProfileDto
+@inject UserManager<AppUser> UserManager
+@{
+    var user = UserManager.GetUserAsync(User).Result;
+}
 @{
     ViewData["Title"] = "Profile";
 }
@@ -6,6 +11,24 @@
 <h1>@ViewData["Title"]</h1>
 
 <div>
+    @if (UserManager.IsEmailConfirmedAsync(user).Result is false)
+    {
+        <div class="alert alert-warning" role="alert">
+            Ваш email не подтвержден.
+            <form asp-action="SendEmailConfirmation" asp-controller="Profile" method="post" class="d-inline">
+                @Html.AntiForgeryToken()
+
+                <!-- TODO:Send email via js and remove this input -->
+                <input type="text" name="email" value="@ViewBag.Email" hidden />
+                <button type="submit" class="btn btn-link p-0 m-0 align-baseline">Отправить письмо с
+                    подтверждением</button>.
+            </form>
+        </div>
+    }
+    else
+    {
+        <div>Ваш email подтвержден</div>
+    }
     <form asp-action="UpdateProfile" asp-controller="Profile" method="post" class="form_controller">
         @Html.AntiForgeryToken()
 

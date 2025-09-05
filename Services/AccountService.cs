@@ -1,13 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CodeSparkNET.Dtos.Account;
+using CodeSparkNET.Dtos.Profile;
 using CodeSparkNET.Interfaces;
 using CodeSparkNET.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace CodeSparkNET.Services
 {
@@ -80,31 +82,6 @@ namespace CodeSparkNET.Services
             await _signInManager.SignOutAsync();
         }
 
-
-        public async Task<IdentityResult> ResetPasswordAsync(ResetPasswordDto model)
-        {
-            // Find the user associated with the provided email
-            var user = await _userManager.FindByEmailAsync(model.Email);
-            // If user not found, return a generic failure
-            if (user == null)
-                return IdentityResult.Failed(new IdentityError { Description = "Invalid request." });
-
-            var decodedBytes = WebEncoders.Base64UrlDecode(model.Token);
-            var decodedToken = Encoding.UTF8.GetString(decodedBytes);
-
-            // Attempt reset user password
-            var result = await _userManager.ResetPasswordAsync(user, decodedToken, model.Password);
-
-            // If successful, update the Security Stamp to invalidate any active sessions or tokens
-            if (result.Succeeded)
-            {
-                await _userManager.UpdateSecurityStampAsync(user);
-                return result;
-            }
-
-            return result;
-        }
-
         public async Task<bool> SendPasswordResetLinkAsync(string email)
         {
             //Get user
@@ -127,6 +104,93 @@ namespace CodeSparkNET.Services
             await _emailService.SendResetPasswordEmailAsync(user.Email!, user.UserName, resetLink);
 
             return true;
+        }
+
+        public async Task<IdentityResult> ResetPasswordAsync(ResetPasswordDto model)
+        {
+            // Find the user associated with the provided email
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            // If user not found, return a generic failure
+            if (user is null)
+                return IdentityResult.Failed(new IdentityError { Description = "Invalid request." });
+
+            var decodedBytes = WebEncoders.Base64UrlDecode(model.Token);
+            var decodedToken = Encoding.UTF8.GetString(decodedBytes);
+
+            // Attempt reset user password
+            var result = await _userManager.ResetPasswordAsync(user, decodedToken, model.Password);
+
+            // If successful, update the Security Stamp to invalidate any active sessions or tokens
+            if (result.Succeeded)
+            {
+                await _userManager.UpdateSecurityStampAsync(user);
+                return result;
+            }
+
+            return result;
+        }
+
+        public async Task<IdentityResult> ChangePasswordAsync(string email, ChangePasswordDto model)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user == null)
+                return null;
+
+            return await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+        }
+
+        public async Task<bool> SendEmailConfirmationLinkAsync(string email)
+        {
+            //Get user
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user is null || (await _userManager.IsEmailConfirmedAsync(user)))
+                return false;
+
+            //Generate unique token
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+            //Encoded token
+            var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
+
+            //Constructing reset url link
+            var baseUrl = _configuration["AppSettings:BaseUrl"]?.TrimEnd('/');
+            var emailEscaped = System.Net.WebUtility.UrlEncode(user.Email);
+            var confirmationLink = $"{baseUrl}/Profile/ConfirmEmail/?email={emailEscaped}&token={encodedToken}";
+
+            await _emailService.SendEmailConfirmationAsync(user.Email!, user.UserName, confirmationLink);
+
+            return true;
+        }
+
+        public async Task<IdentityResult> ConfirmEmailAsync(ConfirmEmailDto model)
+        {
+            // Find the user associated with the provided email
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            // If user not found, return a generic failure
+            if (user is null)
+                return IdentityResult.Failed(new IdentityError { Description = "Invalid request." });
+
+            var decodedBytes = WebEncoders.Base64UrlDecode(model.Token);
+            var decodedToken = Encoding.UTF8.GetString(decodedBytes);
+
+            // Attempt to confirm the user's email
+            var result = await _userManager.ConfirmEmailAsync(user, decodedToken);
+
+            // If successful, update the Security Stamp to invalidate any active sessions or tokens
+            if (result.Succeeded)
+            {
+                await _userManager.UpdateSecurityStampAsync(user);
+                return result;
+            }
+
+            return result;
+        }
+
+        public async Task<AppUser> GetUserAsync(ClaimsPrincipal user)
+        {
+            return await _userManager.GetUserAsync(user);
         }
     }
 }

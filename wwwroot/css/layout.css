@@ -1,11 +1,11 @@
 html[data-theme-color="white"] {
-  --palette-main: #F5F1EE;
-  --palette-acient: #ECC1A1;
-  --palette-second: #DAC8BE;
-  --palette-nav-text: #58626C;
-  --palette-text-inv: #FFFFFF;
+  --palette-main: #f5f1ee;
+  --palette-acient: #ecc1a1;
+  --palette-second: #dac8be;
+  --palette-nav-text: #58626c;
+  --palette-text-inv: #ffffff;
   --palette-shadow: #58626c90;
-  --palette-custom: #EBCCB4;
+  --palette-custom: #ebccb4;
 }
 
 html[data-theme-color="dark"] {
@@ -15,7 +15,7 @@ html[data-theme-color="dark"] {
   --palette-custom-second: #dd92d7;
   --palette-nav-text: #1f1f1f;
   --palette-nav-site: #191919;
-  --palette-text-inv: #FFFFFF;
+  --palette-text-inv: #ffffff;
   --palette-shadow: #ffffff90;
   --palette-custom: #b9aaee;
   --palette-color-tc: #636363;
@@ -45,7 +45,7 @@ html[cross-browser][data-theme-color="dark"] {
       text-align: center;
       background: var(--color-button);
       color: var(--palette-acient);
-      transition: .3s ease-in-out;
+      transition: 0.3s ease-in-out;
       padding: 10px 20px;
       border-radius: 10px;
       font-weight: 700;
@@ -226,14 +226,19 @@ html[cross-browser][data-theme-color="dark"] {
       display: inline-block;
       text-transform: uppercase;
       will-change: transform;
-      background: linear-gradient(45deg, var(--color-gradient-for-hyperbutton_start), var(--color-gradient-for-hyperbutton_end));
+      background: linear-gradient(
+        45deg,
+        var(--color-gradient-for-hyperbutton_start),
+        var(--color-gradient-for-hyperbutton_end)
+      );
       color: var(--color-button);
       border: var(--border-button) 2px solid;
       font-weight: 700;
       width: 100%;
       padding: 12.5px;
       transition:
-        --color-gradient-for-hyperbutton_start 0.4s, --color-gradient-for-hyperbutton_end 0.4s;
+        --color-gradient-for-hyperbutton_start 0.4s,
+        --color-gradient-for-hyperbutton_end 0.4s;
       position: relative;
       overflow: hidden;
       border-radius: 3px;
@@ -276,8 +281,8 @@ html[cross-browser][data-theme-color="dark"] {
     }
 
     [data-style="hyper-button"].hover {
-      --color-gradient-for-hyperbutton_start: #1f1f1fFF;
-      --color-gradient-for-hyperbutton_end: #1f1f1fFF;
+      --color-gradient-for-hyperbutton_start: #1f1f1fff;
+      --color-gradient-for-hyperbutton_end: #1f1f1fff;
     }
 
     button[theme-color] {
@@ -298,7 +303,7 @@ html[cross-browser][data-theme-color="dark"] {
 
     [data-style="on-hover"] {
       opacity: 0.8;
-      transition: .3s ease;
+      transition: 0.3s ease;
     }
 
     [data-style="on-hover"].hover {
@@ -325,7 +330,7 @@ html[cross-browser][data-theme-color="white"] {
     [data-style="button"] {
       background: var(--color-button) !important;
       color: var(--color-button) !important;
-      transition: .3s ease-in-out;
+      transition: 0.3s ease-in-out;
       padding: 10px 20px;
       border-radius: 10px;
       font-weight: 700;
@@ -335,7 +340,7 @@ html[cross-browser][data-theme-color="white"] {
     [data-style="inv-button"] {
       background: var(--border-button) !important;
       color: var(--color-button) !important;
-      transition: .3s ease-in-out;
+      transition: 0.3s ease-in-out;
       padding: 10px 20px;
       border-radius: 10px;
       font-weight: 700;
@@ -345,7 +350,7 @@ html[cross-browser][data-theme-color="white"] {
     [data-style="link"] {
       background: none !important;
       color: var(--color-link);
-      transition: .3s ease-in-out;
+      transition: 0.3s ease-in-out;
       font-weight: normal;
       border: none;
       text-decoration: underline;
@@ -364,7 +369,7 @@ html[cross-browser][data-theme-color="white"] {
       border: var(--border-button) 2px solid;
       font-weight: 700;
       padding: 12.5px 60px;
-      transition: .3s ease;
+      transition: 0.3s ease;
       position: relative;
       overflow: hidden;
       border-radius: 3px;
@@ -490,7 +495,7 @@ html[data-device="desktop"] {
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: .3s ease;
+            transition: 0.3s ease;
           }
         }
 
@@ -538,7 +543,7 @@ html[data-device="desktop"] {
           }
         }
 
-        a[login-asynk] {
+        a[login-async] {
           margin-left: 15px;
 
           &::after {
@@ -547,7 +552,7 @@ html[data-device="desktop"] {
           }
         }
 
-        a[register-asynk] {
+        a[register-async] {
           margin-left: 15px;
 
           &::after {
@@ -562,15 +567,17 @@ html[data-device="desktop"] {
       position: absolute;
       visibility: hidden;
       opacity: 0;
-      transition: .3s ease;
+      transition: 0.3s ease;
     }
 
     div[js-window-select-app] {
-      div[window] {}
+      div[window] {
+      }
     }
 
     div[js-window-select-service] {
-      div[window] {}
+      div[window] {
+      }
     }
   }
 
@@ -633,11 +640,11 @@ html[data-device="desktop"] {
           --btn-size-tc: 19px;
           background: var(--palette-main);
           border: 1px solid var(--palette-color-tc);
-          height: calc(1.1* var(--btn-size-tc));
+          height: calc(1.1 * var(--btn-size-tc));
           width: calc(2.2 * var(--btn-size-tc));
           border-radius: 10em;
           position: relative;
-          transition: .4s ease;
+          transition: 0.4s ease;
 
           &::before {
             position: absolute;
@@ -648,7 +655,7 @@ html[data-device="desktop"] {
             height: 14px;
             border: 1px solid var(--palette-color-tc);
             border-radius: 10em;
-            transition: .4s ease;
+            transition: 0.4s ease;
             will-change: trasform;
             background-position: center;
             background-repeat: no-repeat;
@@ -702,15 +709,15 @@ html[data-device="desktop"] {
 }
 
 @property --color-gradient-for-hyperbutton_start {
-  syntax: '<color>';
+  syntax: "<color>";
   inherits: false;
-  initial-value: #9780e5FF;
+  initial-value: #9780e5ff;
 }
 
 @property --color-gradient-for-hyperbutton_end {
-  syntax: '<color>';
+  syntax: "<color>";
   inherits: false;
-  initial-value: #da6ad0FF;
+  initial-value: #da6ad0ff;
 }
 
 html,

@@ -1,7 +1,7 @@
 html[cross-browser] {
   body {
     main[data-layout="main"][role="main"] {
-      .__container.fogot_password {
+      .__container.forgot_password {
         padding: 0px 10px;
         width: 100%;
         height: auto;
@@ -270,7 +270,7 @@ html[cross-browser] {
         }
 
         .js-window[js-window-restore-password] {
-          --color-fogot-form-asynk: #1E7F34;
+          --color-forgot-form-async: #1E7F34;
           position: fixed;
           inset: 0;
           background: #00000045;
@@ -292,11 +292,11 @@ html[cross-browser] {
             background: var(--palette-main);
             transition: var(--transition-time);
             border-radius: 15px;
-            border: var(--color-fogot-form-asynk) 2px solid;
+            border: var(--color-forgot-form-async) 2px solid;
 
             h2 {
               font-size: var(--fs-h2);
-              color: var(--color-fogot-form-asynk);
+              color: var(--color-forgot-form-async);
               position: relative;
               display: flex;
               justify-content: center;
@@ -310,7 +310,7 @@ html[cross-browser] {
                 left: 50%;
                 transform: translate(-50%, -75%);
                 transition: var(--transition-time);
-                background-color: var(--color-fogot-form-asynk);
+                background-color: var(--color-forgot-form-async);
                 mask: url(../../../assets/icon/message.sent.svg) center / cover no-repeat;
                 width: 67px;
                 height: 65px;
@@ -343,8 +343,8 @@ html[cross-browser] {
           }
 
           .description.hover {
-            box-shadow: 0px 0px 20px 1px var(--color-fogot-form-asynk);
-            --color-fogot-form-asynk: #2ECC71;
+            box-shadow: 0px 0px 20px 1px var(--color-forgot-form-async);
+            --color-forgot-form-async: #2ECC71;
           }
         }
 

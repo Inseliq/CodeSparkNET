@@ -57,6 +57,7 @@ html[cross-browser] {
             justify-content: space-between;
             margin-bottom: 10px;
             position: relative;
+            gap: 30px;
 
             &::before {
               content: "";
@@ -72,7 +73,7 @@ html[cross-browser] {
 
             h2 {
               font-weight: normal;
-              font-family: 'Motserrat__static', sans-serif;
+              font-family: "Motserrat__static", sans-serif;
             }
 
             h3 {
@@ -148,7 +149,7 @@ html[cross-browser] {
                 border: var(--palette-second) 2px solid;
                 background: var(--palette-main);
                 color: var(--palette-text-inv);
-                transition: .3s ease;
+                transition: 0.3s ease;
                 font-weight: 600;
                 opacity: 0.7;
                 font-size: var(--fs-h3);

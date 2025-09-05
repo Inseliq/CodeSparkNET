@@ -37,20 +37,24 @@
       <div class="password-block">
         <span asp-validation-for="Password"></span>
         <label asp-for="Password" for="password">Пароль</label>
-        <input asp-for="Password" name="password" id="password" type="password" required hover autocomplete="new-password">
+        <input asp-for="Password" name="password" id="password" type="password" required hover
+          autocomplete="new-password">
       </div>
       <div class="confirm_password-block">
         <span asp-validation-for="ConfirmPassword"></span>
         <label asp-for="ConfirmPassword">Подтверждение пароля</label>
-        <input asp-for="ConfirmPassword" id="confirm_password" type="password" required hover autocomplete="new-password">
+        <input asp-for="ConfirmPassword" id="confirm_password" type="password" required hover
+          autocomplete="new-password">
       </div>
       <div class="req_checkbox_pp-block cb-container">
         <span asp-validation-for="ConfirmToS"></span>
         <label asp-for="ConfirmToS" class="form-check-label" hover>
           <input asp-for="ConfirmToS" type="checkbox" required hover>
           <span>
-            Я принимаю условия <a href="@Url.Action("License", "Documents")" hover data-style="link">Лицензионного соглашения</a>, <br>
-            <a href="@Url.Action("Privacy", "Documents")" data-style="link" hover>Политики конфиденциальности</a> и даю согласие на обработку данных.
+            Я принимаю условия <a href="@Url.Action("License", "Documents")" hover data-style="link">Лицензионного
+              соглашения</a>, <br>
+            <a href="@Url.Action("Privacy", "Documents")" data-style="link" hover>Политики конфиденциальности</a> и даю
+            согласие на обработку данных.
           </span>
         </label>
       </div>

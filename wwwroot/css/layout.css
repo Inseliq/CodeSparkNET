@@ -1,3 +1,4 @@
+/*layout.css*/
 html[data-theme-color="white"] {
   --palette-main: #f5f1ee;
   --palette-acient: #ecc1a1;
@@ -241,7 +242,7 @@ html[cross-browser][data-theme-color="dark"] {
         --color-gradient-for-hyperbutton_end 0.4s;
       position: relative;
       overflow: hidden;
-      border-radius: 3px;
+      border-radius: 10px;
       text-align: center;
       word-spacing: nowrap;
       z-index: 2;

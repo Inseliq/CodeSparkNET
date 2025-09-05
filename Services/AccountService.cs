@@ -17,26 +17,24 @@ namespace CodeSparkNET.Services
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IEmailService _emailService;
         private readonly IConfiguration _configuration;
-        private readonly ILogger<AccountService> _logger;
 
         public AccountService(
             UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager,
             IEmailService emailService,
-            IConfiguration configuration,
-            ILogger<AccountService> logger)
+            IConfiguration configuration
+            )
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailService = emailService;
             _configuration = configuration;
-            _logger = logger;
         }
 
         public async Task<IdentityResult> RegisterAsync(RegisterDto dto, string loginLink)
         {
             if (await _userManager.FindByEmailAsync(dto.Email) != null)
-                return IdentityResult.Failed(new IdentityError { Description = "Пользователь с таким email уже зарегистрирован." });
+                return IdentityResult.Failed(new IdentityError { Description = "РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ СЃ С‚Р°РєРёРј email СѓР¶Рµ Р·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅ." });
 
             var user = new AppUser
             {
@@ -52,19 +50,13 @@ namespace CodeSparkNET.Services
             if (!roleResult.Succeeded)
             {
                 await _userManager.DeleteAsync(user);
-                return IdentityResult.Failed(new IdentityError { Description = "Не удалось назначить роль пользователю." });
+                return IdentityResult.Failed(new IdentityError { Description = "РћС€РёР±РєР° СЃРѕР·РґР°РЅРёСЏ Р°РєРєР°СѓРЅС‚Р°." });
             }
 
-            try
+
+            if (!string.IsNullOrEmpty(loginLink))
             {
-                if (!string.IsNullOrEmpty(loginLink))
-                {
-                    await _emailService.SendAccountCratedEmailAsync(user.Email!, user.UserName, loginLink);
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogWarning(ex, "Не удалось отправить welcome email для {Email}", user.Email);
+                await _emailService.SendAccountCratedEmailAsync(user.Email!, user.UserName, loginLink);
             }
 
             return IdentityResult.Success;
@@ -114,7 +106,7 @@ namespace CodeSparkNET.Services
             //Get user
             var user = await _userManager.FindByEmailAsync(email);
 
-            if (user == null || (!await _userManager.IsEmailConfirmedAsync(user)))
+            if (user == null || (await _userManager.IsEmailConfirmedAsync(user))) //TODO: add inverse(add !) in email.IsConfirmed
                 return false;
 
             //Generate unique token

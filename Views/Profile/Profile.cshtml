@@ -1,0 +1,62 @@
+@model CodeSparkNET.Dtos.Profile.ProfileDto
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <form asp-action="UpdateProfile" asp-controller="Profile" method="post" class="form_controller">
+        @Html.AntiForgeryToken()
+
+        <div class="description">
+            <h2>Личные данные!</h2>
+        </div>
+        <span asp-validation-summary="ModelOnly" class="error_message_form"></span>
+        <div class="input_block">
+            <div class="names-block">
+                <span asp-validation-for="UpdatePersonalProfileDto.UserName"></span>
+                <label asp-for="UpdatePersonalProfileDto.UserName">@ViewBag.UserName</label>
+                <input asp-for="UpdatePersonalProfileDto.UserName" id="names" type="text" required hover>
+            </div>
+            <div class="email-block not_margin_top">
+                <span asp-validation-for="UpdatePersonalProfileDto.Email" class="not_margin_top"></span>
+                <label asp-for="UpdatePersonalProfileDto.Email">@ViewBag.Email</label>
+                <input asp-for="UpdatePersonalProfileDto.Email" id="email" type="email" required hover>
+            </div>
+            <div class="password-block">
+                @ViewBag.Role
+            </div>
+        </div>
+        <button type="submit" data-style="hyper-button" hover>Сохранить</button>
+    </form>
+    <form asp-action="ChangePAssword" asp-controller="Profile" method="post" class="form_controller">
+        @Html.AntiForgeryToken()
+
+        <div class="description">
+            <h2>Смена пароля</h2>
+        </div>
+        <span asp-validation-summary="ModelOnly" class="error_message_form"></span>
+        <div class="input_block">
+            <div class="names-block">
+                <span asp-validation-for="ChangePasswordDto.CurrentPassword"></span>
+                <label asp-for="ChangePasswordDto.CurrentPassword">Текущий пароль</label>
+                <input asp-for="ChangePasswordDto.CurrentPassword" id="names" type="password" required hover>
+            </div>
+            <div class="email-block not_margin_top">
+                <span asp-validation-for="ChangePasswordDto.NewPassword" class="not_margin_top"></span>
+                <label asp-for="ChangePasswordDto.NewPassword">Новый пароль</label>
+                <input asp-for="ChangePasswordDto.NewPassword" id="email" type="password" required hover>
+            </div>
+            <div class="email-block not_margin_top">
+                <span asp-validation-for="ChangePasswordDto.ConfirmPassword" class="not_margin_top"></span>
+                <label asp-for="ChangePasswordDto.ConfirmPassword">Подтверждение пароля</label>
+                <input asp-for="ChangePasswordDto.ConfirmPassword" id="email" type="password" required hover>
+            </div>
+            <div class="password-block">
+                @ViewBag.Role
+            </div>
+        </div>
+        <button type="submit" data-style="hyper-button" hover>Сохранить</button>
+    </form>
+</div>

@@ -12,22 +12,14 @@ namespace CodeSparkNET.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly ILogger<AccountController> _logger;
-        private readonly IConfiguration _configuration;
-
+        private ILogger<AccountController> _logger;
         private readonly IAccountService _accountService;
-        private readonly IEmailService _emailService;
 
         public AccountController(
-            ILogger<AccountController> logger, 
-            IConfiguration configuration, 
-            IAccountService accountService, 
-            IEmailService emailService)
+            IAccountService accountService
+            )
         {
-            _logger = logger;
-            _configuration = configuration;
             _accountService = accountService;
-            _emailService = emailService;
         }
 
         [HttpGet]

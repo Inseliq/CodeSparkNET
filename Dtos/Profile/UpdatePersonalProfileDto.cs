@@ -4,13 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 
-namespace CodeSparkNET.Dtos.Account
+namespace CodeSparkNET.Dtos.Profile
 {
-    public class UpdateProfileDto
+    public class UpdatePersonalProfileDto
     {
         [Required(ErrorMessage = "Введите имя пользователя.")]
         public string UserName { get; set; }
         [Required(ErrorMessage = "Введите почту.")]
+        [EmailAddress]
         public string Email { get; set; }
     }
 }

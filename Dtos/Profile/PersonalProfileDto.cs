@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using System.ComponentModel.DataAnnotations;
 
-namespace CodeSparkNET.Dtos.Account
+namespace CodeSparkNET.Dtos.Profile
 {
-    public class ProfileDto
+    public class PersonalProfileDto
     {
         [Required]
         public string? UserName { get; set; }

@@ -1,13 +1,10 @@
-using System.Numerics;
 using CodeSparkNET.Data;
 using CodeSparkNET.Interfaces;
 using CodeSparkNET.Models;
 using CodeSparkNET.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.IdentityModel.Tokens;
+
 
 var builder = WebApplication.CreateBuilder(args);
 

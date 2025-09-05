@@ -1,13 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
 using CodeSparkNET.Dtos.Profile;
 using CodeSparkNET.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace CodeSparkNET.Controllers
 {
@@ -25,6 +19,7 @@ namespace CodeSparkNET.Controllers
         [HttpGet]
         public async Task<IActionResult> Profile()
         {
+
             if (!ModelState.IsValid) return View();
 
             var email = User.FindFirstValue(ClaimTypes.Email);
@@ -32,67 +27,87 @@ namespace CodeSparkNET.Controllers
             ViewBag.UserName = personalInfo.UserName;
             ViewBag.Email = personalInfo.Email;
             return View();
+
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateProfile(ProfileDto profileDto)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                // restore ViewBag if needed
+                if (!ModelState.IsValid)
+                {
+                    // restore ViewBag if needed
+                    ViewBag.UserName = profileDto?.UpdatePersonalProfileDto?.UserName;
+                    ViewBag.Email = profileDto?.UpdatePersonalProfileDto?.Email;
+                    ViewBag.Role = User?.FindFirstValue(ClaimTypes.Role);
+                    // explicitly return the Profile view (not "UpdateProfile")
+                    return View("Profile", profileDto);
+                }
+
+                var email = User.FindFirstValue(ClaimTypes.Email);
+                var result = await _profileService.UpdatePersonalProfileAsync(email, profileDto.UpdatePersonalProfileDto);
+
+                if (result.Succeeded)
+                {
+                    // PRG: redirect to GET Profile so updated data is loaded
+                    return RedirectToAction(nameof(Profile));
+                }
+
+                foreach (var err in result.Errors)
+                    ModelState.AddModelError(string.Empty, err.Description);
+
                 ViewBag.UserName = profileDto?.UpdatePersonalProfileDto?.UserName;
                 ViewBag.Email = profileDto?.UpdatePersonalProfileDto?.Email;
                 ViewBag.Role = User?.FindFirstValue(ClaimTypes.Role);
-                // explicitly return the Profile view (not "UpdateProfile")
+
+                return View("Profile", profileDto);
+            }
+            catch (Exception ex)
+            {
+                var email = User.FindFirstValue(ClaimTypes.Email);
+                _logger.LogError(ex, "Ошибка обновления персональных данных в профиле у пользователя {email}", email);
                 return View("Profile", profileDto);
             }
 
-            var email = User.FindFirstValue(ClaimTypes.Email);
-            var result = await _profileService.UpdatePersonalProfileAsync(email, profileDto.UpdatePersonalProfileDto);
-
-            if (result.Succeeded)
-            {
-                // PRG: redirect to GET Profile so updated data is loaded
-                return RedirectToAction(nameof(Profile));
-            }
-
-            foreach (var err in result.Errors)
-                ModelState.AddModelError(string.Empty, err.Description);
-
-            ViewBag.UserName = profileDto?.UpdatePersonalProfileDto?.UserName;
-            ViewBag.Email = profileDto?.UpdatePersonalProfileDto?.Email;
-            ViewBag.Role = User?.FindFirstValue(ClaimTypes.Role);
-
-            return View("Profile", profileDto);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangePassword(ProfileDto profileDto)
         {
-            if (!ModelState.IsValid)
+            try
             {
+                if (!ModelState.IsValid)
+                {
+                    ViewBag.UserName = profileDto?.UpdatePersonalProfileDto?.UserName;
+                    ViewBag.Email = profileDto?.UpdatePersonalProfileDto?.Email;
+                    ViewBag.Role = User?.FindFirstValue(ClaimTypes.Role);
+                    return View("Profile", profileDto);
+                }
+
+                var email = User.FindFirstValue(ClaimTypes.Email);
+                var result = await _profileService.ChangePasswordAsync(email, profileDto.ChangePasswordDto);
+
+                if (result.Succeeded)
+                    return RedirectToAction(nameof(Profile));
+
+                foreach (var err in result.Errors)
+                    ModelState.AddModelError(string.Empty, err.Description);
+
                 ViewBag.UserName = profileDto?.UpdatePersonalProfileDto?.UserName;
                 ViewBag.Email = profileDto?.UpdatePersonalProfileDto?.Email;
                 ViewBag.Role = User?.FindFirstValue(ClaimTypes.Role);
+
                 return View("Profile", profileDto);
             }
-
-            var email = User.FindFirstValue(ClaimTypes.Email);
-            var result = await _profileService.ChangePasswordAsync(email, profileDto.ChangePasswordDto);
-
-            if (result.Succeeded)
-                return RedirectToAction(nameof(Profile));
-
-            foreach (var err in result.Errors)
-                ModelState.AddModelError(string.Empty, err.Description);
-
-            ViewBag.UserName = profileDto?.UpdatePersonalProfileDto?.UserName;
-            ViewBag.Email = profileDto?.UpdatePersonalProfileDto?.Email;
-            ViewBag.Role = User?.FindFirstValue(ClaimTypes.Role);
-
-            return View("Profile", profileDto);
+            catch (Exception ex)
+            {
+                var email = User.FindFirstValue(ClaimTypes.Email);
+                _logger.LogError(ex, "Ошибка смены пароля у пользователя {email}", email);
+                return View("Profile", profileDto);
+            }
         }
 
 

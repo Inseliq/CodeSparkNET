@@ -17,12 +17,14 @@
             <div class="names-block">
                 <span asp-validation-for="UpdatePersonalProfileDto.UserName"></span>
                 <label asp-for="UpdatePersonalProfileDto.UserName">Имя пользователя</label>
-                <input asp-for="UpdatePersonalProfileDto.UserName" id="names" type="text" value="@ViewBag.UserName" required hover>
+                <input asp-for="UpdatePersonalProfileDto.UserName" id="names" type="text" value="@ViewBag.UserName"
+                    required hover>
             </div>
             <div class="email-block not_margin_top">
                 <span asp-validation-for="UpdatePersonalProfileDto.Email" class="not_margin_top"></span>
                 <label asp-for="UpdatePersonalProfileDto.Email">Email</label>
-                <input asp-for="UpdatePersonalProfileDto.Email" id="email" type="email" value="@ViewBag.Email" required hover>
+                <input asp-for="UpdatePersonalProfileDto.Email" id="email" type="email" value="@ViewBag.Email" required
+                    hover>
             </div>
             <div class="password-block">
                 @ViewBag.Role

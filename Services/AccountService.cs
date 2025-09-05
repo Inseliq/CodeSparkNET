@@ -31,18 +31,22 @@ namespace CodeSparkNET.Services
             _configuration = configuration;
         }
 
-        public async Task<IdentityResult> RegisterAsync(RegisterDto dto, string loginLink)
+        public async Task<IdentityResult> RegisterAsync(RegisterDto model, string loginLink)
         {
-            if (await _userManager.FindByEmailAsync(dto.Email) != null)
+            if (await _userManager.FindByEmailAsync(model.Email) != null)
                 return IdentityResult.Failed(new IdentityError { Description = "Пользователь с таким email уже зарегистрирован." });
+
+            if (await _userManager.FindByEmailAsync(model.UserName) != null)
+                return IdentityResult.Failed(new IdentityError { Description = "Пользователь с таким именем пользователя уже зарегистрирован." });
 
             var user = new AppUser
             {
-                UserName = dto.UserName,
-                Email = dto.Email
+                UserName = model.UserName,
+                Email = model.Email,
+                EmailConfirmed = model.ConfirmAd
             };
 
-            var createResult = await _userManager.CreateAsync(user, dto.Password);
+            var createResult = await _userManager.CreateAsync(user, model.Password);
             if (!createResult.Succeeded)
                 return createResult;
 
@@ -62,13 +66,13 @@ namespace CodeSparkNET.Services
             return IdentityResult.Success;
         }
 
-        public async Task<SignInResult> PasswordSignInAsync(LoginDto dto)
+        public async Task<SignInResult> PasswordSignInAsync(LoginDto model)
         {
-            var user = await _userManager.FindByEmailAsync(dto.Email);
+            var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
                 return SignInResult.Failed;
 
-            return await _signInManager.PasswordSignInAsync(user.UserName, dto.Password, dto.RememberMe, lockoutOnFailure: false);
+            return await _signInManager.PasswordSignInAsync(user.UserName, model.Password, model.RememberMe, lockoutOnFailure: false);
         }
 
         public async Task SignOutAsync()
@@ -77,19 +81,19 @@ namespace CodeSparkNET.Services
         }
 
 
-        public async Task<IdentityResult> ResetPasswordAsync(ResetPasswordDto resetPasswordDto)
+        public async Task<IdentityResult> ResetPasswordAsync(ResetPasswordDto model)
         {
             // Find the user associated with the provided email
-            var user = await _userManager.FindByEmailAsync(resetPasswordDto.Email);
+            var user = await _userManager.FindByEmailAsync(model.Email);
             // If user not found, return a generic failure
             if (user == null)
                 return IdentityResult.Failed(new IdentityError { Description = "Invalid request." });
 
-            var decodedBytes = WebEncoders.Base64UrlDecode(resetPasswordDto.Token);
+            var decodedBytes = WebEncoders.Base64UrlDecode(model.Token);
             var decodedToken = Encoding.UTF8.GetString(decodedBytes);
 
             // Attempt reset user password
-            var result = await _userManager.ResetPasswordAsync(user, decodedToken, resetPasswordDto.Password);
+            var result = await _userManager.ResetPasswordAsync(user, decodedToken, model.Password);
 
             // If successful, update the Security Stamp to invalidate any active sessions or tokens
             if (result.Succeeded)

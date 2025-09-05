@@ -1,3 +1,4 @@
+using System.Globalization;
 using CodeSparkNET.Data;
 using CodeSparkNET.Interfaces;
 using CodeSparkNET.Models;
@@ -8,8 +9,23 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// resources for localization
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews()
+    .AddViewLocalization() // localize views
+    .AddDataAnnotationsLocalization() // localize data annotations
+    .AddMvcOptions(options =>
+    {
+        var mb = options.ModelBindingMessageProvider;
+        mb.SetAttemptedValueIsInvalidAccessor((x, name) => "Неверное значение.");
+        mb.SetMissingBindRequiredValueAccessor(name => "Не указано обязательное значение.");
+        mb.SetMissingKeyOrValueAccessor(() => "Отсутствует значение.");
+        mb.SetUnknownValueIsInvalidAccessor(name => "Неверное значение.");
+        mb.SetValueMustBeANumberAccessor(name => "Значение должно быть числом.");
+        mb.SetValueIsInvalidAccessor(name => "Неверное значение.");
+    });
 
 builder.Services.AddHttpContextAccessor();
 
@@ -26,7 +42,9 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
     options.Password.RequiredLength = 8;
     options.Password.RequireUppercase = true;
     options.Password.RequireLowercase = true;
-}).AddEntityFrameworkStores<AppDbContext>()
+    options.Password.RequireNonAlphanumeric = false;
+}).AddErrorDescriber<IdentityErrorDescriber>()
+    .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
 //Sessions
@@ -55,6 +73,16 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IProfileService, ProfileService>();
 
 var app = builder.Build();
+
+// Localization
+var supportedCultures = new[] { new CultureInfo("ru"), new CultureInfo("en") };
+
+var requestLocalizationOptions = new RequestLocalizationOptions
+{
+    DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture("ru"),
+    SupportedCultures = supportedCultures,
+    SupportedUICultures = supportedCultures
+};
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

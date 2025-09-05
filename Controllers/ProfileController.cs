@@ -32,22 +32,22 @@ namespace CodeSparkNET.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateProfile(ProfileDto profileDto)
+        public async Task<IActionResult> UpdateProfile([Bind(Prefix = "UpdatePersonalProfileDto")] UpdatePersonalProfileDto model)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
                     // restore ViewBag if needed
-                    ViewBag.UserName = profileDto?.UpdatePersonalProfileDto?.UserName;
-                    ViewBag.Email = profileDto?.UpdatePersonalProfileDto?.Email;
+                    ViewBag.UserName = model?.UserName;
+                    ViewBag.Email = model?.Email;
                     ViewBag.Role = User?.FindFirstValue(ClaimTypes.Role);
                     // explicitly return the Profile view (not "UpdateProfile")
-                    return View("Profile", profileDto);
+                    return View("Profile", model);
                 }
 
                 var email = User.FindFirstValue(ClaimTypes.Email);
-                var result = await _profileService.UpdatePersonalProfileAsync(email, profileDto.UpdatePersonalProfileDto);
+                var result = await _profileService.UpdatePersonalProfileAsync(email, model);
 
                 if (result.Succeeded)
                 {
@@ -58,37 +58,34 @@ namespace CodeSparkNET.Controllers
                 foreach (var err in result.Errors)
                     ModelState.AddModelError(string.Empty, err.Description);
 
-                ViewBag.UserName = profileDto?.UpdatePersonalProfileDto?.UserName;
-                ViewBag.Email = profileDto?.UpdatePersonalProfileDto?.Email;
+                ViewBag.UserName = model?.UserName;
+                ViewBag.Email = model?.Email;
                 ViewBag.Role = User?.FindFirstValue(ClaimTypes.Role);
 
-                return View("Profile", profileDto);
+                return View("Profile", model);
             }
             catch (Exception ex)
             {
                 var email = User.FindFirstValue(ClaimTypes.Email);
                 _logger.LogError(ex, "Ошибка обновления персональных данных в профиле у пользователя {email}", email);
-                return View("Profile", profileDto);
+                return View("Profile", model);
             }
 
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ChangePassword(ProfileDto profileDto)
+        public async Task<IActionResult> ChangePassword([Bind(Prefix = "ChangePasswordDto")] ChangePasswordDto model)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    ViewBag.UserName = profileDto?.UpdatePersonalProfileDto?.UserName;
-                    ViewBag.Email = profileDto?.UpdatePersonalProfileDto?.Email;
-                    ViewBag.Role = User?.FindFirstValue(ClaimTypes.Role);
-                    return View("Profile", profileDto);
+                    return RedirectToAction(nameof(Profile));
                 }
 
                 var email = User.FindFirstValue(ClaimTypes.Email);
-                var result = await _profileService.ChangePasswordAsync(email, profileDto.ChangePasswordDto);
+                var result = await _profileService.ChangePasswordAsync(email, model);
 
                 if (result.Succeeded)
                     return RedirectToAction(nameof(Profile));
@@ -96,17 +93,13 @@ namespace CodeSparkNET.Controllers
                 foreach (var err in result.Errors)
                     ModelState.AddModelError(string.Empty, err.Description);
 
-                ViewBag.UserName = profileDto?.UpdatePersonalProfileDto?.UserName;
-                ViewBag.Email = profileDto?.UpdatePersonalProfileDto?.Email;
-                ViewBag.Role = User?.FindFirstValue(ClaimTypes.Role);
-
-                return View("Profile", profileDto);
+                return RedirectToAction(nameof(Profile), model);
             }
             catch (Exception ex)
             {
                 var email = User.FindFirstValue(ClaimTypes.Email);
                 _logger.LogError(ex, "Ошибка смены пароля у пользователя {email}", email);
-                return View("Profile", profileDto);
+                return RedirectToAction(nameof(Profile), model);
             }
         }
 

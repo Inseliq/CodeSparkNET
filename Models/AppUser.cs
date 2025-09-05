@@ -8,6 +8,6 @@ namespace CodeSparkNET.Models
 {
     public class AppUser : IdentityUser
     {
-
+        public bool EmailMarketingConsent { get; set; }
     }
 }

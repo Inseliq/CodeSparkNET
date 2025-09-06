@@ -143,6 +143,41 @@ namespace CodeSparkNET.Controllers
             var errors = result.Errors.Select(e => e.Description).ToArray();
             return Json(new { success = false, message = errors });
         }
+        /// <summary>
+        /// Change user password
+        /// </summary>
+        /// <param name="model">The data transfer object containing the old and new passwords.</param>
+        /// <returns>A JSON response indicating the success or failure of the password change operation.</returns>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangePassword([Bind(Prefix = "ChangePasswordDto")] ChangePasswordDto model)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    ModelState.AddModelError(string.Empty, "Ошибка смены пароля.");
+                    return Json(new { success = false, message = "Ошибка смены пароля" });
+                }
+
+                var user = await _accountService.GetUserAsync(User);
+                var result = await _accountService.ChangePasswordAsync(user.Email, model);
+
+                if (result.Succeeded)
+                    return Json(new { success = true, message = "Пароль успешно изменен." });
+
+                foreach (var err in result.Errors)
+                    ModelState.AddModelError(string.Empty, err.Description);
+
+                return Json(new { success = false, message = "Ошибка смены пароля" });
+            }
+            catch (Exception ex)
+            {
+                var user = await _accountService.GetUserAsync(User);
+                _logger.LogError(ex, "Ошибка смены пароля у пользователя {email}", user.Email);
+                return Json(new { success = false, message = "Ошибка смены пароля" });
+            }
+        }
 
 
 

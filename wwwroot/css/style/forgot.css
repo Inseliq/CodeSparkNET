@@ -121,23 +121,6 @@ html[cross-browser] {
             font-weight: 600;
             z-index: 2;
             margin-top: 15px;
-
-            ul {
-              text-decoration: none;
-
-              li {
-                display: flex;
-                flex-direction: row;
-                justify-content: flex-start;
-                align-items: center;
-                text-align: left;
-                width: 100%;
-                color: var(--error-message-form);
-                font-weight: 600;
-                z-index: 2;
-                margin-top: 15px;
-              }
-            }
           }
 
           .input_block {

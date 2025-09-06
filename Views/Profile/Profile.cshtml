@@ -5,7 +5,7 @@
     var user = UserManager.GetUserAsync(User).Result;
 }
 @{
-    ViewData["Title"] = "Профиль";
+    ViewData["Title"] = "Profile";
 }
 @section Styles {
     <link rel="stylesheet" href="~/css/style/profile.css">
@@ -13,12 +13,12 @@
 
 <h1>@ViewData["Title"]</h1>
 
-<div class="__container profile_page loaded">
+<div class="__container profile_page">
     @if (UserManager.IsEmailConfirmedAsync(user).Result is false)
     {
-        <div role="alert">
+        <div class="alert alert-warning" role="alert">
             Ваш email не подтвержден.
-            <a id="confirmEmailBtn" >Отправить письмо с
+            <a id="confirmEmailBtn" class="btn btn-link p-0 m-0 align-baseline">Отправить письмо с
                 подтверждением</a>.
         </div>
     }
@@ -120,11 +120,3 @@
     </script>
 
 </div>
-
-
-@*
-    #Modal
-    1. Окно изменения пароля
-    2. Обновление личных данных
-    3. Поддтверждение email
-*@

@@ -45,8 +45,7 @@ namespace CodeSparkNET.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FullName")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -72,9 +71,7 @@ namespace CodeSparkNET.Migrations
                         .HasColumnType("bit");
 
                     b.Property<DateTime>("RegisteredAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETUTCDATE()");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
@@ -105,12 +102,6 @@ namespace CodeSparkNET.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("CourseDetailProductId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("DeadLine")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -120,43 +111,20 @@ namespace CodeSparkNET.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CourseDetailProductId");
-
                     b.HasIndex("ModuleId");
 
-                    b.ToTable("CourseAssignments");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
-                            DeadLine = new DateTime(2024, 12, 31, 23, 59, 59, 0, DateTimeKind.Utc),
-                            Description = "Создайте простой калькулятор с базовыми арифметическими операциями. Используйте функции для каждой операции.",
-                            ModuleId = new Guid("44444444-4444-4444-4444-444444444444"),
-                            Title = "Создание калькулятора"
-                        },
-                        new
-                        {
-                            Id = new Guid("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"),
-                            DeadLine = new DateTime(2025, 1, 15, 23, 59, 59, 0, DateTimeKind.Utc),
-                            Description = "Создайте форму с валидацией полей в реальном времени. Добавьте обработчики событий для всех полей.",
-                            ModuleId = new Guid("55555555-5555-5555-5555-555555555555"),
-                            Title = "Интерактивная форма"
-                        });
+                    b.ToTable("CourseAssignment");
                 });
 
             modelBuilder.Entity("CodeSparkNET.Models.CourseDetail", b =>
                 {
                     b.Property<Guid>("ProductId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("EstimatedHours")
-                        .HasColumnType("int");
 
                     b.Property<string>("FullDescription")
                         .IsRequired()
@@ -165,176 +133,6 @@ namespace CodeSparkNET.Migrations
                     b.HasKey("ProductId");
 
                     b.ToTable("CourseDetails");
-
-                    b.HasData(
-                        new
-                        {
-                            ProductId = new Guid("11111111-1111-1111-1111-111111111111"),
-                            EstimatedHours = 120,
-                            FullDescription = "Этот курс предназначен для всех, кто хочет освоить JavaScript с нуля и стать профессиональным разработчиком.\r\n\r\n**Что вы изучите:**\r\n- Основы JavaScript: переменные, функции, объекты\r\n- ES6+ возможности: стрелочные функции, деструктуризация, модули\r\n- DOM манипуляции и обработка событий\r\n- Асинхронное программирование: Promises, async/await\r\n- Работа с API и AJAX запросами\r\n- Современные фреймворки и библиотеки\r\n- Тестирование JavaScript кода\r\n- Оптимизация и лучшие практики\r\n\r\n**Проекты в курсе:**\r\n1. Калькулятор с расширенными функциями\r\n2. Todo-приложение с localStorage\r\n3. Погодное приложение с API\r\n4. Интерактивная игра\r\n5. Мини-социальная сеть\r\n\r\nКурс включает более 50 практических заданий и 5 крупных проектов для портфолио."
-                        });
-                });
-
-            modelBuilder.Entity("CodeSparkNET.Models.CourseEnrollment", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CourseId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("EnrolledAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETUTCDATE()");
-
-                    b.Property<bool>("IsCompleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CourseId");
-
-                    b.HasIndex("EnrolledAt")
-                        .HasDatabaseName("IX_CourseEnrollment_EnrolledAt");
-
-                    b.HasIndex("UserId", "CourseId")
-                        .IsUnique()
-                        .HasDatabaseName("IX_CourseEnrollment_User_Course");
-
-                    b.ToTable("CourseEnrollments");
-                });
-
-            modelBuilder.Entity("CodeSparkNET.Models.DiplomaDetail", b =>
-                {
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Bibliography")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedYear")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("DiplomaType")
-                        .HasColumnType("int");
-
-                    b.Property<string>("DocumentUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FullDescription")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("HasPlagiarismCheck")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Keywords")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal?>("PlagiarismPercentage")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("PresentationUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Requirements")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SourceCodeUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Specialization")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Subject")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ProductId");
-
-                    b.HasIndex("DiplomaType")
-                        .HasDatabaseName("IX_DiplomaDetail_DiplomaType");
-
-                    b.ToTable("DiplomaDetail");
-
-                    b.HasData(
-                        new
-                        {
-                            ProductId = new Guid("22222222-2222-2222-2222-222222222222"),
-                            Bibliography = "1. Троelsen Э. C# 10 и .NET 6. Полное руководство. - СПб.: Питер, 2022.\r\n2. Фримен А. ASP.NET Core MVC. Полное руководство. - СПб.: Питер, 2021.\r\n3. Гринс Р. React быстро. Веб-приложения на React, JSX, Redux и GraphQL. - СПб.: Питер, 2020.\r\n4. Microsoft Docs. ASP.NET Core Documentation. - URL: https://docs.microsoft.com/aspnet/core/\r\n5. React Documentation. - URL: https://reactjs.org/docs/",
-                            CreatedYear = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DiplomaType = 2,
-                            DocumentUrl = "/files/diplomas/project-management-app-thesis.pdf",
-                            FullDescription = "Дипломная работа представляет собой полнофункциональное веб-приложение для управления проектами и задачами в команде.\r\n\r\n**Основные возможности системы:**\r\n- Регистрация и авторизация пользователей\r\n- Создание и управление проектами\r\n- Система ролей (администратор, менеджер, разработчик)\r\n- Трекинг времени выполнения задач\r\n- Канбан-доски для визуализации процесса\r\n- Система уведомлений и комментариев\r\n- Отчеты и аналитика\r\n- Интеграция с внешними API\r\n\r\n**Технический стек:**\r\n- Backend: ASP.NET Core 6.0, Entity Framework Core\r\n- Frontend: React 18, TypeScript, Material-UI\r\n- База данных: SQL Server\r\n- Аутентификация: JWT токены\r\n- Тестирование: xUnit, Jest\r\n- Развертывание: Docker, Azure\r\n\r\nРабота включает полную техническую документацию, диаграммы архитектуры, тестирование и презентацию.",
-                            HasPlagiarismCheck = true,
-                            Keywords = "веб-приложение, управление проектами, ASP.NET Core, React, Entity Framework, система управления задачами",
-                            PlagiarismPercentage = 92.5m,
-                            PresentationUrl = "/files/diplomas/project-management-app-presentation.pptx",
-                            Requirements = "Система должна поддерживать не менее 100 одновременных пользователей, обеспечивать безопасность данных и иметь адаптивный интерфейс.",
-                            SourceCodeUrl = "/files/diplomas/project-management-app-source.zip",
-                            Specialization = "09.03.02 Информационные системы и технологии",
-                            Subject = "Информационные системы и технологии"
-                        });
-                });
-
-            modelBuilder.Entity("CodeSparkNET.Models.DiplomaOrder", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("AdminNotes")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("AppUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("CompletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CustomerNotes")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("DiplomaId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("OrderDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("PaidAmount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AppUserId");
-
-                    b.HasIndex("DiplomaId");
-
-                    b.HasIndex("OrderDate")
-                        .HasDatabaseName("IX_DiplomaOrder_OrderDate");
-
-                    b.HasIndex("Status")
-                        .HasDatabaseName("IX_DiplomaOrder_Status");
-
-                    b.ToTable("DiplomaOrder");
                 });
 
             modelBuilder.Entity("CodeSparkNET.Models.Lesson", b =>
@@ -355,65 +153,14 @@ namespace CodeSparkNET.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ModuleId", "Order")
-                        .HasDatabaseName("IX_Lesson_Module_Order");
+                    b.HasIndex("ModuleId");
 
                     b.ToTable("Lessons");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("77777777-7777-7777-7777-777777777771"),
-                            Content = "В этом уроке мы изучим историю JavaScript, его роль в веб-разработке и настроим среду разработки.",
-                            ModuleId = new Guid("44444444-4444-4444-4444-444444444444"),
-                            Order = 1,
-                            Title = "Введение в JavaScript"
-                        },
-                        new
-                        {
-                            Id = new Guid("77777777-7777-7777-7777-777777777772"),
-                            Content = "Изучаем объявление переменных с помощью var, let и const. Разбираем примитивные и ссылочные типы данных.",
-                            ModuleId = new Guid("44444444-4444-4444-4444-444444444444"),
-                            Order = 2,
-                            Title = "Переменные и типы данных"
-                        },
-                        new
-                        {
-                            Id = new Guid("77777777-7777-7777-7777-777777777773"),
-                            Content = "Изучаем объявление функций, параметры, возвращаемые значения и область видимости.",
-                            ModuleId = new Guid("44444444-4444-4444-4444-444444444444"),
-                            Order = 3,
-                            Title = "Функции"
-                        },
-                        new
-                        {
-                            Id = new Guid("88888888-8888-8888-8888-888888888881"),
-                            Content = "Изучаем Document Object Model, поиск элементов и изменение содержимого страницы.",
-                            ModuleId = new Guid("55555555-5555-5555-5555-555555555555"),
-                            Order = 1,
-                            Title = "Работа с DOM"
-                        },
-                        new
-                        {
-                            Id = new Guid("88888888-8888-8888-8888-888888888882"),
-                            Content = "Изучаем addEventListener, типы событий и делегирование событий.",
-                            ModuleId = new Guid("55555555-5555-5555-5555-555555555555"),
-                            Order = 2,
-                            Title = "Обработка событий"
-                        },
-                        new
-                        {
-                            Id = new Guid("99999999-9999-9999-9999-999999999991"),
-                            Content = "Изучаем асинхронное программирование, обещания и современный синтаксис async/await.",
-                            ModuleId = new Guid("66666666-6666-6666-6666-666666666666"),
-                            Order = 1,
-                            Title = "Promises и async/await"
-                        });
                 });
 
             modelBuilder.Entity("CodeSparkNET.Models.Module", b =>
@@ -426,42 +173,19 @@ namespace CodeSparkNET.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Order")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("SortOrder");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CourseId", "Order")
-                        .HasDatabaseName("IX_Module_Course_Order");
+                    b.HasIndex("CourseId");
 
                     b.ToTable("Modules");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("44444444-4444-4444-4444-444444444444"),
-                            CourseId = new Guid("11111111-1111-1111-1111-111111111111"),
-                            Order = 1,
-                            Title = "Основы JavaScript"
-                        },
-                        new
-                        {
-                            Id = new Guid("55555555-5555-5555-5555-555555555555"),
-                            CourseId = new Guid("11111111-1111-1111-1111-111111111111"),
-                            Order = 2,
-                            Title = "DOM и события"
-                        },
-                        new
-                        {
-                            Id = new Guid("66666666-6666-6666-6666-666666666666"),
-                            CourseId = new Guid("11111111-1111-1111-1111-111111111111"),
-                            Order = 3,
-                            Title = "Асинхронное программирование"
-                        });
                 });
 
             modelBuilder.Entity("CodeSparkNET.Models.Product", b =>
@@ -471,9 +195,7 @@ namespace CodeSparkNET.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETUTCDATE()");
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("IsPublished")
                         .HasColumnType("bit");
@@ -486,23 +208,19 @@ namespace CodeSparkNET.Migrations
 
                     b.Property<string>("ShortDescription")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Slug")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ThumbnailUrl")
                         .IsRequired()
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -510,278 +228,6 @@ namespace CodeSparkNET.Migrations
                         .IsUnique();
 
                     b.ToTable("Products");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("11111111-1111-1111-1111-111111111111"),
-                            CreatedAt = new DateTime(2024, 1, 15, 0, 0, 0, 0, DateTimeKind.Utc),
-                            IsPublished = true,
-                            Price = 4999.00m,
-                            ProductType = 1,
-                            ShortDescription = "Изучите JavaScript от основ до продвинутых концепций. Практические проекты, ES6+, асинхронное программирование.",
-                            Slug = "javascript-full-course",
-                            ThumbnailUrl = "/images/courses/javascript-course.jpg",
-                            Title = "Полный курс JavaScript с нуля до профи"
-                        },
-                        new
-                        {
-                            Id = new Guid("22222222-2222-2222-2222-222222222222"),
-                            CreatedAt = new DateTime(2024, 2, 10, 0, 0, 0, 0, DateTimeKind.Utc),
-                            IsPublished = true,
-                            Price = 25000.00m,
-                            ProductType = 3,
-                            ShortDescription = "Дипломная работа по разработке полнофункционального веб-приложения с использованием ASP.NET Core и React.",
-                            Slug = "project-management-web-app-thesis",
-                            ThumbnailUrl = "/images/diplomas/project-management-thesis.jpg",
-                            Title = "Разработка веб-приложения для управления проектами"
-                        },
-                        new
-                        {
-                            Id = new Guid("33333333-3333-3333-3333-333333333333"),
-                            CreatedAt = new DateTime(2024, 3, 5, 0, 0, 0, 0, DateTimeKind.Utc),
-                            IsPublished = true,
-                            Price = 2999.00m,
-                            ProductType = 2,
-                            ShortDescription = "Стильный адаптивный лендинг с анимациями, темной темой и современным дизайном. HTML5, CSS3, JavaScript.",
-                            Slug = "modern-it-landing-template",
-                            ThumbnailUrl = "/images/templates/modern-landing.jpg",
-                            Title = "ModernLanding - Современный лендинг для IT-компании"
-                        });
-                });
-
-            modelBuilder.Entity("CodeSparkNET.Models.UserAssignment", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("AnswerText")
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
-
-                    b.Property<Guid>("AssignmentId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("FileUrl")
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
-
-                    b.Property<DateTime>("SubmittedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETUTCDATE()");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AssignmentId");
-
-                    b.HasIndex("SubmittedAt")
-                        .HasDatabaseName("IX_UserAssignment_SubmittedAt");
-
-                    b.HasIndex("UserId", "AssignmentId")
-                        .IsUnique()
-                        .HasDatabaseName("IX_UserAssignment_User_Assignment");
-
-                    b.ToTable("UserAssignments");
-                });
-
-            modelBuilder.Entity("CodeSparkNET.Models.WebTemplateDetail", b =>
-                {
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("BrowserSupport")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ColorScheme")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DemoUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Dependencies")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DocumentationUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Features")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FigmaUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FontsUsed")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Framework")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("FullDescription")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("HasAnimations")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("HasDarkMode")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("InstallationInstructions")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsResponsive")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("License")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PagesCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SourceCodeUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Technologies")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ProductId");
-
-                    b.HasIndex("Framework")
-                        .HasDatabaseName("IX_WebTemplateDetail_Framework");
-
-                    b.ToTable("WebTemplateDetail");
-
-                    b.HasData(
-                        new
-                        {
-                            ProductId = new Guid("33333333-3333-3333-3333-333333333333"),
-                            BrowserSupport = "Chrome 90+, Firefox 88+, Safari 14+, Edge 90+",
-                            ColorScheme = "Темно-синий градиент (#1a1a2e, #16213e, #0f3460) с акцентным оранжевым (#ff6b35)",
-                            DemoUrl = "https://demo.codesparknet.com/modern-landing",
-                            Dependencies = "Bootstrap 5.3.0, AOS.js 2.3.4, Swiper.js 8.4.7, Font Awesome 6.4.0",
-                            DocumentationUrl = "/files/templates/modern-landing-docs.pdf",
-                            Features = "Параллакс эффекты, плавная прокрутка, анимации при скролле, интерактивные элементы, адаптивное меню, контактная форма, слайдеры, модальные окна",
-                            FigmaUrl = "https://figma.com/file/modern-landing-design",
-                            FontsUsed = "Inter (основной), Space Grotesk (заголовки)",
-                            Framework = "Vanilla JavaScript",
-                            FullDescription = "ModernLanding - это современный и стильный шаблон лендинга, специально разработанный для IT-компаний, стартапов и технологических проектов.\r\n\r\n**Особенности дизайна:**\r\n- Минималистичный и современный стиль\r\n- Градиентные элементы и плавные анимации\r\n- Темная и светлая темы\r\n- Адаптивный дизайн для всех устройств\r\n- Высокая скорость загрузки\r\n\r\n**Секции шаблона:**\r\n1. Hero секция с анимированным фоном\r\n2. О компании с интерактивными карточками\r\n3. Услуги с hover-эффектами\r\n4. Портфолио с фильтрацией\r\n5. Команда с социальными ссылками\r\n6. Отзывы клиентов (слайдер)\r\n7. Контакты с интерактивной картой\r\n8. Подвал с полезными ссылками\r\n\r\n**Технические возможности:**\r\n- Плавная прокрутка между секциями\r\n- Параллакс эффекты\r\n- Анимации при скролле (AOS)\r\n- Валидация контактной формы\r\n- Интеграция с Google Analytics\r\n- SEO оптимизация\r\n\r\nШаблон готов к использованию и легко кастомизируется под ваши потребности.",
-                            HasAnimations = true,
-                            HasDarkMode = true,
-                            InstallationInstructions = "1. Распакуйте архив в папку вашего проекта\r\n2. Откройте index.html в браузере для просмотра\r\n3. Настройте контактную форму в файле js/contact.js\r\n4. Замените демо-контент на ваш в HTML файлах\r\n5. Настройте цвета в файле scss/_variables.scss\r\n6. Скомпилируйте SCSS в CSS (опционально)\r\n\r\nПодробная инструкция находится в файле README.md",
-                            IsResponsive = true,
-                            License = "Standard License (может использоваться для одного проекта)",
-                            PagesCount = 1,
-                            SourceCodeUrl = "/files/templates/modern-landing-source.zip",
-                            Technologies = "HTML5, CSS3, JavaScript ES6+, SCSS, Bootstrap 5, AOS.js, Swiper.js"
-                        });
-                });
-
-            modelBuilder.Entity("CodeSparkNET.Models.WebTemplateOrder", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("AdminNotes")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("AppUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("CompletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CustomerNotes")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("OrderDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("PaidAmount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("TemplateId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AppUserId");
-
-                    b.HasIndex("OrderDate")
-                        .HasDatabaseName("IX_TemplateOrder_OrderDate");
-
-                    b.HasIndex("Status")
-                        .HasDatabaseName("IX_TemplateOrder_Status");
-
-                    b.HasIndex("TemplateId");
-
-                    b.ToTable("WebTemplateOrder");
-                });
-
-            modelBuilder.Entity("CodeSparkNET.Models.WebTemplateReview", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("AppUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsPublished")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("Rating")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ReviewText")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("TemplateId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AppUserId");
-
-                    b.HasIndex("CreatedAt")
-                        .HasDatabaseName("IX_TemplateReview_CreatedAt");
-
-                    b.HasIndex("TemplateId", "Rating")
-                        .HasDatabaseName("IX_TemplateReview_Template_Rating");
-
-                    b.ToTable("WebTemplateReview");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -942,10 +388,6 @@ namespace CodeSparkNET.Migrations
 
             modelBuilder.Entity("CodeSparkNET.Models.CourseAssignment", b =>
                 {
-                    b.HasOne("CodeSparkNET.Models.CourseDetail", null)
-                        .WithMany("Assignments")
-                        .HasForeignKey("CourseDetailProductId");
-
                     b.HasOne("CodeSparkNET.Models.Module", "Module")
                         .WithMany("Assignments")
                         .HasForeignKey("ModuleId")
@@ -964,55 +406,6 @@ namespace CodeSparkNET.Migrations
                         .IsRequired();
 
                     b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("CodeSparkNET.Models.CourseEnrollment", b =>
-                {
-                    b.HasOne("CodeSparkNET.Models.CourseDetail", "Course")
-                        .WithMany()
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CodeSparkNET.Models.AppUser", "AppUser")
-                        .WithMany("Enrollments")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AppUser");
-
-                    b.Navigation("Course");
-                });
-
-            modelBuilder.Entity("CodeSparkNET.Models.DiplomaDetail", b =>
-                {
-                    b.HasOne("CodeSparkNET.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("CodeSparkNET.Models.DiplomaOrder", b =>
-                {
-                    b.HasOne("CodeSparkNET.Models.AppUser", "AppUser")
-                        .WithMany("DiplomaOrders")
-                        .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CodeSparkNET.Models.DiplomaDetail", "Diploma")
-                        .WithMany("Orders")
-                        .HasForeignKey("DiplomaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AppUser");
-
-                    b.Navigation("Diploma");
                 });
 
             modelBuilder.Entity("CodeSparkNET.Models.Lesson", b =>
@@ -1035,74 +428,6 @@ namespace CodeSparkNET.Migrations
                         .IsRequired();
 
                     b.Navigation("Course");
-                });
-
-            modelBuilder.Entity("CodeSparkNET.Models.UserAssignment", b =>
-                {
-                    b.HasOne("CodeSparkNET.Models.CourseAssignment", "CourseAssignment")
-                        .WithMany("UserAssignments")
-                        .HasForeignKey("AssignmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CodeSparkNET.Models.AppUser", "AppUser")
-                        .WithMany("Assignments")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AppUser");
-
-                    b.Navigation("CourseAssignment");
-                });
-
-            modelBuilder.Entity("CodeSparkNET.Models.WebTemplateDetail", b =>
-                {
-                    b.HasOne("CodeSparkNET.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("CodeSparkNET.Models.WebTemplateOrder", b =>
-                {
-                    b.HasOne("CodeSparkNET.Models.AppUser", "AppUser")
-                        .WithMany("TemplateOrders")
-                        .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CodeSparkNET.Models.WebTemplateDetail", "Template")
-                        .WithMany("Orders")
-                        .HasForeignKey("TemplateId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AppUser");
-
-                    b.Navigation("Template");
-                });
-
-            modelBuilder.Entity("CodeSparkNET.Models.WebTemplateReview", b =>
-                {
-                    b.HasOne("CodeSparkNET.Models.AppUser", "AppUser")
-                        .WithMany("TemplateReviews")
-                        .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CodeSparkNET.Models.WebTemplateDetail", "Template")
-                        .WithMany("Reviews")
-                        .HasForeignKey("TemplateId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AppUser");
-
-                    b.Navigation("Template");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -1156,34 +481,9 @@ namespace CodeSparkNET.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("CodeSparkNET.Models.AppUser", b =>
-                {
-                    b.Navigation("Assignments");
-
-                    b.Navigation("DiplomaOrders");
-
-                    b.Navigation("Enrollments");
-
-                    b.Navigation("TemplateOrders");
-
-                    b.Navigation("TemplateReviews");
-                });
-
-            modelBuilder.Entity("CodeSparkNET.Models.CourseAssignment", b =>
-                {
-                    b.Navigation("UserAssignments");
-                });
-
             modelBuilder.Entity("CodeSparkNET.Models.CourseDetail", b =>
                 {
-                    b.Navigation("Assignments");
-
                     b.Navigation("Modules");
-                });
-
-            modelBuilder.Entity("CodeSparkNET.Models.DiplomaDetail", b =>
-                {
-                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("CodeSparkNET.Models.Module", b =>
@@ -1191,13 +491,6 @@ namespace CodeSparkNET.Migrations
                     b.Navigation("Assignments");
 
                     b.Navigation("Lessons");
-                });
-
-            modelBuilder.Entity("CodeSparkNET.Models.WebTemplateDetail", b =>
-                {
-                    b.Navigation("Orders");
-
-                    b.Navigation("Reviews");
                 });
 #pragma warning restore 612, 618
         }

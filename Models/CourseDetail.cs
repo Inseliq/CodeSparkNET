@@ -10,9 +10,7 @@ namespace CodeSparkNET.Models
         public Guid ProductId { get; set; } // Primary key and foreign key to Product
         public Product Product { get; set; } = null!; // Navigation property to the Product
         public string FullDescription { get; set; } = null!; // Detailed description of the course
-        public int EstimatedHours { get; set; } // Estimated time to complete the course
 
         public ICollection<Module>? Modules { get; set; } = new List<Module>(); // Navigation property for related modules
-        public ICollection<CourseAssignment>? Assignments { get; set; } = new List<CourseAssignment>(); // Navigation property for related assignments
     }
 }

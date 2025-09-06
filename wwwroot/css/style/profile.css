@@ -1,7 +1,5 @@
-/* profile.css — современный молодёжный стиль для страницы профиля */
-
 /* Базовые шрифты и фон */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap");
 
 :root {
   --bg-1: #0f1226;
@@ -14,19 +12,27 @@
   --danger: #ff6b6b;
   --radius: 16px;
   --shadow-lg: 0 20px 50px rgba(2, 6, 23, 0.7);
-  --transition: 260ms cubic-bezier(.22, .9, .34, 1);
+  --transition: 260ms cubic-bezier(0.22, 0.9, 0.34, 1);
 }
 
 * {
-  box-sizing: border-box
+  box-sizing: border-box;
 }
 
 html,
 body {
   height: 100%;
   margin: 0;
-  font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial;
-  background: radial-gradient(1200px 600px at 10% 10%, rgba(0, 170, 255, 0.06), transparent 6%),
+  font-family:
+    "Poppins",
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    Helvetica,
+    Arial;
+  background:
+    radial-gradient(1200px 600px at 10% 10%, rgba(0, 170, 255, 0.06), transparent 6%),
     linear-gradient(180deg, var(--bg-1), var(--bg-2));
   color: #eef2f7;
   -webkit-font-smoothing: antialiased;
@@ -42,9 +48,10 @@ body {
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
   border: 1px solid rgba(255, 255, 255, 0.04);
   box-shadow: var(--shadow-lg);
-  transform: translateY(32px) scale(.995);
-  opacity: 0;
-  transition: transform 600ms cubic-bezier(.2, .95, .25, 1), opacity 520ms ease;
+  transform: translateY(32px) scale(0.995);
+  transition:
+    transform 600ms cubic-bezier(0.2, 0.95, 0.25, 1),
+    opacity 520ms ease;
   position: relative;
   overflow: visible;
 }
@@ -73,7 +80,9 @@ h1 {
   border-radius: 12px;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.009), rgba(255, 255, 255, 0.006));
   border: 1px solid rgba(255, 255, 255, 0.03);
-  transition: transform var(--transition), box-shadow var(--transition);
+  transition:
+    transform var(--transition),
+    box-shadow var(--transition);
   will-change: transform;
   position: relative;
   overflow: hidden;
@@ -104,7 +113,7 @@ h1 {
 }
 
 /* Мобильная адаптация */
-@media (max-width:720px) {
+@media (max-width: 720px) {
   .__container.profile_page {
     margin: 28px 18px;
     padding: 20px;
@@ -124,8 +133,8 @@ h1 {
 }
 
 /* Валидационные спаны */
-.names-block>span,
-.email-block>span {
+.names-block > span,
+.email-block > span {
   display: block;
   height: 0;
   font-size: 12px;
@@ -137,8 +146,8 @@ h1 {
 }
 
 /* Когда есть ошибка — показываем (JS должен добавить класс .has-error на родителя) */
-.names-block.has-error>span,
-.email-block.has-error>span {
+.names-block.has-error > span,
+.email-block.has-error > span {
   height: auto;
   opacity: 1;
   transform: none;
@@ -153,7 +162,10 @@ h1 {
   font-size: 0.95rem;
   color: var(--muted);
   pointer-events: none;
-  transition: transform var(--transition), font-size var(--transition), color var(--transition);
+  transition:
+    transform var(--transition),
+    font-size var(--transition),
+    color var(--transition);
   transform-origin: left top;
   background: transparent;
   padding: 0 6px;
@@ -172,13 +184,18 @@ h1 {
   outline: none;
   color: #e9f0f7;
   font-size: 0.98rem;
-  transition: box-shadow var(--transition), border-color var(--transition), transform var(--transition);
+  transition:
+    box-shadow var(--transition),
+    border-color var(--transition),
+    transform var(--transition);
   -webkit-appearance: none;
 }
 
 /* focus */
 .input_block input:focus {
-  box-shadow: 0 6px 30px rgba(0, 170, 255, 0.06), 0 2px 10px rgba(0, 255, 184, 0.03) inset;
+  box-shadow:
+    0 6px 30px rgba(0, 170, 255, 0.06),
+    0 2px 10px rgba(0, 255, 184, 0.03) inset;
   border-color: rgba(0, 170, 255, 0.9);
   transform: translateY(-1px);
 }
@@ -188,7 +205,7 @@ h1 {
 .email-block.focused label,
 .names-block.filled label,
 .email-block.filled label {
-  transform: translateY(-34px) scale(.86);
+  transform: translateY(-34px) scale(0.86);
   font-size: 0.79rem;
   color: var(--accent1);
 }
@@ -213,7 +230,10 @@ h1 {
   background: linear-gradient(90deg, var(--accent1), var(--accent2));
   color: #06101a;
   box-shadow: 0 8px 30px rgba(0, 170, 255, 0.12);
-  transition: transform 220ms ease, box-shadow 220ms ease, filter 220ms ease;
+  transition:
+    transform 220ms ease,
+    box-shadow 220ms ease,
+    filter 220ms ease;
   text-decoration: none;
 }
 
@@ -273,7 +293,7 @@ h1 {
 }
 
 /* сам контент модалки */
-.js-window>.description {
+.js-window > .description {
   position: relative;
   z-index: 1202;
   max-width: 420px;
@@ -284,11 +304,11 @@ h1 {
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
   border: 1px solid rgba(255, 255, 255, 0.04);
   box-shadow: 0 30px 60px rgba(2, 6, 23, 0.8);
-  transform: translateY(12px) scale(.99);
-  transition: transform 260ms cubic-bezier(.2, .95, .24, 1);
+  transform: translateY(12px) scale(0.99);
+  transition: transform 260ms cubic-bezier(0.2, 0.95, 0.24, 1);
 }
 
-.js-window.visible>.description {
+.js-window.visible > .description {
   transform: translateY(0) scale(1);
 }
 
@@ -316,7 +336,7 @@ h1 {
 .staged {
   opacity: 0;
   transform: translateY(8px);
-  transition: all 420ms cubic-bezier(.2, .9, .25, 1);
+  transition: all 420ms cubic-bezier(0.2, 0.9, 0.25, 1);
 }
 
 .staged.show {
@@ -325,7 +345,7 @@ h1 {
 }
 
 /* Мелкие правки для мобильных */
-@media (max-width:420px) {
+@media (max-width: 420px) {
   h1 {
     font-size: 1.6rem;
   }

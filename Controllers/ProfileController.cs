@@ -2,10 +2,12 @@ using System.Security.Claims;
 using CodeSparkNET.Dtos.Account;
 using CodeSparkNET.Dtos.Profile;
 using CodeSparkNET.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CodeSparkNET.Controllers
 {
+    [Authorize]
     public class ProfileController : Controller
     {
         private readonly ILogger<ProfileController> _logger;
@@ -26,15 +28,24 @@ namespace CodeSparkNET.Controllers
         [HttpGet]
         public async Task<IActionResult> Profile()
         {
+            try
+            {
 
-            if (!ModelState.IsValid) return View();
+                if (!ModelState.IsValid) return View();
 
-            var user = await _accountService.GetUserAsync(User);
+                var user = await _accountService.GetUserAsync(User);
 
-            ViewBag.UserName = user.UserName;
-            ViewBag.Email = user.Email;
-            return View();
-
+                ViewBag.UserName = user.UserName;
+                ViewBag.Email = user.Email;
+                return View();
+            }
+            catch (Exception ex)
+            {
+                var email = User.FindFirstValue(ClaimTypes.Email);
+                _logger.LogError(ex, "Ошибка загрузки профиля у пользователя {email}", email);
+                ModelState.AddModelError(string.Empty, "Ошибка загрузки профиля.");
+                return View();
+            }
         }
 
         /// <summary>
@@ -108,19 +119,28 @@ namespace CodeSparkNET.Controllers
         [HttpPost]
         public async Task<IActionResult> SendEmailConfirmation()
         {
-            if (!ModelState.IsValid)
+            try
             {
-                var modelErrors = ModelState.Values
-                    .SelectMany(v => v.Errors)
-                    .Select(e => e.ErrorMessage)
-                    .ToArray();
+                if (!ModelState.IsValid)
+                {
+                    var modelErrors = ModelState.Values
+                        .SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage)
+                        .ToArray();
 
-                return BadRequest(new { success = false, errors = modelErrors });
+                    return BadRequest(new { success = false, errors = modelErrors });
+                }
+                var user = await _accountService.GetUserAsync(User);
+
+                await _accountService.SendEmailConfirmationLinkAsync(user.Email);
+                return Json(new { success = true, message = "Проверьте вашу почту." });
             }
-            var user = await _accountService.GetUserAsync(User);
-
-            await _accountService.SendEmailConfirmationLinkAsync(user.Email);
-            return Json(new { success = true, message = "Проверьте вашу почту." });
+            catch (Exception ex)
+            {
+                var email = User.FindFirstValue(ClaimTypes.Email);
+                _logger.LogError(ex, "Ошибка отправки ссылки подтверждения email у пользователя {email}", email);
+                return Json(new { success = false, message = "Ошибка отправки ссылки подтверждения email." });
+            }
         }
 
         /// <summary>
@@ -132,16 +152,23 @@ namespace CodeSparkNET.Controllers
         [HttpGet]
         public async Task<IActionResult> ConfirmEmail(string email, string token)
         {
-
-            var model = new ConfirmEmailDto { Email = email, Token = token };
-            var result = await _accountService.ConfirmEmailAsync(model);
-            if (result.Succeeded)
+            try
             {
-                return Json(new { success = true, message = "Email успешно подтвержден." });
-            }
+                var model = new ConfirmEmailDto { Email = email, Token = token };
+                var result = await _accountService.ConfirmEmailAsync(model);
+                if (result.Succeeded)
+                {
+                    return Json(new { success = true, message = "Email успешно подтвержден." });
+                }
 
-            var errors = result.Errors.Select(e => e.Description).ToArray();
-            return Json(new { success = false, message = errors });
+                var errors = result.Errors.Select(e => e.Description).ToArray();
+                return Json(new { success = false, message = "Ошибка обновления данных." });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка подтверждения email {email}", email);
+                return Json(new { success = false, message = "Ошибка подтверждения email." });
+            }
         }
         /// <summary>
         /// Change user password
@@ -169,7 +196,7 @@ namespace CodeSparkNET.Controllers
                 foreach (var err in result.Errors)
                     ModelState.AddModelError(string.Empty, err.Description);
 
-                return Json(new { success = false, message = "Ошибка смены пароля" });
+                return Json(new { success = false, message = "Ошибка смены пароля." });
             }
             catch (Exception ex)
             {

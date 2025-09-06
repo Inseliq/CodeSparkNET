@@ -4,6 +4,7 @@ using CodeSparkNET.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CodeSparkNET.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250906131737_AddMainModels")]
+    partial class AddMainModels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -118,8 +121,7 @@ namespace CodeSparkNET.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -127,7 +129,7 @@ namespace CodeSparkNET.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("CourseAssignments");
+                    b.ToTable("CourseAssignment");
                 });
 
             modelBuilder.Entity("CodeSparkNET.Models.CourseDetail", b =>
@@ -144,7 +146,7 @@ namespace CodeSparkNET.Migrations
 
                     b.HasKey("ProductId");
 
-                    b.ToTable("CourseDetails");
+                    b.ToTable("CourseDetail");
                 });
 
             modelBuilder.Entity("CodeSparkNET.Models.CourseEnrollment", b =>
@@ -152,6 +154,9 @@ namespace CodeSparkNET.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<Guid>("CourseId")
                         .HasColumnType("uniqueidentifier");
@@ -168,13 +173,15 @@ namespace CodeSparkNET.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AppUserId");
+
                     b.HasIndex("CourseId");
 
                     b.HasIndex("UserId", "CourseId")
                         .IsUnique()
                         .HasDatabaseName("UX_Enrollment_User_Course");
 
-                    b.ToTable("CourseEnrollments");
+                    b.ToTable("CourseEnrollment");
                 });
 
             modelBuilder.Entity("CodeSparkNET.Models.Lesson", b =>
@@ -195,14 +202,13 @@ namespace CodeSparkNET.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ModuleId");
 
-                    b.ToTable("Lessons");
+                    b.ToTable("Lesson");
                 });
 
             modelBuilder.Entity("CodeSparkNET.Models.Module", b =>
@@ -215,19 +221,17 @@ namespace CodeSparkNET.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Order")
-                        .HasColumnType("int")
-                        .HasColumnName("SortOrder");
+                        .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("Modules");
+                    b.ToTable("Module");
                 });
 
             modelBuilder.Entity("CodeSparkNET.Models.Product", b =>
@@ -235,6 +239,11 @@ namespace CodeSparkNET.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CratedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -269,7 +278,7 @@ namespace CodeSparkNET.Migrations
                     b.HasIndex("Slug")
                         .IsUnique();
 
-                    b.ToTable("Products");
+                    b.ToTable("Product");
                 });
 
             modelBuilder.Entity("CodeSparkNET.Models.UserAssignment", b =>
@@ -281,27 +290,32 @@ namespace CodeSparkNET.Migrations
                     b.Property<string>("AnswerText")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<Guid>("AssignmentId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("FileUrl")
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double?>("Grade")
+                        .HasColumnType("float");
 
                     b.Property<DateTime>("SubmittedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AppUserId");
+
                     b.HasIndex("AssignmentId");
 
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserAssignments");
+                    b.ToTable("UserAssignment");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -471,7 +485,7 @@ namespace CodeSparkNET.Migrations
                     b.HasOne("CodeSparkNET.Models.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Module");
 
@@ -491,19 +505,15 @@ namespace CodeSparkNET.Migrations
 
             modelBuilder.Entity("CodeSparkNET.Models.CourseEnrollment", b =>
                 {
+                    b.HasOne("CodeSparkNET.Models.AppUser", null)
+                        .WithMany("Enrollments")
+                        .HasForeignKey("AppUserId");
+
                     b.HasOne("CodeSparkNET.Models.CourseDetail", "Course")
                         .WithMany()
                         .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("CodeSparkNET.Models.AppUser", "AppUser")
-                        .WithMany("Enrollments")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("AppUser");
 
                     b.Navigation("Course");
                 });
@@ -532,19 +542,15 @@ namespace CodeSparkNET.Migrations
 
             modelBuilder.Entity("CodeSparkNET.Models.UserAssignment", b =>
                 {
+                    b.HasOne("CodeSparkNET.Models.AppUser", null)
+                        .WithMany("Assignments")
+                        .HasForeignKey("AppUserId");
+
                     b.HasOne("CodeSparkNET.Models.CourseAssignment", "CourseAssignment")
                         .WithMany("UserAssignments")
                         .HasForeignKey("AssignmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("CodeSparkNET.Models.AppUser", "AppUser")
-                        .WithMany("Assignments")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("AppUser");
 
                     b.Navigation("CourseAssignment");
                 });

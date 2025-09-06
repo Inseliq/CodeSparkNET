@@ -87,6 +87,7 @@ html[cross-browser] {
               align-items: center;
               font-size: var(--fs-btn);
               gap: 5px;
+              white-space: nowrap;
             }
           }
 
@@ -101,6 +102,23 @@ html[cross-browser] {
             font-weight: 600;
             z-index: 2;
             margin-top: 15px;
+
+            ul {
+              text-decoration: none;
+
+              li {
+                display: flex;
+                flex-direction: row;
+                justify-content: flex-start;
+                align-items: center;
+                text-align: left;
+                width: 100%;
+                color: var(--error-message-form);
+                font-weight: 600;
+                z-index: 2;
+                margin-top: 15px;
+              }
+            }
           }
 
           .input_block {
@@ -244,6 +262,34 @@ html[cross-browser] {
             &:nth-child(2) {
               opacity: 0.8;
             }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 1920px) {
+  html[cross-browser] {
+    & body {
+      & main[data-layout="main"][role="main"] {
+        & .__container.register {
+          .form_controller {
+            max-width: 550px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 1920px) {
+  html[cross-browser] {
+    & body {
+      & main[data-layout="main"][role="main"] {
+        & .__container.register {
+          .form_controller {
+            max-width: 525px;
           }
         }
       }

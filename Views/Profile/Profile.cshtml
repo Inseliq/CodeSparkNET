@@ -3,6 +3,11 @@
 @inject UserManager<AppUser> UserManager
 @{
     var user = UserManager.GetUserAsync(User).Result;
+    var confirmResultJson = System.Text.Json.JsonSerializer.Serialize(ViewBag.EmailConfirmationResult ?? "");
+    var confirmMessageJson = System.Text.Json.JsonSerializer.Serialize(ViewBag.EmailConfirmationMessage ?? "");
+    /*Никита смотри эти две нижние переменные это результат подтверждения почту. Когда пользователь переходит по ссылке их
+    письма у него открывается эта страница и пусть через обрабатывается это и если поля не пустые, то выводиться модальное
+    окно с сообщением успешно или нет и с описанием.*/
 }
 @{
     ViewData["Title"] = "Профиль";
@@ -18,7 +23,7 @@
     {
         <div role="alert">
             Ваш email не подтвержден.
-            <a id="confirmEmailBtn" >Отправить письмо с
+            <a id="confirmEmailBtn">Отправить письмо с
                 подтверждением</a>.
         </div>
     }

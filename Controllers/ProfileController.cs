@@ -12,13 +12,11 @@ namespace CodeSparkNET.Controllers
     {
         private readonly ILogger<ProfileController> _logger;
         private readonly IProfileService _profileService;
-        private readonly IAccountService _accountService;
 
         public ProfileController(ILogger<ProfileController> logger, IProfileService profileService, IAccountService accountService)
         {
             _logger = logger;
             _profileService = profileService;
-            _accountService = accountService;
         }
 
         /// <summary>
@@ -33,10 +31,15 @@ namespace CodeSparkNET.Controllers
 
                 if (!ModelState.IsValid) return View();
 
-                var user = await _accountService.GetUserAsync(User);
+                var user = await _profileService.GetUserAsync(User);
 
                 ViewBag.UserName = user.UserName;
                 ViewBag.Email = user.Email;
+
+                // Message from email confirmation
+                ViewBag.EmailConfirmationResult = TempData["EmailConfirmationResult"];
+                ViewBag.EmailConfirmationMessage = TempData["EmailConfirmationMessage"];
+
                 return View();
             }
             catch (Exception ex)
@@ -60,37 +63,27 @@ namespace CodeSparkNET.Controllers
             try
             {
                 if (!ModelState.IsValid)
-                {
-                    var vmInvalid = new ProfileDto
-                    {
-                        UpdatePersonalProfileDto = model,
-                        ChangePasswordDto = new ChangePasswordDto()
-                    };
+                    return Json(new { success = false, message = "Ошибка изменения." });
 
-                    ViewBag.UserName = model?.UserName;
-                    ViewBag.Email = model?.Email;
-                    ViewBag.Role = User?.FindFirstValue(ClaimTypes.Role);
-
-                    return View("Profile", vmInvalid);
-                }
-
-                var user = await _accountService.GetUserAsync(User);
+                var user = await _profileService.GetUserAsync(User);
                 var result = await _profileService.UpdatePersonalProfileAsync(user.Email, model);
 
                 if (result.Succeeded)
                 {
+                    await _profileService.RefreshSignInAsync(user);
                     // PRG: redirect to GET Profile so updated data is loaded
-                    return RedirectToAction(nameof(Profile));
+                    return Json(new { success = true, message = "Данные изменены." });
                 }
 
                 foreach (var err in result.Errors)
                     ModelState.AddModelError(string.Empty, err.Description);
 
-                ViewBag.UserName = model?.UserName;
-                ViewBag.Email = model?.Email;
-                ViewBag.Role = User?.FindFirstValue(ClaimTypes.Role);
+                var errors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToArray();
 
-                return View("Profile", model); //TODO: return Json to show modal or text about result
+                return Json(new { success = false, message = "Ошибка изменения.", errors });
             }
             catch (Exception ex)
             {
@@ -130,9 +123,9 @@ namespace CodeSparkNET.Controllers
 
                     return BadRequest(new { success = false, errors = modelErrors });
                 }
-                var user = await _accountService.GetUserAsync(User);
+                var user = await _profileService.GetUserAsync(User);
 
-                await _accountService.SendEmailConfirmationLinkAsync(user.Email);
+                await _profileService.SendEmailConfirmationLinkAsync(user.Email);
                 return Json(new { success = true, message = "Проверьте вашу почту." });
             }
             catch (Exception ex)
@@ -149,27 +142,35 @@ namespace CodeSparkNET.Controllers
         /// <param name="email">The email address to confirm.</param>
         /// <param name="token">The token used to confirm the email address.</param>
         /// <returns>Returns a JSON result indicating the success or failure of the email confirmation.</returns>
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> ConfirmEmail(string email, string token)
         {
             try
             {
                 var model = new ConfirmEmailDto { Email = email, Token = token };
-                var result = await _accountService.ConfirmEmailAsync(model);
+                var result = await _profileService.ConfirmEmailAsync(model);
                 if (result.Succeeded)
                 {
-                    return Json(new { success = true, message = "Email успешно подтвержден." });
+                    TempData["EmailConfirmationResult"] = "success";
+                    TempData["EmailConfirmationMessage"] = "Email успешно подтвержден.";
                 }
-
-                var errors = result.Errors.Select(e => e.Description).ToArray();
-                return Json(new { success = false, message = "Ошибка обновления данных." });
+                else
+                {
+                    var errors = result.Errors.Select(e => e.Description).ToArray();
+                    TempData["EmailConfirmationResult"] = "error";
+                    TempData["EmailConfirmationMessage"] = string.Join(" ", errors);
+                }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Ошибка подтверждения email {email}", email);
-                return Json(new { success = false, message = "Ошибка подтверждения email." });
+                TempData["EmailConfirmationResult"] = "error";
+                TempData["EmailConfirmationMessage"] = "Ошибка подтверждения email.";
             }
+            return RedirectToAction(nameof(Profile));
         }
+
         /// <summary>
         /// Change user password
         /// </summary>
@@ -187,8 +188,8 @@ namespace CodeSparkNET.Controllers
                     return Json(new { success = false, message = "Ошибка смены пароля" });
                 }
 
-                var user = await _accountService.GetUserAsync(User);
-                var result = await _accountService.ChangePasswordAsync(user.Email, model);
+                var user = await _profileService.GetUserAsync(User);
+                var result = await _profileService.ChangePasswordAsync(user.Email, model);
 
                 if (result.Succeeded)
                     return Json(new { success = true, message = "Пароль успешно изменен." });
@@ -200,7 +201,7 @@ namespace CodeSparkNET.Controllers
             }
             catch (Exception ex)
             {
-                var user = await _accountService.GetUserAsync(User);
+                var user = await _profileService.GetUserAsync(User);
                 _logger.LogError(ex, "Ошибка смены пароля у пользователя {email}", user.Email);
                 return Json(new { success = false, message = "Ошибка смены пароля" });
             }

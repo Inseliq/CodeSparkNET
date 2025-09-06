@@ -1,0 +1,191 @@
+@using CodeSparkNET.Dtos
+@using CodeSparkNET.Models.Enum
+@model CatalogDto
+
+<!-- Информация о результатах -->
+<div class="results-info d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <span class="text-muted">
+            Показано @Model.Products.Count() из @Model.FilteredProductsCount товаров
+            @if (Model.HasActiveFilters)
+            {
+                <span class="badge bg-primary ms-2">Фильтры применены</span>
+            }
+        </span>
+    </div>
+
+</div>
+
+<!-- Активные фильтры (теги) -->
+@if (Model.HasActiveFilters)
+{
+    <div class="active-filters mb-3">
+        <span class="text-muted me-2">Активные фильтры:</span>
+
+        @if (Model.Filters.HasSearchQuery)
+        {
+            <span class="badge bg-secondary me-1">
+                Поиск: "@Model.Filters.SearchQuery"
+                <a href="#" class="text-white ms-1 remove-filter" data-filter="SearchQuery">×</a>
+            </span>
+        }
+
+        @if (Model.Filters.HasPriceFilter)
+        {
+            <span class="badge bg-secondary me-1">
+                Цена: @Model.Filters.MinPrice?.ToString("C") - @Model.Filters.MaxPrice?.ToString("C")
+                <a href="#" class="text-white ms-1 remove-filter" data-filter="Price">×</a>
+            </span>
+        }
+
+        @if (Model.Filters.HasDiscount == true)
+        {
+            <span class="badge bg-secondary me-1">
+                Со скидкой
+                <a href="#" class="text-white ms-1 remove-filter" data-filter="HasDiscount">×</a>
+            </span>
+        }
+    </div>
+}
+
+<!-- Список товаров -->
+@if (Model.Products.Any())
+{
+
+    <!-- Список товаров -->
+    <div class="products-list-container">
+        @foreach (var product in Model.Products)
+        {
+            @await Html.PartialAsync("_ProductListItem", product)
+        }
+    </div>
+
+    <!-- Пагинация -->
+    @if (Model.Pagination.TotalPages > 1)
+    {
+        <nav aria-label="Пагинация каталога" class="mt-4">
+            <ul class="pagination justify-content-center">
+                <!-- Предыдущая страница -->
+                <li class="page-item @(!Model.Pagination.HasPreviousPage ? "disabled" : "")">
+                    @if (Model.Pagination.HasPreviousPage)
+                    {
+                        <a class="page-link" href="#" data-page="@(Model.Pagination.CurrentPage - 1)">
+                            <i class="fas fa-chevron-left"></i> Предыдущая
+                        </a>
+                    }
+                    else
+                    {
+                        <span class="page-link">
+                            <i class="fas fa-chevron-left"></i> Предыдущая
+                        </span>
+                    }
+                </li>
+
+                <!-- Номера страниц -->
+                @foreach (var pageNumber in Model.Pagination.PageNumbers)
+                {
+                    <li class="page-item @(pageNumber == Model.Pagination.CurrentPage ? "active" : "")">
+                        @if (pageNumber == Model.Pagination.CurrentPage)
+                        {
+                            <span class="page-link">@pageNumber</span>
+                        }
+                        else
+                        {
+                            <a class="page-link" href="#" data-page="@pageNumber">@pageNumber</a>
+                        }
+                    </li>
+                }
+
+                <!-- Следующая страница -->
+                <li class="page-item @(!Model.Pagination.HasNextPage ? "disabled" : "")">
+                    @if (Model.Pagination.HasNextPage)
+                    {
+                        <a class="page-link" href="#" data-page="@(Model.Pagination.CurrentPage + 1)">
+                            Следующая <i class="fas fa-chevron-right"></i>
+                        </a>
+                    }
+                    else
+                    {
+                        <span class="page-link">
+                            Следующая <i class="fas fa-chevron-right"></i>
+                        </span>
+                    }
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Информация о пагинации -->
+        <div class="pagination-info text-center text-muted mt-2">
+            Страница @Model.Pagination.CurrentPage из @Model.Pagination.TotalPages
+            (@Model.Pagination.TotalItems товаров всего)
+        </div>
+    }
+}
+else
+{
+    <!-- Пустой результат -->
+    <div class="empty-results text-center py-5">
+        <div class="mb-4">
+            <i class="fas fa-search fa-3x text-muted"></i>
+        </div>
+        <h4>Товары не найдены</h4>
+        <p class="text-muted">
+            @if (Model.HasActiveFilters)
+            {
+                <span>По вашим критериям поиска ничего не найдено. Попробуйте изменить фильтры.</span>
+            }
+            else
+            {
+                <span>В каталоге пока нет товаров.</span>
+            }
+        </p>
+        @if (Model.HasActiveFilters)
+        {
+            <a href="@Url.Action("Index", "Catalog")" class="btn btn-primary">
+                Сбросить все фильтры
+            </a>
+        }
+    </div>
+}
+
+<script>
+    // Обработка пагинации
+    $('.page-link[data-page]').on('click', function (e) {
+        e.preventDefault();
+        var page = $(this).data('page');
+        $('input[name="Page"]').val(page);
+        $('#filtersForm').submit();
+    });
+
+    // Обработка смены количества товаров на странице
+    $('#pageSize').on('change', function () {
+        $('input[name="PageSize"]').val($(this).val());
+        $('input[name="Page"]').val(1); // Сброс на первую страницу
+        $('#filtersForm').submit();
+    });
+
+    // Удаление отдельных фильтров
+    $('.remove-filter').on('click', function (e) {
+        e.preventDefault();
+        var filter = $(this).data('filter');
+
+        switch (filter) {
+            case 'SearchQuery':
+                $('input[name="SearchQuery"]').val('');
+                break;
+            case 'Price':
+                $('input[name="MinPrice"]').val('');
+                $('input[name="MaxPrice"]').val('');
+                break;
+            case 'HasDiscount':
+                $('input[name="HasDiscount"]').prop('checked', false);
+                break;
+            case 'OnlyFeatured':
+                $('input[name="OnlyFeatured"]').prop('checked', false);
+                break;
+        }
+
+        $('input[name="Page"]').val(1);
+        $('#filtersForm').submit();
+    });
+</script>

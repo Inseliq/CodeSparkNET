@@ -22,5 +22,25 @@ namespace CodeSparkNET.Models
         public bool IsPublished { get; set; } // Whether the product is published or not
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow; // Set default to current UTC time
 
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal? OriginalPrice { get; set; } // Original price for discounts
+
+        public int ViewsCount { get; set; } = 0; // Number of views
+        public int SalesCount { get; set; } = 0; //  Number of sales
+
+        // Rating
+        public decimal AverageRating { get; set; } = 0;
+        public int ReviewsCount { get; set; } = 0;
+
+        // Navigation properties
+        public ICollection<ProductCategory> ProductCategories { get; set; } = new List<ProductCategory>();
+
+        // Computed properties
+        public bool HasDiscount => OriginalPrice.HasValue && OriginalPrice > Price;
+
+        public decimal DiscountPercentage => HasDiscount && OriginalPrice.HasValue
+            ? Math.Round(((OriginalPrice.Value - Price) / OriginalPrice.Value) * 100, 0)
+            : 0;
+
     }
 }

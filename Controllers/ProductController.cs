@@ -67,17 +67,18 @@ namespace CodeSparkNET.Controllers
             // bool hasUserOrdered = await _context.CourseOrders
             //     .AnyAsync(co => co.UserId == userId && co.CourseId == courseDetail.Id);
 
-            var dto = new Dtos.Products.CourseDto
-            {
-                Product = product,
-                CourseDetail = courseDetail,
-                Modules = courseDetail.Modules?.ToList() ?? new List<Models.Module>(),
-                TotalLessons = courseDetail.Modules?.Sum(m => m.Lessons.Count) ?? 0,
-                IsUserEnrolled = false,
-                EnrolledStudents = 0
-            };
+            // var dto = new Dtos.Products.CourseDto
+            // {
+            //     Product = product,
+            //     CourseDetail = courseDetail,
+            //     Modules = courseDetail.Modules?.ToList() ?? new List<Models.Module>(),
+            //     TotalLessons = courseDetail.Modules?.Sum(m => m.Lessons.Count) ?? 0,
+            //     IsUserEnrolled = false,
+            //     EnrolledStudents = 0
+            // };
 
-            return View("CourseDetails", dto);
+            return View("CourseDetails");
+            // return View("CourseDetails", dto);
 
         }
 

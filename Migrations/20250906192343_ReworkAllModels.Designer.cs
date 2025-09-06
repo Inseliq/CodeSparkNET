@@ -4,6 +4,7 @@ using CodeSparkNET.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CodeSparkNET.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250906192343_ReworkAllModels")]
+    partial class ReworkAllModels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -138,11 +141,11 @@ namespace CodeSparkNET.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 10, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 23, 42, 920, DateTimeKind.Utc).AddTicks(5423),
                             Description = "Каталог курсов, веб-шаблонов и дипломных работ",
                             Name = "Каталог товаров",
                             TotalViews = 0,
-                            UpdatedAt = new DateTime(2024, 10, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2025, 9, 6, 19, 23, 42, 920, DateTimeKind.Utc).AddTicks(5655)
                         });
                 });
 
@@ -276,8 +279,8 @@ namespace CodeSparkNET.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("11111111-1111-1111-1111-111111111111"),
-                            CreatedAt = new DateTime(2024, 10, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Id = new Guid("2f40ca2d-4a0f-492c-9cdf-08076e4af3bb"),
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 23, 42, 921, DateTimeKind.Utc).AddTicks(6037),
                             Description = "Курсы по программированию и разработке ПО",
                             IsActive = true,
                             IsVisible = true,
@@ -286,42 +289,42 @@ namespace CodeSparkNET.Migrations
                             Name = "Программирование",
                             Slug = "programming",
                             SortOrder = 1,
-                            UpdatedAt = new DateTime(2024, 10, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2025, 9, 6, 19, 23, 42, 921, DateTimeKind.Utc).AddTicks(6258)
                         },
                         new
                         {
-                            Id = new Guid("22222222-2222-2222-2222-222222222222"),
-                            CreatedAt = new DateTime(2024, 10, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Id = new Guid("8c7b7360-47de-49cd-9d4c-1a1e7e5dbc3b"),
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 23, 42, 921, DateTimeKind.Utc).AddTicks(7362),
                             Description = "Курсы по созданию веб-сайтов и веб-приложений",
                             IsActive = true,
                             IsVisible = true,
                             MetaDescription = "Освойте создание современных веб-приложений",
                             MetaTitle = "Курсы веб-разработки",
                             Name = "Веб-разработка",
-                            ParentCategoryId = new Guid("11111111-1111-1111-1111-111111111111"),
+                            ParentCategoryId = new Guid("2f40ca2d-4a0f-492c-9cdf-08076e4af3bb"),
                             Slug = "web-development",
                             SortOrder = 1,
-                            UpdatedAt = new DateTime(2024, 10, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2025, 9, 6, 19, 23, 42, 921, DateTimeKind.Utc).AddTicks(7363)
                         },
                         new
                         {
-                            Id = new Guid("33333333-3333-3333-3333-333333333333"),
-                            CreatedAt = new DateTime(2024, 10, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Id = new Guid("91757b46-3d2a-401a-8d1e-730a6ebe0cd3"),
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 23, 42, 921, DateTimeKind.Utc).AddTicks(7654),
                             Description = "Курсы по созданию мобильных приложений",
                             IsActive = true,
                             IsVisible = true,
                             MetaDescription = "Создавайте мобильные приложения для iOS и Android",
                             MetaTitle = "Курсы мобильной разработки",
                             Name = "Мобильная разработка",
-                            ParentCategoryId = new Guid("11111111-1111-1111-1111-111111111111"),
+                            ParentCategoryId = new Guid("2f40ca2d-4a0f-492c-9cdf-08076e4af3bb"),
                             Slug = "mobile-development",
                             SortOrder = 2,
-                            UpdatedAt = new DateTime(2024, 10, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2025, 9, 6, 19, 23, 42, 921, DateTimeKind.Utc).AddTicks(7654)
                         },
                         new
                         {
-                            Id = new Guid("44444444-4444-4444-4444-444444444444"),
-                            CreatedAt = new DateTime(2024, 10, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Id = new Guid("cb0d9f77-feab-4eb4-b2a0-0dc43fbf6d4c"),
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 23, 42, 921, DateTimeKind.Utc).AddTicks(7923),
                             Description = "Курсы по анализу данных и машинному обучению",
                             IsActive = true,
                             IsVisible = true,
@@ -330,12 +333,12 @@ namespace CodeSparkNET.Migrations
                             Name = "Data Science",
                             Slug = "data-science",
                             SortOrder = 2,
-                            UpdatedAt = new DateTime(2024, 10, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2025, 9, 6, 19, 23, 42, 921, DateTimeKind.Utc).AddTicks(7923)
                         },
                         new
                         {
-                            Id = new Guid("55555555-5555-5555-5555-555555555555"),
-                            CreatedAt = new DateTime(2024, 10, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Id = new Guid("136eaf07-0d67-4999-9209-d5f0f458d02c"),
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 23, 42, 921, DateTimeKind.Utc).AddTicks(8191),
                             Description = "Готовые шаблоны для веб-сайтов",
                             IsActive = true,
                             IsVisible = true,
@@ -344,12 +347,12 @@ namespace CodeSparkNET.Migrations
                             Name = "Веб-шаблоны",
                             Slug = "web-templates",
                             SortOrder = 3,
-                            UpdatedAt = new DateTime(2024, 10, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2025, 9, 6, 19, 23, 42, 921, DateTimeKind.Utc).AddTicks(8192)
                         },
                         new
                         {
-                            Id = new Guid("66666666-6666-6666-6666-666666666666"),
-                            CreatedAt = new DateTime(2024, 10, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Id = new Guid("13856811-69dc-46c2-ab08-991286d89a01"),
+                            CreatedAt = new DateTime(2025, 9, 6, 19, 23, 42, 921, DateTimeKind.Utc).AddTicks(8452),
                             Description = "Готовые дипломные и курсовые работы",
                             IsActive = true,
                             IsVisible = true,
@@ -358,7 +361,7 @@ namespace CodeSparkNET.Migrations
                             Name = "Дипломные работы",
                             Slug = "diploma-works",
                             SortOrder = 4,
-                            UpdatedAt = new DateTime(2024, 10, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2025, 9, 6, 19, 23, 42, 921, DateTimeKind.Utc).AddTicks(8453)
                         });
                 });
 
@@ -962,29 +965,6 @@ namespace CodeSparkNET.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "a3f9c6d2-1f4b-4b8e-9f2a-111111111111",
-                            ConcurrencyStamp = "c1f9c6d2-1f4b-4b8e-9f2a-111111111111",
-                            Name = "Admin",
-                            NormalizedName = "ADMIN"
-                        },
-                        new
-                        {
-                            Id = "b4f9c6d2-2f4b-4b8e-9f2a-222222222222",
-                            ConcurrencyStamp = "d2f9c6d2-2f4b-4b8e-9f2a-222222222222",
-                            Name = "User",
-                            NormalizedName = "USER"
-                        },
-                        new
-                        {
-                            Id = "c5f9c6d2-3f4b-4b8e-9f2a-333333333333",
-                            ConcurrencyStamp = "e3f9c6d2-3f4b-4b8e-9f2a-333333333333",
-                            Name = "Prime",
-                            NormalizedName = "PRIME"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

@@ -31,7 +31,7 @@
 else
 {
     @* Ник img(профиля) *@
-    <span class="welcome">Привет, @userName</span>
+    <span class="welcome">Привет, @User.Identity.Name</span>
 
     <form asp-action="Logout" asp-controller="Account" method="post" class="logout-form">
         @Html.AntiForgeryToken()

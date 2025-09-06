@@ -1,0 +1,184 @@
+@using CodeSparkNET.Dtos
+@using CodeSparkNET.Models.Enum
+@model CatalogDto
+
+<div class="catalog-page">
+
+    <!-- Заголовок и статистика -->
+    <div class="catalog-header d-flex justify-content-between align-items-center mb-4">
+        <div>
+
+            <small class="text-muted">
+                Показано @Model.Products.Count() из @Model.FilteredProductsCount товаров
+                @if (Model.HasActiveFilters)
+                {
+                    <span>(применены фильтры)</span>
+                }
+            </small>
+        </div>
+
+        <!-- Переключатель макета и сортировка -->
+        <div class="catalog-controls d-flex align-items-center gap-3">
+
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Боковая панель с фильтрами -->
+        <div class="col-md-3">
+            <div class="filters-sidebar">
+                <h5>Фильтры</h5>
+
+                @using (Html.BeginForm("Index", "Catalog", FormMethod.Get, new { id = "filtersForm", @class = "filters-form" }))
+                {
+                    <!-- Скрытые поля для пагинации -->
+                    @Html.Hidden("Page", 1)
+                    @Html.HiddenFor(m => m.Filters.PageSize)
+                    @Html.HiddenFor(m => m.Filters.SortBy)
+
+                    <!-- Поиск -->
+                    <div class="filter-group mb-3">
+                        @Html.LabelFor(m => m.Filters.SearchQuery, new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.Filters.SearchQuery, new { @class = "form-control", placeholder = "Введите название товара..." })
+                    </div>
+
+                    <!-- Категории -->
+                    @if (Model.FilterOptions.Categories.Any())
+                    {
+                        <div class="filter-group mb-3">
+                            @Html.LabelFor(m => m.Filters.CategoryIds, "Категории", new { @class = "form-label" })
+                            <div class="category-checkboxes">
+                                @for (int i = 0; i < Model.FilterOptions.Categories.Count; i++)
+                                {
+                                    var category = Model.FilterOptions.Categories[i];
+                                    <div class="form-check">
+                                        <input type="checkbox" name="CategoryIds" value="@category.Value"
+                                               class="form-check-input" id="category_@category.Value"
+                                               @(Model.Filters.CategoryIds.Contains(Guid.Parse(category.Value)) ? "checked" : "")>
+                                        <label class="form-check-label" for="category_@category.Value">
+                                            @category.Text
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+
+                    <!-- Типы продуктов -->
+                    <div class="filter-group mb-3">
+                        @Html.LabelFor(m => m.Filters.ProductTypes, "Тип товара", new { @class = "form-label" })
+                        <div class="product-type-checkboxes">
+                            @foreach (var type in Model.FilterOptions.ProductTypes)
+                            {
+                                <div class="form-check">
+                                    <input type="checkbox" name="ProductTypes" value="@type.Value"
+                                           class="form-check-input" id="type_@type.Value"
+                                           @(Model.Filters.ProductTypes.Contains((ProductType)int.Parse(type.Value)) ? "checked" : "")>
+                                    <label class="form-check-label" for="type_@type.Value">
+                                        @type.Text
+                                    </label>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Ценовой диапазон -->
+                    <div class="filter-group mb-3">
+                        <label class="form-label">Цена</label>
+                        <div class="row">
+                            <div class="col-6">
+                                @Html.TextBoxFor(m => m.Filters.MinPrice, new { @class = "form-control", placeholder = "От", type = "number", min = "0" })
+                            </div>
+                            <div class="col-6">
+                                @Html.TextBoxFor(m => m.Filters.MaxPrice, new { @class = "form-control", placeholder = "До", type = "number", min = "0" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Кнопки управления фильтрами -->
+                    <div class="filter-actions">
+                        <button type="submit" class="btn btn-primary w-100 mb-2">Применить фильтры</button>
+                        @if (Model.HasActiveFilters)
+                        {
+                            <a href="@Url.Action("Index", "Catalog")" class="btn btn-outline-secondary w-100">
+                                Сбросить фильтры
+                            </a>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Основной контент с товарами -->
+        <div class="col-md-9">
+            <div id="products-container">
+                @await Html.PartialAsync("_ProductsList", Model)
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Частичное представление для списка товаров -->
+<div style="display: none;">
+    @* Этот блок будет заменен содержимым _ProductsList.cshtml *@
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Обработка смены макета
+            $('.layout-btn').on('click', function() {
+                var layout = $(this).data('layout');
+                $('input[name="Layout"]').val(layout);
+                $('#filtersForm').submit();
+            });
+
+            // Обработка смены сортировки
+            $('#sortBy').on('change', function() {
+                $('input[name="SortBy"]').val($(this).val());
+                $('#filtersForm').submit();
+            });
+
+            // AJAX отправка фильтров (опционально)
+            $('#filtersForm').on('submit', function(e) {
+                e.preventDefault();
+
+                var formData = $(this).serialize();
+
+                $.post('@Url.Action("Filter", "Catalog")', formData)
+                    .done(function(data) {
+                        $('#products-container').html(data);
+
+                        // Обновляем URL без перезагрузки страницы
+                        var newUrl = '@Url.Action("Index", "Catalog")?' + formData;
+                        history.pushState(null, '', newUrl);
+                    })
+                    .fail(function() {
+                        // Если AJAX не сработал, отправляем обычную форму
+                        window.location.href = '@Url.Action("Index", "Catalog")?' + formData;
+                    });
+            });
+
+            // Автоматическая отправка при изменении чекбоксов
+            $('.filters-form input[type="checkbox"], .filters-form input[type="number"]').on('change', function() {
+                // Сброс страницы на первую при изменении фильтров
+                $('input[name="Page"]').val(1);
+
+                // Задержка для лучшего UX
+                setTimeout(function() {
+                    $('#filtersForm').submit();
+                }, 300);
+            });
+
+            // Поиск с задержкой
+            var searchTimeout;
+            $('input[name="SearchQuery"]').on('input', function() {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(function() {
+                    $('input[name="Page"]').val(1);
+                    $('#filtersForm').submit();
+                }, 500);
+            });
+        });
+    </script>
+}

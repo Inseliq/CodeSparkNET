@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace CodeSparkNET.Services
 {
-    public class AccountService : IAccountService
+    public class AccountService : IAccountService, IProfileService
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
@@ -188,9 +188,25 @@ namespace CodeSparkNET.Services
             return result;
         }
 
+        public async Task<IdentityResult> UpdatePersonalProfileAsync(string email, UpdatePersonalProfileDto model)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user == null && model == null)
+                return null;
+
+            user.UserName = model.UserName;
+            user.Email = model.Email;
+
+            return await _userManager.UpdateAsync(user);
+        }
+
         public async Task<AppUser> GetUserAsync(ClaimsPrincipal user)
         {
             return await _userManager.GetUserAsync(user);
         }
+
+        public async Task RefreshSignInAsync(AppUser user) => await _signInManager.RefreshSignInAsync(user);
+
     }
 }

@@ -16,8 +16,6 @@ namespace CodeSparkNET.Models
         public string Title { get; set; } = null!;
         public string Description { get; set; } = null!;
         public DateTime DeadLine { get; set; }
-        public Product Product { get; set; }
-
         public ICollection<UserAssignment> UserAssignments { get; set; } = new List<UserAssignment>();
     }
 }

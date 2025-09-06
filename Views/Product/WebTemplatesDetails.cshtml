@@ -1,0 +1,22 @@
+@using CodeSparkNET.Dtos.Products
+@model WebTemplateDto
+<div class="template-hero">
+    <h1>@Model.Product.Title</h1>
+    <p>Фреймворк: @Model.TemplateDetail.Framework</p>
+    <p>Рейтинг: ⭐ @Model.AverageRating.ToString("F1")</p>
+</div>
+<div class="template-demo">
+    <a href="@Model.TemplateDetail.DemoUrl" target="_blank" class="btn btn-success">
+        Посмотреть демо
+    </a>
+</div>
+<div class="template-reviews">
+    @foreach (var review in Model.Reviews)
+    {
+        <div class="review">
+            <strong>@review.AppUser.FullName</strong>
+            <span>⭐ @review.Rating</span>
+            <p>@review.ReviewText</p>
+        </div>
+    }
+</div>

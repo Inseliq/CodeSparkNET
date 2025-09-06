@@ -7,22 +7,19 @@
 @{
     ViewData["Title"] = "Profile";
 }
+@section Styles {
+    <link rel="stylesheet" href="~/css/style/profile.css">
+}
 
 <h1>@ViewData["Title"]</h1>
 
-<div>
+<div class="__container profile_page">
     @if (UserManager.IsEmailConfirmedAsync(user).Result is false)
     {
         <div class="alert alert-warning" role="alert">
             Ваш email не подтвержден.
-            <form asp-action="SendEmailConfirmation" asp-controller="Profile" method="post" class="d-inline">
-                @Html.AntiForgeryToken()
-
-                <!-- TODO:Send email via js and remove this input -->
-                <input type="text" name="email" value="@ViewBag.Email" hidden />
-                <button type="submit" class="btn btn-link p-0 m-0 align-baseline">Отправить письмо с
-                    подтверждением</button>.
-            </form>
+            <a id="confirmEmailBtn" class="btn btn-link p-0 m-0 align-baseline">Отправить письмо с
+                подтверждением</a>.
         </div>
     }
     else
@@ -55,7 +52,7 @@
         </div>
         <button type="submit" data-style="hyper-button" hover>Сохранить</button>
     </form>
-    <form asp-action="ChangePassword" asp-controller="Profile" method="post" class="form_controller">
+    <form asp-action="ChangePassword" asp-controller="Account" method="post" class="form_controller">
         @Html.AntiForgeryToken()
 
         <div class="description">
@@ -81,4 +78,45 @@
         </div>
         <button type="submit" data-style="hyper-button" hover>Сохранить</button>
     </form>
+
+    <div class="js-window hidden" js-window-send-confirmation-email>
+        <div class="description" hover>
+            <h2>Проверьте вашу почту</h2>
+            <a hover data-style="hyper-button"><span>Продолжить</span></a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const confirmEmailBtn = document.getElementById('confirmEmailBtn');
+            // Handle confirm email button click
+            confirmEmailBtn.addEventListener('click', async (event) => {
+                event.preventDefault();
+
+                showSendEmailResultModal();
+
+                try {
+                    const response = await fetch('@Url.Action("SendEmailConfirmation", "Profile")', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                } catch (error) {
+                    console.error('Произошла ошибка:', error);
+                }
+            });
+            //TODO: add modal windows for update profile and change password
+            function showSendEmailResultModal() {
+                const modalWindow = document.querySelector('[js-window-send-confirmation-email]');
+
+                if (!modalWindow) {
+                    return;
+                }
+
+                modalWindow.classList.replace('hidden', 'visible');
+            }
+        });
+    </script>
+
 </div>

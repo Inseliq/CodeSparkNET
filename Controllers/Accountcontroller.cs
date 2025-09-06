@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using CodeSparkNET.Dtos.Account;
+using CodeSparkNET.Dtos.Profile;
 using CodeSparkNET.Interfaces;
 using CodeSparkNET.Models;
 using Microsoft.AspNetCore.Identity;
@@ -10,6 +11,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace CodeSparkNET.Controllers
 {
+    /// <summary>
+    /// Controller responsible for handling account-related actions such as registration, login, and password management.
+    /// </summary>
     public class AccountController : Controller
     {
         private ILogger<AccountController> _logger;
@@ -22,12 +26,21 @@ namespace CodeSparkNET.Controllers
             _accountService = accountService;
         }
 
+        /// <summary>
+        /// Show register page
+        /// </summary>
+        /// <returns>A view for the register page.</returns>
         [HttpGet]
         public IActionResult Register()
         {
             return View();
         }
 
+        /// <summary>
+        /// Register user
+        /// </summary>
+        /// <param name="registerDto">The data transfer object containing the user's registration details.</param>
+        /// <returns>A view for the registration page.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterDto registerDto)
@@ -53,12 +66,21 @@ namespace CodeSparkNET.Controllers
             return RedirectToAction("Login", "Account");
         }
 
+        /// <summary>
+        /// Show login page
+        /// </summary>
+        /// <returns>A view for the login page.</returns>
         [HttpGet]
         public IActionResult Login()
         {
             return View();
         }
 
+        /// <summary>
+        /// Login user
+        /// </summary>
+        /// <param name="loginDto">The data transfer object containing the user's login credentials.</param>
+        /// <returns>A view for the login page.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginDto loginDto)
@@ -80,6 +102,10 @@ namespace CodeSparkNET.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        /// <summary>
+        /// Logout user
+        /// </summary>
+        /// <returns>A redirect to the home page after logging out.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
@@ -88,12 +114,21 @@ namespace CodeSparkNET.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        /// <summary>
+        /// Show forgot password page
+        /// </summary>
+        /// <returns>A view for the forgot password page.</returns>
         [HttpGet]
         public IActionResult ForgotPassword()
         {
             return View();
         }
 
+        /// <summary>
+        /// Send password reset link to user email
+        /// </summary>
+        /// <param name="model">The data transfer object containing the email for which the password reset link is requested.</param>
+        /// <returns>A view for requesting a password reset.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordDto model)
@@ -112,6 +147,12 @@ namespace CodeSparkNET.Controllers
             return Json(new { success = true, message = "Проверьте вашу почту." });
         }
 
+        /// <summary>
+        /// Show reset password page
+        /// </summary>
+        /// <param name="email">The email address associated with the account for which the password is being reset.</param>
+        /// <param name="token">The token used to verify the password reset request.</param>
+        /// <returns>A view for resetting the password with pre-filled email and token.</returns>
         [HttpGet]
         public IActionResult ResetPassword(string email, string token)
         {
@@ -121,6 +162,11 @@ namespace CodeSparkNET.Controllers
             return View(new ResetPasswordDto { Email = email, Token = token });
         }
 
+        /// <summary>
+        /// Reset user password
+        /// </summary>
+        /// <param name="model">The data transfer object containing the email, token, and new password.</param>
+        /// <returns>A JSON response indicating the success or failure of the password reset operation.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword(ResetPasswordDto model)
@@ -144,6 +190,43 @@ namespace CodeSparkNET.Controllers
             var errors = result.Errors.Select(e => e.Description).ToArray();
             return BadRequest(new { success = false, errors });
         }
+
+        /// <summary>
+        /// Change user password
+        /// </summary>
+        /// <param name="model">The data transfer object containing the old and new passwords.</param>
+        /// <returns>A JSON response indicating the success or failure of the password change operation.</returns>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangePassword([Bind(Prefix = "ChangePasswordDto")] ChangePasswordDto model)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    ModelState.AddModelError(string.Empty, "Ошибка смены пароля.");
+                    return Json(new { success = false, message = "Ошибка смены пароля" });
+                }
+
+                var user = await _accountService.GetUserAsync(User);
+                var result = await _accountService.ChangePasswordAsync(user.Email, model);
+
+                if (result.Succeeded)
+                    return Json(new { success = true, message = "Пароль успешно изменен." });
+
+                foreach (var err in result.Errors)
+                    ModelState.AddModelError(string.Empty, err.Description);
+
+                return Json(new { success = false, message = "Ошибка смены пароля" });
+            }
+            catch (Exception ex)
+            {
+                var user = await _accountService.GetUserAsync(User);
+                _logger.LogError(ex, "Ошибка смены пароля у пользователя {email}", user.Email);
+                return Json(new { success = false, message = "Ошибка смены пароля" });
+            }
+        }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

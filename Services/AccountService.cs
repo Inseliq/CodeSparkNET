@@ -45,7 +45,7 @@ namespace CodeSparkNET.Services
             {
                 UserName = model.UserName,
                 Email = model.Email,
-                EmailConfirmed = model.ConfirmAd
+                EmailMarketingConsent = model.ConfirmAd
             };
 
             var createResult = await _userManager.CreateAsync(user, model.Password);

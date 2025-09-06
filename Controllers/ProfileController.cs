@@ -19,6 +19,10 @@ namespace CodeSparkNET.Controllers
             _accountService = accountService;
         }
 
+        /// <summary>
+        /// Show profile page
+        /// </summary>
+        /// <returns>Returns the profile view.</returns>
         [HttpGet]
         public async Task<IActionResult> Profile()
         {
@@ -33,6 +37,11 @@ namespace CodeSparkNET.Controllers
 
         }
 
+        /// <summary>
+        /// Update personal profile data
+        /// </summary>
+        /// <param name="model">The data transfer object containing the updated personal profile information.</param>
+        /// <returns>Returns the updated profile view with the result of the operation.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateProfile([Bind(Prefix = "UpdatePersonalProfileDto")] UpdatePersonalProfileDto model)
@@ -92,39 +101,12 @@ namespace CodeSparkNET.Controllers
 
         }
 
+        /// <summary>
+        /// Send email confirmation link
+        /// </summary>
+        /// <returns>Returns a JSON result indicating the success or failure of the operation.</returns>
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ChangePassword([Bind(Prefix = "ChangePasswordDto")] ChangePasswordDto model)
-        {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    return RedirectToAction(nameof(Profile));
-                }
-
-                var user = await _accountService.GetUserAsync(User);
-                var result = await _accountService.ChangePasswordAsync(user.Email, model);
-
-                if (result.Succeeded)
-                    return RedirectToAction(nameof(Profile));
-
-                foreach (var err in result.Errors)
-                    ModelState.AddModelError(string.Empty, err.Description);
-
-                return RedirectToAction(nameof(Profile), model); //TODO: return Json to show modal or text about result
-            }
-            catch (Exception ex)
-            {
-                var email = User.FindFirstValue(ClaimTypes.Email);
-                _logger.LogError(ex, "Ошибка смены пароля у пользователя {email}", email);
-                return RedirectToAction(nameof(Profile), model);
-            }
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SendEmailConfirmation(SendEmailConfirmationDto model)
+        public async Task<IActionResult> SendEmailConfirmation()
         {
             if (!ModelState.IsValid)
             {
@@ -135,11 +117,18 @@ namespace CodeSparkNET.Controllers
 
                 return BadRequest(new { success = false, errors = modelErrors });
             }
+            var user = await _accountService.GetUserAsync(User);
 
-            await _accountService.SendEmailConfirmationLinkAsync(model.Email);
+            await _accountService.SendEmailConfirmationLinkAsync(user.Email);
             return Json(new { success = true, message = "Проверьте вашу почту." });
         }
 
+        /// <summary>
+        /// Confirm email address
+        /// </summary>
+        /// <param name="email">The email address to confirm.</param>
+        /// <param name="token">The token used to confirm the email address.</param>
+        /// <returns>Returns a JSON result indicating the success or failure of the email confirmation.</returns>
         [HttpGet]
         public async Task<IActionResult> ConfirmEmail(string email, string token)
         {

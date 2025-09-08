@@ -69,19 +69,17 @@ namespace CodeSparkNET.Controllers
 
                 if (result.Succeeded)
                 {
-
+                    await _profileService.UpdateUserClaims(user);
                     // PRG: redirect to GET Profile so updated data is loaded
-                    return RedirectToAction(nameof(Profile));
+                    return Json(new { success = true, message = "Профиль успешно обновлен." });
                 }
 
-                foreach (var err in result.Errors)
-                    ModelState.AddModelError(string.Empty, err.Description);
+                var modelErrors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToArray();
 
-                ViewBag.UserName = model?.UserName;
-                ViewBag.Email = model?.Email;
-                ViewBag.Role = User?.FindFirstValue(ClaimTypes.Role);
-
-                return View("Profile", model); //TODO: return Json to show modal or text about result
+                return Json(new { success = false, errors = modelErrors });
             }
             catch (Exception ex)
             {

@@ -1,6 +1,7 @@
 
 using System.Security.Claims;
 using CodeSparkNET.Dtos.Profile;
+using CodeSparkNET.Models;
 using Microsoft.AspNetCore.Identity;
 
 namespace CodeSparkNET.Interfaces
@@ -10,7 +11,7 @@ namespace CodeSparkNET.Interfaces
         Task<IdentityResult> UpdatePersonalProfileAsync(string email, UpdatePersonalProfileDto personalProfile);
         Task<bool> SendEmailConfirmationLinkAsync(string email);
         Task<IdentityResult> ChangePasswordAsync(string email, ChangePasswordDto model);
-        // Task UpdateUserClaims(ClaimsPrincipal claimsPrincipal);
+        Task UpdateUserClaims(AppUser user);
 
     }
 }

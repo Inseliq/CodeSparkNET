@@ -206,6 +206,9 @@ namespace CodeSparkNET.Services
             return true;
         }
 
-
+        public async Task UpdateUserClaims(AppUser user)
+        {
+            await _signInManager.RefreshSignInAsync(user);
+        }
     }
 }

@@ -17,6 +17,7 @@ html[data-theme-color="dark"] {
   --palette-nav-text: #1f1f1f;
   --palette-nav-site: #191919;
   --palette-text-inv: #ffffff;
+  --palette-text-shadow: #c3c3c3;
   --palette-shadow: #ffffff90;
   --palette-custom: #b9aaee;
   --palette-color-tc: #636363;
@@ -690,6 +691,15 @@ html[data-device="desktop"] {
             background-size: cover;
             opacity: 1;
           }
+        }
+
+        .js-window {
+          position: fixed;
+        }
+
+        .js-window.hidden {
+          opacity: 0;
+          visibility: hidden;
         }
       }
     }

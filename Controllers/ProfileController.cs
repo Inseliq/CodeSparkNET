@@ -61,17 +61,7 @@ namespace CodeSparkNET.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    var vmInvalid = new ProfileDto
-                    {
-                        UpdatePersonalProfileDto = model,
-                        ChangePasswordDto = new ChangePasswordDto()
-                    };
-
-                    ViewBag.UserName = model?.UserName;
-                    ViewBag.Email = model?.Email;
-                    ViewBag.Role = User?.FindFirstValue(ClaimTypes.Role);
-
-                    return View("Profile", vmInvalid);
+                    return Json(new { success = true, message = "Ошибка изменения данных." });
                 }
 
                 var user = await _accountService.GetUserAsync(User);
@@ -79,6 +69,7 @@ namespace CodeSparkNET.Controllers
 
                 if (result.Succeeded)
                 {
+
                     // PRG: redirect to GET Profile so updated data is loaded
                     return RedirectToAction(nameof(Profile));
                 }
@@ -132,7 +123,7 @@ namespace CodeSparkNET.Controllers
                 }
                 var user = await _accountService.GetUserAsync(User);
 
-                await _accountService.SendEmailConfirmationLinkAsync(user.Email);
+                await _profileService.SendEmailConfirmationLinkAsync(user.Email);
                 return Json(new { success = true, message = "Проверьте вашу почту." });
             }
             catch (Exception ex)
@@ -188,7 +179,7 @@ namespace CodeSparkNET.Controllers
                 }
 
                 var user = await _accountService.GetUserAsync(User);
-                var result = await _accountService.ChangePasswordAsync(user.Email, model);
+                var result = await _profileService.ChangePasswordAsync(user.Email, model);
 
                 if (result.Succeeded)
                     return Json(new { success = true, message = "Пароль успешно изменен." });

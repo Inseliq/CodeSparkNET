@@ -17,8 +17,6 @@ namespace CodeSparkNET.Interfaces
         Task SignOutAsync();
         Task<bool> SendPasswordResetLinkAsync(string email);
         Task<IdentityResult> ResetPasswordAsync(ResetPasswordDto model);
-        Task<IdentityResult> ChangePasswordAsync(string email, ChangePasswordDto model);
-        Task<bool> SendEmailConfirmationLinkAsync(string email);
         Task<IdentityResult> ConfirmEmailAsync(ConfirmEmailDto model);
         Task<AppUser> GetUserAsync(ClaimsPrincipal user);
     }

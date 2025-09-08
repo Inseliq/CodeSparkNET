@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace CodeSparkNET.Services
 {
-    public class AccountService : IAccountService
+    public class AccountService : IAccountService, IProfileService
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
@@ -130,6 +130,49 @@ namespace CodeSparkNET.Services
             return result;
         }
 
+        public async Task<IdentityResult> ConfirmEmailAsync(ConfirmEmailDto model)
+        {
+            // Find the user associated with the provided email
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            // If user not found, return a generic failure
+            if (user is null)
+                return IdentityResult.Failed(new IdentityError { Description = "Invalid request." });
+
+            var decodedBytes = WebEncoders.Base64UrlDecode(model.Token);
+            var decodedToken = Encoding.UTF8.GetString(decodedBytes);
+
+            // Attempt to confirm the user's email
+            var result = await _userManager.ConfirmEmailAsync(user, decodedToken);
+
+            // If successful, update the Security Stamp to invalidate any active sessions or tokens
+            if (result.Succeeded)
+            {
+                await _userManager.UpdateSecurityStampAsync(user);
+                return result;
+            }
+
+            return result;
+        }
+
+        public async Task<AppUser> GetUserAsync(ClaimsPrincipal user)
+        {
+            return await _userManager.GetUserAsync(user);
+        }
+
+        public async Task<IdentityResult> UpdatePersonalProfileAsync(string email, UpdatePersonalProfileDto model)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user == null && model == null)
+                return null;
+
+            user.UserName = model.UserName;
+            user.Email = model.Email;
+
+            return await _userManager.UpdateAsync(user);
+        }
+
+
         public async Task<IdentityResult> ChangePasswordAsync(string email, ChangePasswordDto model)
         {
             var user = await _userManager.FindByEmailAsync(email);
@@ -160,37 +203,9 @@ namespace CodeSparkNET.Services
             var confirmationLink = $"{baseUrl}/Profile/ConfirmEmail/?email={emailEscaped}&token={encodedToken}";
 
             await _emailService.SendEmailConfirmationAsync(user.Email!, user.UserName, confirmationLink);
-
             return true;
         }
 
-        public async Task<IdentityResult> ConfirmEmailAsync(ConfirmEmailDto model)
-        {
-            // Find the user associated with the provided email
-            var user = await _userManager.FindByEmailAsync(model.Email);
-            // If user not found, return a generic failure
-            if (user is null)
-                return IdentityResult.Failed(new IdentityError { Description = "Invalid request." });
 
-            var decodedBytes = WebEncoders.Base64UrlDecode(model.Token);
-            var decodedToken = Encoding.UTF8.GetString(decodedBytes);
-
-            // Attempt to confirm the user's email
-            var result = await _userManager.ConfirmEmailAsync(user, decodedToken);
-
-            // If successful, update the Security Stamp to invalidate any active sessions or tokens
-            if (result.Succeeded)
-            {
-                await _userManager.UpdateSecurityStampAsync(user);
-                return result;
-            }
-
-            return result;
-        }
-
-        public async Task<AppUser> GetUserAsync(ClaimsPrincipal user)
-        {
-            return await _userManager.GetUserAsync(user);
-        }
     }
 }

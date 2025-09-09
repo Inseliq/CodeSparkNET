@@ -32,6 +32,7 @@ html[data-device="desktop"] {
           width: 100%;
           flex-direction: column;
           border: 2px solid var(--palette-acient);
+          transition: .3s ease;
           border-radius: 8px;
 
           .block.header {
@@ -165,6 +166,10 @@ html[data-device="desktop"] {
           }
         }
 
+        .l_block.hover {
+          box-shadow: 0px 0px 10px 0px var(--palette-acient);
+        }
+
         .block {
           display: flex;
           padding: 10px 15px;
@@ -194,6 +199,7 @@ html[data-device="desktop"] {
           flex-direction: column;
           border: 2px solid var(--palette-second);
           border-radius: 8px;
+          transition: .3s ease;
 
           .block.header {
             border-bottom: 2px solid var(--palette-second);
@@ -405,6 +411,10 @@ html[data-device="desktop"] {
             }
           }
         }
+
+        .r_block.hover {
+          box-shadow: 0px 0px 10px 0px var(--palette-second);
+        }
       }
 
       .long.block.management {
@@ -422,6 +432,11 @@ html[data-device="desktop"] {
           justify-content: center;
           align-items: center;
           border: 2px solid var(--palette-second);
+          transition: .3s ease;
+        }
+
+        .block.session.hover {
+          box-shadow: 0px 0px 10px 0px var(--palette-second);
         }
 
         .block.prime_pref {
@@ -429,6 +444,11 @@ html[data-device="desktop"] {
           justify-content: center;
           align-items: center;
           border: 2px solid var(--palette-acient);
+          transition: .3s ease;
+        }
+
+        .block.prime_pref.hover {
+          box-shadow: 0px 0px 10px 0px var(--palette-acient);
         }
       }
 
@@ -437,6 +457,7 @@ html[data-device="desktop"] {
         border-radius: 8px;
         padding: 2px;
         background: linear-gradient(90deg, var(--palette-acient), var(--palette-second));
+        transition: .3s ease;
         justify-content: center;
         align-items: center;
 
@@ -462,6 +483,11 @@ html[data-device="desktop"] {
             }
           }
         }
+      }
+
+      .long.block.save_data.hover {
+        box-shadow: 0px 0px 10px 0 var(--palette-acient),
+                    0px 0px 10px 0px var(--palette-second);
       }
 
       .js-window {

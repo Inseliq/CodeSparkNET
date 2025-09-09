@@ -2,16 +2,18 @@ document.addEventListener("DOMContentLoaded", function () {
   const html = document.documentElement;
 
   if (html.dataset.device === "desktop") {
-    const hoverElements = document.querySelectorAll("[hover]");
-
-    hoverElements.forEach(el => {
-      el.addEventListener("mouseenter", () => {
+    document.addEventListener("mouseover", e => {
+      const el = e.target.closest("[hover]");
+      if (el) {
         el.classList.add("hover");
-      });
+      }
+    });
 
-      el.addEventListener("mouseleave", () => {
+    document.addEventListener("mouseout", e => {
+      const el = e.target.closest("[hover]");
+      if (el) {
         el.classList.remove("hover");
-      });
+      }
     });
   }
 });

@@ -72,8 +72,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SERVER_PORT }}
-          timeout: 120
-          known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
+          timeout: "120s"
           script: |
             set -e
             cd /CodeSparkNET   # <- Путь к docker-compose.yml на сервере

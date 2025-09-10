@@ -50,7 +50,7 @@ jobs:
           username: ${{ env.IMAGE_USER }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and push image (tags: sha + latest)
+      - name: Build and push image
         uses: docker/build-push-action@v4
         with:
           context: .
@@ -76,7 +76,7 @@ jobs:
           known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
           script: |
             set -e
-            cd /srv/myapp   # <- Путь к docker-compose.yml на сервере
+            cd /CodeSparkNET   # <- Путь к docker-compose.yml на сервере
 
             IMAGE_FULL="${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_USER }}/${{ env.IMAGE_REPO }}"
             IMAGE_SHA="${{ env.IMAGE_TAG }}"

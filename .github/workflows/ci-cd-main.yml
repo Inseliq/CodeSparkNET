@@ -1,0 +1,101 @@
+name: CI/CD — main
+
+on:
+  push:
+    branches: [ "main" ]
+
+env:
+  DOTNET_VERSION: "8.0.x"
+  IMAGE_TAG: ${{ github.sha }}
+  IMAGE_LATEST: latest
+  IMAGE_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
+  IMAGE_USER: ${{ secrets.DOCKER_USERNAME }}
+  IMAGE_REPO: ${{ github.repository }}
+
+jobs:
+  test:
+    name: Run tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Run tests
+        run: dotnet test --configuration Release --no-build --verbosity normal
+
+  build:
+    name: Build & Push Docker image
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.IMAGE_REGISTRY }}
+          username: ${{ env.IMAGE_USER }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push image (tags: sha + latest)
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: |
+            ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_USER }}/${{ env.IMAGE_REPO }}:${{ env.IMAGE_LATEST }}
+            ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_USER }}/${{ env.IMAGE_REPO }}:${{ env.IMAGE_TAG }}
+
+  deploy:
+    name: Deploy to remote server (pull exact sha image, tag as latest, up)
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via SSH (docker pull sha -> tag latest -> compose up)
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SERVER_PORT }}
+          timeout: 120
+          known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
+          script: |
+            set -e
+            cd /srv/myapp   # <- Путь к docker-compose.yml на сервере
+
+            IMAGE_FULL="${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_USER }}/${{ env.IMAGE_REPO }}"
+            IMAGE_SHA="${{ env.IMAGE_TAG }}"
+            IMAGE_LATEST="${{ env.IMAGE_LATEST }}"
+
+            # Если реестр приватный — логинимся на сервере перед pull
+            if [ -n "${{ secrets.DOCKER_PASSWORD }}" ]; then
+              echo "${{ secrets.DOCKER_PASSWORD }}" | docker login "${{ env.IMAGE_REGISTRY }}" -u "${{ env.IMAGE_USER }}" --password-stdin
+            fi
+
+            echo "Pulling image: ${IMAGE_FULL}:${IMAGE_SHA}"
+            docker pull "${IMAGE_FULL}:${IMAGE_SHA}"
+
+            # Перемаркируем sha-образ в latest (чтобы docker-compose, ссылающийся на :latest, использовал именно этот образ)
+            docker tag "${IMAGE_FULL}:${IMAGE_SHA}" "${IMAGE_FULL}:${IMAGE_LATEST}"
+
+            # Запускаем compose (compose должен ссылаться на image: ...:latest)
+            docker-compose pull || true   # если image указан как :latest — pull не обязателен, но безопасно
+            docker-compose up -d --remove-orphans
+
+            # Очистка
+            docker image prune -af || true

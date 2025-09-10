@@ -8,7 +8,7 @@ env:
   DOTNET_VERSION: "9.0.x"
   IMAGE_TAG: ${{ github.sha }}
   IMAGE_LATEST: latest
-  IMAGE_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
+  IMAGE_REGISTRY: docker.io
   IMAGE_USER: ${{ secrets.DOCKER_USERNAME }}
   IMAGE_REPO: ${{ secrets.DOCKER_REPOSITORY }}
 

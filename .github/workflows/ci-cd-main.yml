@@ -75,7 +75,7 @@ jobs:
             set -e
             
             REPO_URL="https://github.com/${{ github.repository }}.git"
-            TARGET_DIR="/CodeSparkNET"
+            TARGET_DIR="$HOME/CodeSparkNET"
             BRANCH="main"
 
             # Проверка, что git установлен

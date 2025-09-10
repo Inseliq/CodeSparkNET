@@ -2,9 +2,12 @@ using System.Globalization;
 using CodeSparkNET.Data;
 using CodeSparkNET.Interfaces;
 using CodeSparkNET.Models;
+using CodeSparkNET.Redis;
 using CodeSparkNET.Services;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using StackExchange.Redis;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,7 +35,7 @@ builder.Services.AddHttpContextAccessor();
 // Add DbContext with SQL Server
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("MSSQL"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Sql"));
 });
 
 // Identity
@@ -67,10 +70,27 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
     options.Secure = CookieSecurePolicy.Always;
 });
 
+//Add Redis
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("Redis");
+    options.InstanceName = "CodeSparkNET:";
+});
+
 //Add scoped
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IProfileService, AccountService>();
+builder.Services.AddScoped<ICacheService, CacheService>();
+
+//Add Redis singleton
+builder.Services.AddSingleton<ICacheProvider, CacheProvider>();
+
+//Add keys
+var redis = ConnectionMultiplexer.Connect(builder.Configuration["REDIS_CONNECTION"]);
+builder.Services.AddDataProtection()
+    .PersistKeysToStackExchangeRedis(redis, "DataProtection-Keys")
+    .SetApplicationName("CodeSparkNET");
 
 var app = builder.Build();
 
@@ -96,6 +116,14 @@ app.UseCookiePolicy();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+// миграции при старте
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate();
+}
+
 
 app.MapStaticAssets();
 

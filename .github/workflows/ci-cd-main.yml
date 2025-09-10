@@ -73,8 +73,39 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             set -e
-            cd /CodeSparkNET   # <- Путь к docker-compose.yml на сервере
+            
+            REPO_URL="https://github.com/${{ github.repository }}.git"
+            TARGET_DIR="/CodeSparkNET"
+            BRANCH="main"
 
+            # Проверка, что git установлен
+            if ! command -v git >/dev/null 2>&1; then
+              if command -v apt-get >/dev/null 2>&1; then
+                sudo apt-get update -y
+                sudo apt-get install -y git
+              elif command -v yum >/dev/null 2>&1; then
+                sudo yum install -y git
+              else
+                echo "git not found and cannot auto-install (unknown package manager). Please install git on the server." >&2
+                exit 1
+              fi
+            fi
+
+            # Клонируем репозиторий, либо обновляем существующий checkout
+            if [ -d "${TARGET_DIR}/.git" ]; then
+              echo "Repository exists — fetching latest ${BRANCH}"
+              cd "${TARGET_DIR}"
+              git fetch origin --depth=1
+              git reset --hard "origin/${BRANCH}"
+              git clean -fd
+            else
+              echo "Cloning ${REPO_URL} (branch ${BRANCH}) into ${TARGET_DIR}"
+              rm -rf "${TARGET_DIR}" || true
+              git clone --depth 1 --branch "${BRANCH}" "${REPO_URL}" "${TARGET_DIR}"
+              cd "${TARGET_DIR}"
+            fi
+
+            # Переменные образа (подставляются из workflow до отправки на сервер)
             IMAGE_FULL="${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_USER }}/${{ env.IMAGE_REPO }}"
             IMAGE_SHA="${{ env.IMAGE_TAG }}"
             IMAGE_LATEST="${{ env.IMAGE_LATEST }}"
@@ -91,7 +122,7 @@ jobs:
             docker tag "${IMAGE_FULL}:${IMAGE_SHA}" "${IMAGE_FULL}:${IMAGE_LATEST}"
 
             # Запускаем compose (compose должен ссылаться на image: ...:latest)
-            docker-compose pull || true   # если image указан как :latest — pull не обязателен, но безопасно
+            docker-compose pull || true
             docker-compose up -d --remove-orphans
 
             # Очистка

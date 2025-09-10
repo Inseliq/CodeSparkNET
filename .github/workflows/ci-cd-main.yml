@@ -10,7 +10,7 @@ env:
   IMAGE_LATEST: latest
   IMAGE_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
   IMAGE_USER: ${{ secrets.DOCKER_USERNAME }}
-  IMAGE_REPO: ${{ github.repository }}
+  IMAGE_REPO: ${{ secrets.DOCKER_REPOSITORY }}
 
 jobs:
   test:

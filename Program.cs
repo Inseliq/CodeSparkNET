@@ -121,8 +121,16 @@ app.UseAuthorization();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.Migrate();
+    try
+    {
+        db.Database.Migrate();
+    }
+    catch (Microsoft.Data.SqlClient.SqlException ex) when (ex.Number == 1801)
+    {
+        Console.WriteLine("База уже существует, пропускаем создание.");
+    }
 }
+
 
 
 app.MapStaticAssets();

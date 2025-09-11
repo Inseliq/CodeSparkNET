@@ -78,38 +78,6 @@ jobs:
             TARGET_DIR="$HOME/CodeSparkNET"
             BRANCH="main"
 
-            # --- begin permission-fix block ---
-            if [ -d "${TARGET_DIR}" ]; then
-              echo "Ensuring ${TARGET_DIR} ownership/permissions for deploy user (system)..."
-              # Попробуем сменить владельца рекурсивно — если есть sudo, используем его
-              if command -v sudo >/dev/null 2>&1; then
-                sudo chown -R system:system "${TARGET_DIR}" || true
-                sudo chmod -R u+rwX,go+rX,go-w "${TARGET_DIR}" || true
-              else
-                chmod -R u+rwX,go+rX,go-w "${TARGET_DIR}" || true
-              fi
-            
-              # Если известные проблемные пути (nginx/default.conf, dataprotection-keys) заблокированы — удаление через sudo
-              for p in "${TARGET_DIR}/nginx/default.conf" "${TARGET_DIR}/nginx.conf" "${TARGET_DIR}/dataprotection-keys"; do
-                if [ -e "$p" ] && [ ! -w "$p" ]; then
-                  echo "Found non-writable $p — attempting remove/fix with sudo"
-                  if command -v sudo >/dev/null 2>&1; then
-                    sudo rm -f "$p" || sudo rm -rf "$p" || true
-                  else
-                    echo "Cannot remove $p (no sudo) — continuing"
-                  fi
-                fi
-              done
-            
-              # Ещё раз выровняем права на случай, если удаляли
-              if command -v sudo >/dev/null 2>&1; then
-                sudo chown -R system:system "${TARGET_DIR}" || true
-                sudo chmod -R u+rwX,go+rX,go-w "${TARGET_DIR}" || true
-              fi
-            fi
-            # --- end permission-fix block ---
-
-
             # Проверка, что git установлен
             if ! command -v git >/dev/null 2>&1; then
               if command -v apt-get >/dev/null 2>&1; then

@@ -122,8 +122,8 @@ jobs:
             docker tag "${IMAGE_FULL}:${IMAGE_SHA}" "${IMAGE_FULL}:${IMAGE_LATEST}"
 
             # Запускаем compose (compose должен ссылаться на image: ...:latest)
-            docker-compose pull || true
-            docker-compose up -d --remove-orphans
+            docker compose pull || true
+            docker compose up -d --remove-orphans
 
             # Очистка
             docker image prune -af || true

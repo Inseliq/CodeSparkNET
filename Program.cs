@@ -51,7 +51,7 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
     .AddDefaultTokenProviders();
 
 //Sessions
-builder.Services.AddDistributedMemoryCache(); // in prod — Redis or SQL
+// builder.Services.AddDistributedMemoryCache(); // in prod — Redis or SQL
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);
@@ -71,26 +71,26 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
 });
 
 //Add Redis
-builder.Services.AddStackExchangeRedisCache(options =>
-{
-    options.Configuration = builder.Configuration.GetConnectionString("Redis");
-    options.InstanceName = "CodeSparkNET:";
-});
+// builder.Services.AddStackExchangeRedisCache(options =>
+// {
+//     options.Configuration = builder.Configuration.GetConnectionString("Redis");
+//     options.InstanceName = "CodeSparkNET:";
+// });
 
 //Add scoped
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IProfileService, AccountService>();
-builder.Services.AddScoped<ICacheService, CacheService>();
+// builder.Services.AddScoped<ICacheService, CacheService>();
 
 //Add Redis singleton
-builder.Services.AddSingleton<ICacheProvider, CacheProvider>();
+// builder.Services.AddSingleton<ICacheProvider, CacheProvider>();
 
 //Add keys
-var redis = ConnectionMultiplexer.Connect(builder.Configuration["REDIS_CONNECTION"]);
-builder.Services.AddDataProtection()
-    .PersistKeysToStackExchangeRedis(redis, "DataProtection-Keys")
-    .SetApplicationName("CodeSparkNET");
+// var redis = ConnectionMultiplexer.Connect(builder.Configuration["REDIS_CONNECTION"]);
+// builder.Services.AddDataProtection()
+//     .PersistKeysToStackExchangeRedis(redis, "DataProtection-Keys")
+//     .SetApplicationName("CodeSparkNET");
 
 var app = builder.Build();
 

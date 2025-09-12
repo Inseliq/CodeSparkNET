@@ -13,19 +13,19 @@ namespace CodeSparkNET.Controllers
         private readonly ILogger<ProfileController> _logger;
         private readonly IProfileService _profileService;
         private readonly IAccountService _accountService;
-        private readonly ICacheService _cacheService;
+        // private readonly ICacheService _cacheService;
 
         public ProfileController(
             ILogger<ProfileController> logger,
             IProfileService profileService,
-            IAccountService accountService,
-            ICacheService cacheService
+            IAccountService accountService
+            // ICacheService cacheService
             )
         {
             _logger = logger;
             _profileService = profileService;
             _accountService = accountService;
-            _cacheService = cacheService;
+            // _cacheService = cacheService;
         }
 
         /// <summary>
@@ -40,7 +40,8 @@ namespace CodeSparkNET.Controllers
 
                 if (!ModelState.IsValid) return View();
 
-                var user = await _cacheService.GetCachedUserAsync(User.FindFirstValue(ClaimTypes.Email));
+                // var user = await _cacheService.GetCachedUserAsync(User.FindFirstValue(ClaimTypes.Email));
+                var user = await _accountService.GetUserAsync(User);
 
                 ViewBag.UserName = user.UserName;
                 ViewBag.Email = user.Email;
@@ -71,13 +72,14 @@ namespace CodeSparkNET.Controllers
                     return Json(new { success = true, message = "Ошибка изменения данных." });
                 }
 
-                var user = await _cacheService.GetCachedUserAsync(User.FindFirstValue(ClaimTypes.Email));
+                // var user = await _cacheService.GetCachedUserAsync(User.FindFirstValue(ClaimTypes.Email));
+                var user = await _accountService.GetUserAsync(User);
                 var result = await _profileService.UpdatePersonalProfileAsync(user.Email, model);
 
                 if (result.Succeeded)
                 {
                     await _profileService.UpdateUserClaims(user);
-                    await _cacheService.CacheUserAsync(model.Email);
+                    // await _cacheService.CacheUserAsync(model.Email);
                     // PRG: redirect to GET Profile so updated data is loaded
                     return Json(new { success = true, message = "Профиль успешно обновлен." });
                 }
@@ -184,7 +186,8 @@ namespace CodeSparkNET.Controllers
                     return Json(new { success = false, message = "Ошибка смены пароля" });
                 }
 
-                var user = await _cacheService.GetCachedUserAsync(User.FindFirstValue(ClaimTypes.Email));
+                // var user = await _cacheService.GetCachedUserAsync(User.FindFirstValue(ClaimTypes.Email));
+                var user = await _accountService.GetUserAsync(User);
                 var result = await _profileService.ChangePasswordAsync(user.Email, model);
 
                 if (result.Succeeded)

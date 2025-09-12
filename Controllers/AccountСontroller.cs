@@ -17,15 +17,15 @@ namespace CodeSparkNET.Controllers
     public class AccountController : Controller
     {
         private readonly IAccountService _accountService;
-        private readonly ICacheService _cacheService;
+        // private readonly ICacheService _cacheService;
 
         public AccountController(
-            IAccountService accountService,
-            ICacheService cacheService
+            IAccountService accountService
+            // ICacheService cacheService
             )
         {
             _accountService = accountService;
-            _cacheService = cacheService;
+            // _cacheService = cacheService;
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace CodeSparkNET.Controllers
             }
 
             // Cache the user after successful registration
-            await _cacheService.CacheUserAsync(registerDto.Email);
+            // await _cacheService.CacheUserAsync(registerDto.Email);
 
             return RedirectToAction("Login", "Account");
         }
@@ -105,7 +105,7 @@ namespace CodeSparkNET.Controllers
             }
 
             // Cache the user after successful login
-            await _cacheService.CacheUserAsync(loginDto.Email);
+            // await _cacheService.CacheUserAsync(loginDto.Email);
 
             return RedirectToAction("Index", "Home");
         }
@@ -122,7 +122,7 @@ namespace CodeSparkNET.Controllers
             var email = User.Identity?.Name;
             if (!string.IsNullOrEmpty(email))
             {
-                await _cacheService.ClearCachedUserAsync(email);
+                // await _cacheService.ClearCachedUserAsync(email);
             }
 
             await _accountService.SignOutAsync();

@@ -14,6 +14,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.body.appendChild(modal);
 
+    // отключаем скролл
+    document.body.style.overflow = "hidden";
+
     // плавное появление
     setTimeout(() => modal.classList.add("visible"), 100);
 
@@ -21,6 +24,10 @@ document.addEventListener("DOMContentLoaded", () => {
     function closeModal() {
       modal.classList.remove("visible");
       modal.classList.add("hidden");
+
+      // возвращаем скролл
+      document.body.style.overflow = "";
+
       setTimeout(() => modal.remove(), 300);
     }
 

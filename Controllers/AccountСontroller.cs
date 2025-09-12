@@ -16,14 +16,16 @@ namespace CodeSparkNET.Controllers
     /// </summary>
     public class AccountController : Controller
     {
-        private ILogger<AccountController> _logger;
         private readonly IAccountService _accountService;
+        private readonly ICacheService _cacheService;
 
         public AccountController(
-            IAccountService accountService
+            IAccountService accountService,
+            ICacheService cacheService
             )
         {
             _accountService = accountService;
+            _cacheService = cacheService;
         }
 
         /// <summary>
@@ -63,6 +65,9 @@ namespace CodeSparkNET.Controllers
                 return View(registerDto);
             }
 
+            // Cache the user after successful registration
+            await _cacheService.CacheUserAsync(registerDto.Email);
+
             return RedirectToAction("Login", "Account");
         }
 
@@ -99,6 +104,9 @@ namespace CodeSparkNET.Controllers
                 return View(loginDto);
             }
 
+            // Cache the user after successful login
+            await _cacheService.CacheUserAsync(loginDto.Email);
+
             return RedirectToAction("Index", "Home");
         }
 
@@ -110,6 +118,13 @@ namespace CodeSparkNET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
+            // Clear cached user data on logout
+            var email = User.Identity?.Name;
+            if (!string.IsNullOrEmpty(email))
+            {
+                await _cacheService.ClearCachedUserAsync(email);
+            }
+
             await _accountService.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }

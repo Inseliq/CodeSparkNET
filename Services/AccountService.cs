@@ -4,6 +4,7 @@ using CodeSparkNET.Interfaces;
 using CodeSparkNET.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Caching.Distributed;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,7 +60,6 @@ namespace CodeSparkNET.Services
                 return IdentityResult.Failed(new IdentityError { Description = "Ошибка создания аккаунта." });
             }
 
-
             if (!string.IsNullOrEmpty(loginLink))
             {
                 await _emailService.SendAccountCratedEmailAsync(user.Email!, user.UserName, loginLink);
@@ -73,6 +73,7 @@ namespace CodeSparkNET.Services
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
                 return SignInResult.Failed;
+
 
             return await _signInManager.PasswordSignInAsync(user.UserName, model.Password, model.RememberMe, lockoutOnFailure: false);
         }

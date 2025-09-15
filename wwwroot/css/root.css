@@ -146,7 +146,7 @@ textarea {
   }
 }
 
-@media screen and (max-width: 880px) {
+/* @media screen and (max-width: 880px) {
   html[cross-browser] {
     --fs-body: clamp(0.75rem, 0.3529rem + 1.1765vw, 1rem);
     --fs-p: clamp(0.75rem, 0.3529rem + 1.1765vw, 1rem);
@@ -156,7 +156,7 @@ textarea {
     --fs-btn: clamp(0.75rem, 0.3529rem + 1.1765vw, 1rem);
     --fs-small: clamp(0.75rem, 0.5515rem + 0.5882vw, 0.875rem);
   }
-}
+} */
 
 @media screen and (max-width: 540px) {
   html[cross-browser] {

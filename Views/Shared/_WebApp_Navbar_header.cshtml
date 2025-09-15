@@ -1,0 +1,36 @@
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<AppUser> UserManager
+@{
+  var userName = User.Identity.Name;
+  var user = UserManager.GetUserAsync(User).Result;
+}
+
+<header class="webapp-nav">
+  <nav class="__container">
+    <section class="left">
+      <a asp-action="Index" asp-controller="Home" banner-CS></a>
+      <button js-list-catalog-view-btn>Каталог</button>
+      <div js-list-catalog-view class="list hidden" hidden="!">
+        <a filter="course">Курсы</a>
+        <a filter="course_work">Курсовые работы</a>
+        <a filter="diplome_work">Дипломные работы</a>
+        <a filter="desigen">Дизайны</a>
+        <a filter="create_site">Создание сайта</a>
+      </div>
+      <button js-list-documents-btn>Документация</button>
+      <div js-list-documents-view class="list hidden" hidden="!">
+        a
+      </div>
+      <button js-list-socials-btn>Соц. сети</button>
+      <div js-list-socials class="list hidden" hidden="!"></div>
+    </section>
+    <section class="right">
+      @if (!User?.Identity?.IsAuthenticated == true) {
+        <a asp-controller="Account" asp-action="Login">Войти</a>
+        <a filter="course">Курсы</a>
+      } else {
+        <a filrer="course">Курсы</a>
+      }
+    </section>
+  </nav>
+</header>

@@ -421,7 +421,8 @@ html[cross-browser][data-theme-color="white"] {
   }
 }
 
-html[data-device="desktop"] {
+/* main-layout */
+html[cross-browser] {
   header[data-layout="header"] {
     z-index: 10;
     background: var(--palette-nav-site);
@@ -433,6 +434,7 @@ html[data-device="desktop"] {
     align-items: center;
     min-height: 37px;
     max-height: 37px;
+    padding: 0px 10px;
 
     nav.__container[data-layout="navbar-site"] {
       display: flex;
@@ -513,7 +515,9 @@ html[data-device="desktop"] {
         flex-direction: row;
         gap: 15px;
 
-        a {
+        a[help],
+        a[login-async],
+        a[register-async] {
           background: none;
           border: none;
           display: flex;
@@ -639,6 +643,7 @@ html[data-device="desktop"] {
     height: auto;
     justify-content: center;
     align-items: center;
+    padding: 0px 10px;
 
     .__container {
       display: flex;
@@ -659,6 +664,7 @@ html[data-device="desktop"] {
     min-height: 37px;
     max-height: 37px;
     background: var(--palette-nav-site);
+    padding: 0px 10px;
 
     .__container {
       display: flex;
@@ -863,7 +869,7 @@ html[cross-browser] {
   }
 }
 
-/*  */
+/* profile-app  */
 html[cross-browser] {
   .js-window[js-window-profile] {
     position: fixed;
@@ -988,8 +994,10 @@ html[cross-browser] {
             justify-content: space-between;
             padding-inline: 5px;
             width: 100%;
+            flex-wrap: wrap;
 
             [el="stocks"] {
+              display: contents;
               --async-color: var(--palette-text-shadow);
               color: var(--async-color);
               font-size: calc(0.85 * var(--fs-small));
@@ -1020,12 +1028,14 @@ html[cross-browser] {
             .n_confirm {
               --not-allowed: #ffd23f;
 
-              a {
+              button {
                 font-size: calc(0.85 * var(--fs-small));
                 color: var(--not-allowed);
                 margin-right: 15px;
                 position: relative;
                 transition: .3s ease;
+                background: none;
+                border: none;
 
                 &::after {
                   content: "";
@@ -1054,13 +1064,28 @@ html[cross-browser] {
                   transition: .3s ease;
                 }
               }
-              a.hover {
+
+              button.locked {
+                pointer-events: none !important;
+                opacity: 0.6;
+              }
+
+              button.hover {
                 --not-allowed: #ffca1d;
                 transform: scale(1.025);
 
                 &::after {
                   width: 100%;
                   transform: translate(0, 0);
+                }
+              }
+
+              button.locked.hover {
+                --not-allowed: #ffd23f;
+                transform: scale(1.0) !important;
+
+                &::after {
+                  width: 0 !important;
                 }
               }
             }
@@ -1076,6 +1101,7 @@ html[cross-browser] {
                 width: 17px;
                 height: 17px;
               }
+
               [el="confirm_email"].hover {
                 --allowed: #2ECC71;
                 transform: scale(1.05);
@@ -1216,6 +1242,92 @@ html[cross-browser] {
     .description {
       height: 50%;
     }
+  }
+}
+
+@media screen and (max-width: 1460px) {
+  html[cross-browser] {
+    & .js-window[js-window-profile] {
+      .description {
+        right: 9px;
+        border-top-right-radius: 0px;
+      }
+    }
+  }
+}
+
+/* send-email */
+html[cross-browser] {
+  .js-window[js-window-send-confirmation-email] {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 15;
+    background: #19191990;
+
+    .description {
+      --pre-hover: #1E7F34;
+      --async-color: var(--palette-text-shadow);
+      background: var(--palette-main);
+      padding: 60px 40px 30px 40px;
+      border-radius: 8px;
+      border: 2px solid var(--pre-hover);
+      transition: .3s ease;
+
+      h2 {
+        display: flex;
+        width: 100%;
+        margin-bottom: 50px;
+        position: relative;
+        color: var(--pre-hover);
+        transition: .3s ease;
+
+        &::after {
+          content: "";
+          position: absolute;
+          transition: .3s ease;
+          width: 52px;
+          height: 52px;
+          background-color: var(--pre-hover);
+          top: -24.5px;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          mask: url(../assets/icon/mail.unread-msg.svg) center/cover no-repeat;
+          -webkit-mask: url(../assets/icon/mail.unread-msg.svg) center/cover no-repeat;
+        }
+
+        &::before {
+          content: "На вашу почту отправлено сообщение, с ссылкой на подтверждение";
+          position: absolute;
+          width: 100%;
+          color: var(--async-color);
+          font-size: calc(0.9 * var(--fs-small));
+          bottom: -20px;
+          left: 0;
+          transform: translate(0, 50%);
+          text-align: center;
+          transition: .3s ease;
+        }
+      }
+    }
+
+    .description.hover {
+      --async-color: var(--palette-text-inv);
+      --pre-hover: #2ECC71;
+      box-shadow: 0px 0px 10px 0px var(--pre-hover);
+    }
+  }
+
+  .js-window[js-window-send-confirmation-email].hidden {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .js-window[js-window-send-confirmation-email].visible {
+    opacity: 1;
+    visibility: visible;
   }
 }
 

@@ -10,6 +10,9 @@
 @section Styles {
     <link rel="stylesheet" href="~/css/style/profile.css">
 }
+@section Meta {
+
+}
 
 <div logo-banner hover>
     <img src="~/../assets/img/banner-tag.webp" alt="banner">
@@ -61,7 +64,8 @@
                         <h3 title="Подтвердите адрес электронной почты">@ViewBag.Email</h3>
                         <span>Ваш Email не подтвержден!</span>
                     </div>
-                    <button data-function="confirmEmailBtn" class="btn right" data-style="link" hover>Подтвердить</button>
+                    <button data-function="send-confirmation-email" class="btn right" data-style="link" hover
+                        data-time="">Подтвердить</button>
                 </div>
             }
             else
@@ -75,7 +79,7 @@
                 </div>
             }
             <div class="block body">
-                <h3 hover el="password" title="Ваш пароль">Пароль добавлен: $data-edit-password</h3>
+                <h3 hover el="password" title="Ваш пароль">Пароль добавлен: <span>$data-edit-password</span></h3>
                 <button class="edit" data-function="editPasswordBtn" hover data-style="link">Изменить</button>
             </div>
             <div class="block body">
@@ -125,156 +129,46 @@
         </div>
     </div>
 
-
-    <div class="js-window hidden" js-window-send-confirmation-email>
-        <div class="description" hover>
-            <h2>Проверьте вашу почту</h2>
-            <a hover data-style="hyper-button"><span>Продолжить</span></a>
-        </div>
-    </div>
-    <div class="js-window hidden" js-window-update-profile>
+    <div class="js-window hidden" js-window-change-password hidden="!">
         <div class="description" hover>
             <h2></h2>
             <a hover data-style="hyper-button" id="continueBtn"><span>Продолжить</span></a>
         </div>
     </div>
-    <div class="js-window hidden" js-window-change-password>
-        <div class="description" hover>
-            <h2></h2>
-            <a hover data-style="hyper-button" id="continueBtn"><span>Продолжить</span></a>
+</div>
+
+<div class="js-window visible" js-window-update-profile-name>
+    <div class="description" hover step="2">
+        <div class="progress-bar"></div>
+        <div class="main-content step1">
+            <h3 class="headline">Вы можете изменить своё имя на сайте. Переименование доступно не чаще 1 раза в 7
+                дней.
+            </h3>
+            <span class="desc">Имя должно содержать от 3 до 24 символов. Можно использовать латинские буквы и
+                цифры.</span>
+            <div class="button-block">
+                <button next-step="2" hover data-style="hyper-button"><span>Продолжить</span></button>
+                <button class="backlink" hover data-style="link-new">Отмена</button>
+            </div>
         </div>
+        <div class="main-content step2">
+            <form asp-action="UpdateProfile" asp-controller="Profile" method="post">
+                @Html.AntiForgeryToken()
+                <span asp-validation-summary="ModelOnly" class="error_message_form"></span>
+                <div class="input_block">
+                    <span asp-validation-for="UpdatePersonalProfileDto.UserName"></span>
+                    <input asp-for="UpdatePersonalProfileDto.UserName" id="names" type="text" required hover
+                        placeholder="@ViewBag.UserName">
+                </div>
+                <div class="block-button">
+                    <button type="submit" data-style="hyper-button" hover>Сохранить</button>
+                    <button class="backlink" hover data-style="link-new">Отмена</button>
+                </div>
+
+            </form>
+        </div>
+        <div class="main-content step3"></div>
     </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const confirmEmailBtn = document.getElementById('confirmEmailBtn');
-            const updateProfileForm = document.getElementById('updateProfileForm');
-            const changePasswordForm = document.getElementById('changePasswordForm');
-            confirmEmailBtn.addEventListener('click', async (event) => {
-                event.preventDefault();
-
-                showSendEmailResultModal();
-
-                try {
-                    const response = await fetch('@Url.Action("SendEmailConfirmation", "Profile")', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        }
-                    });
-                } catch (error) {
-                    console.error('Произошла ошибка:', error);
-                }
-            });
-
-            updateProfileForm.addEventListener('submit', async (event) => {
-                event.preventDefault();
-
-                if (!jQuery(updateProfileForm).valid())
-                    return;
-
-                const formData = new FormData(updateProfileForm);
-                const tokenInput = updateProfileForm.querySelector('input[name="__RequestVerificationToken"]');
-                const antiForgeryToken = tokenInput ? tokenInput.value : null;
-
-                const headers = {};
-                if (antiForgeryToken) headers['RequestVerificationToken'] = antiForgeryToken;
-
-                try {
-                    const response = await fetch(updateProfileForm.action || window.location.pathname, {
-                        method: 'POST',
-                        headers: headers,
-                        body: formData
-                    });
-
-                    const result = await response.json();
-                    if (result.success) {
-                        showUpdateProfileResultModal(true);
-                    } else if (result.errors) {
-                        showUpdateProfileResultModal(false);
-                    }
-                } catch (error) {
-                    console.error('Произошла ошибка:', error);
-                }
-            });
-
-            changePasswordForm.addEventListener('submit', async (event) => {
-                event.preventDefault();
-
-                if (!jQuery(changePasswordForm).valid())
-                    return;
-
-                const formData = new FormData(changePasswordForm);
-                const tokenInput = changePasswordForm.querySelector('input[name="__RequestVerificationToken"]');
-                const antiForgeryToken = tokenInput ? tokenInput.value : null;
-
-                const headers = {};
-                if (antiForgeryToken) headers['RequestVerificationToken'] = antiForgeryToken;
-
-                try {
-                    const response = await fetch(changePasswordForm.action || window.location.pathname, {
-                        method: 'POST',
-                        headers: headers,
-                        body: formData
-                    });
-
-                    const result = await response.json();
-                    if (result.success) {
-                        showChangePasswordResultModal(true);
-                    } else if (result.errors) {
-                        showChangePasswordResultModal(false);
-                    }
-                } catch (error) {
-                    console.error('Произошла ошибка:', error);
-                }
-            });
-
-            function showSendEmailResultModal() {
-                const modalWindow = document.querySelector('[js-window-send-confirmation-email]');
-
-                if (!modalWindow) {
-                    return;
-                }
-
-                modalWindow.classList.replace('hidden', 'visible');
-            }
-
-            function showUpdateProfileResultModal(success) {
-                const modalWindow = document.querySelector('[js-window-update-profile]');
-                const resultTitle = modalWindow.querySelector('h2');
-
-                if (!modalWindow) {
-                    return;
-                }
-
-                if (success) {
-                    resultTitle.textContent = "Профиль успешно обновлен.";
-                    modalWindow.classList.replace('hidden', 'visible');
-                } else {
-                    resultTitle.textContent = "Произошла ошибка при обновлении профиля.";
-                    modalWindow.classList.replace('hidden', 'visible');
-                }
-            }
-        });
-
-        function showChangePasswordResultModal(success) {
-            const modalWindow = document.querySelector('[js-window-change-password]');
-            const resultTitle = modalWindow.querySelector('h2');
-
-            if (!modalWindow) {
-                return;
-            }
-
-            if (success) {
-                resultTitle.textContent = "Пароль успешно изменен.";
-                modalWindow.classList.replace('hidden', 'visible');
-            } else {
-                resultTitle.textContent = "Произошла ошибка при изменении пароля.";
-                modalWindow.classList.replace('hidden', 'visible');
-            }
-        }
-    </script>
-
 </div>
 
 @section Scripts {

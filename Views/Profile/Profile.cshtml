@@ -137,39 +137,96 @@
     </div>
 </div>
 
-<div class="js-window visible" js-window-update-profile-name>
-    <div class="description" hover step="2">
-        <div class="progress-bar"></div>
-        <div class="main-content step1">
-            <h3 class="headline">Вы можете изменить своё имя на сайте. Переименование доступно не чаще 1 раза в 7
-                дней.
-            </h3>
-            <span class="desc">Имя должно содержать от 3 до 24 символов. Можно использовать латинские буквы и
-                цифры.</span>
-            <div class="button-block">
-                <button next-step="2" hover data-style="hyper-button"><span>Продолжить</span></button>
-                <button class="backlink" hover data-style="link-new">Отмена</button>
+@if (UserManager.IsEmailConfirmedAsync(user).Result is false)
+{ }
+else
+{
+    <div class="js-window hidden" js-window-update-profile-name>
+        <div class="description" hover step="1">
+            <div class="progress-bar"></div>
+            <div class="main-content step1">
+                <h3 class="headline">Вы можете изменить своё имя на сайте. Переименование доступно не чаще 1 раза в 7
+                    дней.
+                </h3>
+                <span class="desc">Имя должно содержать от 3 до 24 символов. Можно использовать латинские буквы и
+                    цифры.</span>
+                <div class="button-block">
+                    <button hover data-style="hyper-button"
+                        data-function="next-step-JS-UPName"><span>Продолжить</span></button>
+                    <button class="backlink" hover data-style="link-new" type="button"
+                        data-function="close-js-window-update-profile-name">Отмена</button>
+                </div>
+            </div>
+            <div class="main-content step2">
+                <form asp-action="UpdateProfile" asp-controller="Profile" method="post" id="UpdateProfileUserName">
+                    @Html.AntiForgeryToken()
+                    <span asp-validation-summary="ModelOnly" class="error_message_form">Ошибка сервера</span>
+                    <div class="input_block" hover>
+                        <span asp-validation-for="UpdatePersonalProfileDto.UserName"></span>
+                        <label asp-for="UpdatePersonalProfileDto.UserName">Имя пользователя</label>
+                        <input asp-for="UpdatePersonalProfileDto.UserName" id="names" type="text" required hover
+                            placeholder="@ViewBag.UserName">
+                        <input asp-for="UpdatePersonalProfileDto.Email" id="email" type="email" value="@ViewBag.Email"
+                            required hover hidden="!">
+                    </div>
+                    <div class="block-button">
+                        <button type="submit" data-style="hyper-button" hover>Сохранить</button>
+                        <button class="backlink" hover data-style="link-new" type="button"
+                            data-function="close-js-window-update-profile-name">Отмена</button>
+                    </div>
+
+                </form>
+            </div>
+            <div class="main-content step3">
+
             </div>
         </div>
-        <div class="main-content step2">
-            <form asp-action="UpdateProfile" asp-controller="Profile" method="post">
-                @Html.AntiForgeryToken()
-                <span asp-validation-summary="ModelOnly" class="error_message_form"></span>
-                <div class="input_block">
-                    <span asp-validation-for="UpdatePersonalProfileDto.UserName"></span>
-                    <input asp-for="UpdatePersonalProfileDto.UserName" id="names" type="text" required hover
-                        placeholder="@ViewBag.UserName">
-                </div>
-                <div class="block-button">
-                    <button type="submit" data-style="hyper-button" hover>Сохранить</button>
-                    <button class="backlink" hover data-style="link-new">Отмена</button>
-                </div>
-
-            </form>
-        </div>
-        <div class="main-content step3"></div>
     </div>
-</div>
+    <script src="~/js/windows/js-window.changeName.js" defer></script>
+
+    <div class="js-window hidden" js-window-update-profile-email>
+        <div class="description" hover step="1">
+            <div class="progress-bar"></div>
+            <div class="main-content step1">
+                <h3 class="headline">Вы можете изменить свой Email на сайте. Изменение доступно не чаще 1 раза в 7
+                    дней.
+                </h3>
+                <span class="desc">Имя должно содержать от 3 до 24 символов. Можно использовать латинские буквы и
+                    цифры.</span>
+                <div class="button-block">
+                    <button hover data-style="hyper-button"
+                        data-function="next-step-JS-Email"><span>Продолжить</span></button>
+                    <button class="backlink" hover data-style="link-new" type="button"
+                        data-function="close-js-window-update-profile-email">Отмена</button>
+                </div>
+            </div>
+            <div class="main-content step2">
+                <form asp-action="UpdateProfile" asp-controller="Profile" method="post" id="UpdateProfileEmail">
+                    @Html.AntiForgeryToken()
+                    <span asp-validation-summary="ModelOnly" class="error_message_form">Ошибка сервера</span>
+                    <div class="input_block" hover>
+                        <span asp-validation-for="UpdatePersonalProfileDto.Email"></span>
+                        <label asp-for="UpdatePersonalProfileDto.Email">Новый Email</label>
+                        <input asp-for="UpdatePersonalProfileDto.UserName" id="names" type="text" required hover
+                            value="@ViewBag.UserName" hidden="!">
+                        <input asp-for="UpdatePersonalProfileDto.Email" id="email" type="email" placeholder="@ViewBag.Email"
+                            required hover>
+                    </div>
+                    <div class="block-button">
+                        <button type="submit" data-style="hyper-button" hover>Сохранить</button>
+                        <button class="backlink" hover data-style="link-new" type="button"
+                            data-function="close-js-window-update-profile-email">Отмена</button>
+                    </div>
+
+                </form>
+            </div>
+            <div class="main-content step3">
+
+            </div>
+        </div>
+    </div>
+    <script src="~/js/windows/js-window.changeEmail.js" defer></script>
+}
 
 @section Scripts {
     @{

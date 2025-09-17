@@ -23,7 +23,8 @@ html[data-theme-color="dark"] {
   --palette-color-tc: #636363;
   --palette-color-tc_hover: #909090;
   --error-message-form: #db3b3b;
-  --error-message-form-input: var(--error-message-form);
+  --error-message-form-input: #ffd23f;
+  --success-message: #1E7F34;
 }
 
 html[cross-browser][data-theme-color="dark"] {
@@ -576,13 +577,29 @@ html[cross-browser] {
           justify-content: center;
           align-items: center;
           height: 37px;
-          width: 110px;
+          width: 100%;
           transition: .3s ease;
           border-top-left-radius: 8px;
           border-top-right-radius: 8px;
 
           &::after {
-            position: absolute;
+            position: relative;
+            content: "›";
+            width: 14px;
+            height: 14px;
+            color: var(--palette-text-inv);
+            transform: rotate(90deg);
+            font-size: var(--fs-h3);
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: 0.3s ease;
+            margin-left: 5px;
+          }
+
+          &::before {
+            position: relative;
             content: "";
             background-position: center;
             background-repeat: no-repeat;
@@ -591,28 +608,8 @@ html[cross-browser] {
             width: 14px;
             height: 14px;
             filter: invert(1);
-            left: 0;
-            top: 50%;
-            transform: translate(60%, -50%);
+            margin-right: 5px;
             transition: .3s ease;
-          }
-
-          &::before {
-            position: absolute;
-            content: "›";
-            width: 14px;
-            height: 14px;
-            color: var(--palette-text-inv);
-            position: absolute;
-            transform: translate(-60%, -50%) rotate(90deg);
-            top: 50%;
-            right: 0;
-            font-size: var(--fs-h3);
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: 0.3s ease;
           }
         }
 
@@ -628,8 +625,8 @@ html[cross-browser] {
           z-index: 17;
           color: var(--palette-text-inv);
 
-          &::before {
-            transform: translate(-60%, -50%) rotate(-90deg);
+          &::after {
+            transform: rotate(-90deg);
           }
         }
       }

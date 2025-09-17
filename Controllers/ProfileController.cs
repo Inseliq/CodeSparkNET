@@ -62,54 +62,62 @@ namespace CodeSparkNET.Controllers
         /// <param name="model">The data transfer object containing the updated personal profile information.</param>
         /// <returns>Returns the updated profile view with the result of the operation.</returns>
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateProfile([Bind(Prefix = "UpdatePersonalProfileDto")] UpdatePersonalProfileDto model)
+[ValidateAntiForgeryToken]
+public async Task<IActionResult> UpdateProfile([Bind(Prefix = "UpdatePersonalProfileDto")] UpdatePersonalProfileDto model)
+{
+    try
+    {
+        if (!ModelState.IsValid)
         {
-            try
+            var modelErrors = ModelState.Values
+                .SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToArray();
+
+            return Json(new
             {
-                if (!ModelState.IsValid)
-                {
-                    return Json(new { success = true, message = "Ошибка изменения данных." });
-                }
-
-                // var user = await _cacheService.GetCachedUserAsync(User.FindFirstValue(ClaimTypes.Email));
-                var user = await _accountService.GetUserAsync(User);
-                var result = await _profileService.UpdatePersonalProfileAsync(user.Email, model);
-
-                if (result.Succeeded)
-                {
-                    await _profileService.UpdateUserClaims(user);
-                    // await _cacheService.CacheUserAsync(model.Email);
-                    // PRG: redirect to GET Profile so updated data is loaded
-                    return Json(new { success = true, message = "Профиль успешно обновлен." });
-                }
-
-                var modelErrors = ModelState.Values
-                    .SelectMany(v => v.Errors)
-                    .Select(e => e.ErrorMessage)
-                    .ToArray();
-
-                return Json(new { success = false, errors = modelErrors });
-            }
-            catch (Exception ex)
-            {
-                var email = User.FindFirstValue(ClaimTypes.Email);
-                _logger.LogError(ex, "Ошибка обновления персональных данных в профиле у пользователя {email}", email);
-
-                var vmException = new ProfileDto
-                {
-                    UpdatePersonalProfileDto = model ?? new UpdatePersonalProfileDto(),
-                    ChangePasswordDto = new ChangePasswordDto()
-                };
-
-                ViewBag.UserName = model?.UserName;
-                ViewBag.Email = model?.Email;
-                ViewBag.Role = User?.FindFirstValue(ClaimTypes.Role);
-
-                return View("Profile", vmException);
-            }
-
+                success = false,
+                message = "Ошибка изменения данных.",
+                desc = string.Join(" ", modelErrors)
+            });
         }
+
+        var user = await _accountService.GetUserAsync(User);
+        var result = await _profileService.UpdatePersonalProfileAsync(user.Email, model);
+
+        if (result.Succeeded)
+        {
+            await _profileService.UpdateUserClaims(user);
+
+            return Json(new
+            {
+                success = true,
+                message = "Профиль успешно обновлен.",
+                desc = "Изменение имени успешно сохранено. Следующее изменение будет доступно через 7 дней."
+            });
+        }
+
+        return Json(new
+        {
+            success = false,
+            message = "Ошибка изменения данных.",
+            desc = "Не удалось сохранить изменения, попробуйте ещё раз."
+        });
+    }
+    catch (Exception ex)
+    {
+        var email = User.FindFirstValue(ClaimTypes.Email);
+        _logger.LogError(ex, "Ошибка обновления персональных данных в профиле у пользователя {email}", email);
+
+        return Json(new
+        {
+            success = false,
+            message = "Внутренняя ошибка сервера.",
+            desc = "Попробуйте ещё раз позже или обратитесь в поддержку."
+        });
+    }
+}
+
 
         /// <summary>
         /// Send email confirmation link

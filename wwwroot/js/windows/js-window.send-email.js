@@ -7,8 +7,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   //TODO: Показать на паре, потом поменять на F:60, потом на S:180, потом на FB: 300.
   const STORAGE_KEY = "emailConfirmLocks";
-  const FIRST_LOCK_SECONDS = 5;
-  const SECOND_LOCK_SECONDS = 10;
+  const FIRST_LOCK_SECONDS = 10;
+  const SECOND_LOCK_SECONDS = 12;
   const FINAL_BLOCK_SECONDS = 15;
 
   const LOCK_GROUP_ID = (() => {

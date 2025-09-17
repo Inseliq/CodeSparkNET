@@ -160,7 +160,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // открыть окно сразу
     openModal();
   }
 });

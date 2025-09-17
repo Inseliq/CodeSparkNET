@@ -4,6 +4,7 @@ using CodeSparkNET.Dtos.Profile;
 using CodeSparkNET.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using CodeSparkNET.Utils;
 
 namespace CodeSparkNET.Controllers
 {
@@ -43,8 +44,12 @@ namespace CodeSparkNET.Controllers
                 // var user = await _cacheService.GetCachedUserAsync(User.FindFirstValue(ClaimTypes.Email));
                 var user = await _accountService.GetUserAsync(User);
 
+                var roles = _accountService.GetRolesAsync(user);
+                var translated = roles.ToRussianListAsync();
+                
                 ViewBag.UserName = user.UserName;
                 ViewBag.Email = user.Email;
+                ViewBag.RolesString = await roles.ToRussianStringAsync();
                 return View();
             }
             catch (Exception ex)

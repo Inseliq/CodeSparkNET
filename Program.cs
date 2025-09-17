@@ -86,6 +86,7 @@ builder.Services.AddScoped<ICatalogService, CatalogService>();
 
 //Add repositories
 builder.Services.AddScoped<ICatalogRepository, CatalogRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 //Add Redis Service
 // builder.Services.AddScoped<ICacheService, CacheService>();

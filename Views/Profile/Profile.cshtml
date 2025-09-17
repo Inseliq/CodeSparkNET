@@ -137,7 +137,7 @@
     </div>
 </div>
 
-@if (UserManager.IsEmailConfirmedAsync(user).Result is true)
+@if (UserManager.IsEmailConfirmedAsync(user).Result is false)
 { }
 else
 {

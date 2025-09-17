@@ -1,8 +1,8 @@
 @using Microsoft.AspNetCore.Identity
 @inject UserManager<AppUser> UserManager
 @{
-    var userName = User.Identity.Name;
-    var user = UserManager.GetUserAsync(User).Result;
+    var userName = User?.Identity?.Name;
+    var user = await UserManager.GetUserAsync(User);
 }
 
 @if (!User?.Identity?.IsAuthenticated == true)
@@ -41,7 +41,7 @@ else
                     </div>
                     <div class="footer-block">
                         <a el="stocks" hover>Акции и предложения</a>
-                        @if (UserManager.IsEmailConfirmedAsync(user!).Result is false)
+                        @if (await UserManager.IsEmailConfirmedAsync(user) is false)
                         {
                             <div class="n_confirm">
                                 <button hover title="Подтвердите ваш Email в профиле"

@@ -97,7 +97,7 @@ namespace CodeSparkNET.Services
       catch (Exception ex)
       {
         _logger.LogError(ex, "Ошибка отправки письма при регистрации {Email}", toEmail);
-        throw;
+        return;
       }
     }
   }

@@ -17,9 +17,11 @@ namespace CodeSparkNET.Data
         }
 
         public DbSet<Product> Products { get; set; } = null!;
-        public DbSet<CourseDetail> CourseDetails { get; set; } = null!;
-        public DbSet<Module> Modules { get; set; } = null!;
-        public DbSet<Lesson> Lessons { get; set; } = null!;
+        public DbSet<ProductImage> ProductImages { get; set; } = null!;
+        public DbSet<Catalog> Catalogs { get; set; } = null!;
+        public DbSet<Course> Courses { get; set; } = null!;
+        public DbSet<Template> Templates { get; set; } = null!;
+        public DbSet<Diploma> Diplomas { get; set; } = null!;
 
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -53,90 +55,128 @@ namespace CodeSparkNET.Data
 
             builder.Entity<IdentityRole>().HasData(roles);
 
-            // -----------------------
-            // Product
-            // -----------------------
+            //Catalog
+            builder.Entity<Catalog>(entity =>
+            {
+                entity.HasKey(c => c.Id);
+                entity.Property(c => c.Name).IsRequired();
+                entity.Property(c => c.Slug).IsRequired();
+                entity.HasIndex(c => c.Slug).IsUnique();
+                entity.Property(c => c.IsVisible).HasDefaultValue(true);
+            });
+
+            //Product
             builder.Entity<Product>(entity =>
             {
                 entity.HasKey(p => p.Id);
-
-                // unique slug
-                entity.HasIndex(p => p.Slug).IsUnique();
-
-                // decimal precision (дублирует атрибут в модели)
+                entity.Property(p => p.Name).IsRequired();
+                entity.Property(p => p.Slug).IsRequired();
                 entity.Property(p => p.Price).HasColumnType("decimal(18,2)");
+                entity.HasIndex(p => p.Price);
+                entity.HasIndex(p => new { p.CatalogId, p.Slug }).IsUnique();
 
-                // Enum to int
-                entity.Property(p => p.ProductType).HasConversion<int>();
-
-                // One-to-one: Product <-> CourseDetail (shared PK)
-                // Исправлено: используем HasOne<CourseDetail>() — т.к. Product НЕ содержит навигационного свойства CourseDetail.
-                builder.Entity<Product>()
-                            .HasOne<CourseDetail>()                       // principal -> dependent type
-                            .WithOne(cd => cd.Product)                    // dependent navigation -> principal navigation
-                            .HasForeignKey<CourseDetail>(cd => cd.ProductId)
-                            .OnDelete(DeleteBehavior.Cascade);
+                //Links
+                entity.HasOne(p => p.Catalog)
+                    .WithMany(p => p.Products)
+                    .HasForeignKey(p => p.CatalogId)
+                    .OnDelete(DeleteBehavior.Restrict);
             });
 
-            // -----------------------
-            // CourseDetail (shared PK to Product.Id)
-            // -----------------------
-            builder.Entity<CourseDetail>(entity =>
+            //Product Image
+            builder.Entity<ProductImage>(entity =>
             {
-                entity.HasKey(cd => cd.ProductId);
+                entity.HasKey(pi => pi.Id);
+                entity.Property(pi => pi.ProductId).IsRequired();
+
+                //Links
+                entity.HasOne(pi => pi.Product)
+                    .WithMany(pi => pi.ProductImages)
+                    .HasForeignKey(pi => pi.ProductId)
+                    .OnDelete(DeleteBehavior.Restrict);
             });
 
-            // -----------------------
-            // Module -> CourseDetail
-            // -----------------------
-            builder.Entity<Module>(entity =>
-            {
-                entity.HasKey(m => m.Id);
 
-                entity.HasOne(m => m.Course)
-                      .WithMany(cd => cd.Modules)
-                      .HasForeignKey(m => m.CourseId)
-                      .HasPrincipalKey(cd => cd.ProductId)
-                      .OnDelete(DeleteBehavior.Cascade);
+            // Seed: Catalogs
+            builder.Entity<Catalog>().HasData(
+                new Catalog
+                {
+                    Id = "d1f9c6d2-4b4b-4b8e-9f2a-aaaa00000001",
+                    Name = "It-Cubic",
+                    Slug = "it-cubic",
+                    IsVisible = true
+                },
+                new Catalog
+                {
+                    Id = "d1f9c6d2-4b4b-4b8e-9f2a-aaaa00000002",
+                    Name = "Code Spark",
+                    Slug = "code-spark",
+                    IsVisible = true
+                },
+                new Catalog
+                {
+                    Id = "d1f9c6d2-4b4b-4b8e-9f2a-aaaa00000003",
+                    Name = "Монтажка",
+                    Slug = "montazhka",
+                    IsVisible = true
+                }
+            );
 
-                entity.Property(m => m.Title).HasMaxLength(500);
-                entity.Property(m => m.Order).HasColumnName("SortOrder");
-            });
+            // Seed: Products (по одному продукту в каждом каталоге)
+            builder.Entity<Product>().HasData(
+                new Product
+                {
+                    Id = "e1f9c6d2-5b4b-4b8e-9f2a-bbbb00000001",
+                    CatalogId = "d1f9c6d2-4b4b-4b8e-9f2a-aaaa00000001",
+                    Name = "Курс C# с нуля",
+                    Slug = "c#-for-beginners",
+                    Price = 1999.99m,
 
-            // -----------------------
-            // Lesson -> Module
-            // -----------------------
-            builder.Entity<Lesson>(entity =>
-            {
-                entity.HasKey(l => l.Id);
+                },
+                new Product
+                {
+                    Id = "e1f9c6d2-5b4b-4b8e-9f2a-bbbb00000002",
+                    CatalogId = "d1f9c6d2-4b4b-4b8e-9f2a-aaaa00000002",
+                    Name = "Трехуровневая заготовка ASP.NET MVC",
+                    Slug = "3-tier-web-template",
+                    Price = 1299.00m,
+                },
+                new Product
+                {
+                    Id = "e1f9c6d2-5b4b-4b8e-9f2a-bbbb00000003",
+                    CatalogId = "d1f9c6d2-4b4b-4b8e-9f2a-aaaa00000003",
+                    Name = "Дипломгая работа",
+                    Slug = "diploma-work",
+                    Price = 30000m,
+                }
+            );
 
-                entity.HasOne(l => l.Module)
-                      .WithMany(m => m.Lessons)
-                      .HasForeignKey(l => l.ModuleId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                entity.Property(l => l.Content).HasColumnType("nvarchar(max)");
-                entity.Property(l => l.Title).HasMaxLength(500);
-            });
-
-            // -----------------------
-            // CourseAssignment -> Module AND -> Product (shadow FK ProductId)
-            // -----------------------
-            builder.Entity<CourseAssignment>(entity =>
-            {
-                entity.HasKey(ca => ca.Id);
-
-                // связь к модулю — каскад оставляем
-                entity.HasOne(ca => ca.Module)
-                      .WithMany(m => m.Assignments)
-                      .HasForeignKey(ca => ca.ModuleId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                entity.Property(ca => ca.Title).HasMaxLength(500);
-                entity.Property(ca => ca.Description).HasColumnType("nvarchar(max)");
-            });
+            builder.Entity<ProductImage>().HasData(
+                new ProductImage
+                {
+                    Id = "f1f9c6d2-6b4b-4b8e-9f2a-cccc00000001",
+                    ProductId = "e1f9c6d2-5b4b-4b8e-9f2a-bbbb00000001",
+                    Name = "itcubic-main.jpg",
+                    ImageData = null,
+                    IsMain = true
+                },
+                new ProductImage
+                {
+                    Id = "f1f9c6d2-6b4b-4b8e-9f2a-cccc00000002",
+                    ProductId = "e1f9c6d2-5b4b-4b8e-9f2a-bbbb00000002",
+                    Name = "codespark-main.jpg",
+                    ImageData = null,
+                    IsMain = true
+                },
+                new ProductImage
+                {
+                    Id = "f1f9c6d2-6b4b-4b8e-9f2a-cccc00000003",
+                    ProductId = "e1f9c6d2-5b4b-4b8e-9f2a-bbbb00000003",
+                    Name = "montazhka-main.jpg",
+                    ImageData = null,
+                    IsMain = true
+                }
+            );
 
         }
-
     }
 }

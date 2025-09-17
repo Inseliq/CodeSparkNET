@@ -3,6 +3,7 @@ using CodeSparkNET.Data;
 using CodeSparkNET.Interfaces;
 using CodeSparkNET.Models;
 using CodeSparkNET.Redis;
+using CodeSparkNET.Repositories;
 using CodeSparkNET.Services;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
@@ -77,10 +78,16 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
 //     options.InstanceName = "CodeSparkNET:";
 // });
 
-//Add scoped
+//Add Services
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IProfileService, AccountService>();
+builder.Services.AddScoped<ICatalogService, CatalogService>();
+
+//Add repositories
+builder.Services.AddScoped<ICatalogRepository, CatalogRepository>();
+
+//Add Redis Service
 // builder.Services.AddScoped<ICacheService, CacheService>();
 
 //Add Redis singleton
@@ -116,14 +123,6 @@ app.UseCookiePolicy();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
-// миграции при старте
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.Migrate();
-}
-
 
 app.MapStaticAssets();
 

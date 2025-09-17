@@ -82,6 +82,12 @@ namespace CodeSparkNET.Data
                     .OnDelete(DeleteBehavior.Restrict);
             });
 
+            //User Course
+            builder.Entity<UserCourse>(entity =>
+            {
+                entity.HasKey(c => c.Id);
+            });
+
             //Product Image
             builder.Entity<ProductImage>(entity =>
             {

@@ -41,7 +41,7 @@ else
                     </div>
                     <div class="footer-block">
                         <a el="stocks" hover>Акции и предложения</a>
-                        @if (UserManager.IsEmailConfirmedAsync(user).Result is false)
+                        @if (UserManager.IsEmailConfirmedAsync(user!).Result is false)
                         {
                             <div class="n_confirm">
                                 <button hover title="Подтвердите ваш Email в профиле"

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CodeSparkNET.Migrations
 {
     /// <inheritdoc />
-    public partial class AddModules : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -56,22 +56,17 @@ namespace CodeSparkNET.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Products",
+                name: "Catalogs",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Slug = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    ShortDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ThumbnailUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ProductType = table.Column<int>(type: "int", nullable: false),
-                    IsPublished = table.Column<bool>(type: "bit", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    IsVisible = table.Column<bool>(type: "bit", nullable: true, defaultValue: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Products", x => x.Id);
+                    table.PrimaryKey("PK_Catalogs", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -181,82 +176,80 @@ namespace CodeSparkNET.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CourseDetails",
+                name: "Products",
                 columns: table => new
                 {
-                    ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    FullDescription = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Slug = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ShortDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FullDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Currency = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsPublished = table.Column<bool>(type: "bit", nullable: false),
+                    InStock = table.Column<int>(type: "int", nullable: false),
+                    CatalogId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Discriminator = table.Column<string>(type: "nvarchar(8)", maxLength: 8, nullable: false),
+                    Level = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Issuer = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CourseDetails", x => x.ProductId);
+                    table.PrimaryKey("PK_Products", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CourseDetails_Products_ProductId",
+                        name: "FK_Products_Catalogs_CatalogId",
+                        column: x => x.CatalogId,
+                        principalTable: "Catalogs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProductImages",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ProductId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ImageData = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    IsMain = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductImages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProductImages_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Modules",
+                name: "UserCourse",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CourseId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
-                    SortOrder = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CourseSlug = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CourseId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    EnrolledAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsCompleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Modules", x => x.Id);
+                    table.PrimaryKey("PK_UserCourse", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Modules_CourseDetails_CourseId",
+                        name: "FK_UserCourse_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserCourse_Products_CourseId",
                         column: x => x.CourseId,
-                        principalTable: "CourseDetails",
-                        principalColumn: "ProductId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "CourseAssignment",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ModuleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CourseAssignment", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_CourseAssignment_Modules_ModuleId",
-                        column: x => x.ModuleId,
-                        principalTable: "Modules",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Lessons",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ModuleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
-                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Order = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Lessons", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Lessons_Modules_ModuleId",
-                        column: x => x.ModuleId,
-                        principalTable: "Modules",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalTable: "Products",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.InsertData(
@@ -267,6 +260,36 @@ namespace CodeSparkNET.Migrations
                     { "a3f9c6d2-1f4b-4b8e-9f2a-111111111111", "c1f9c6d2-1f4b-4b8e-9f2a-111111111111", "Admin", "ADMIN" },
                     { "b4f9c6d2-2f4b-4b8e-9f2a-222222222222", "d2f9c6d2-2f4b-4b8e-9f2a-222222222222", "User", "USER" },
                     { "c5f9c6d2-3f4b-4b8e-9f2a-333333333333", "e3f9c6d2-3f4b-4b8e-9f2a-333333333333", "Prime", "PRIME" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Catalogs",
+                columns: new[] { "Id", "IsVisible", "Name", "Slug" },
+                values: new object[,]
+                {
+                    { "d1f9c6d2-4b4b-4b8e-9f2a-aaaa00000001", true, "It-Cubic", "it-cubic" },
+                    { "d1f9c6d2-4b4b-4b8e-9f2a-aaaa00000002", true, "Code Spark", "code-spark" },
+                    { "d1f9c6d2-4b4b-4b8e-9f2a-aaaa00000003", true, "Монтажка", "montazhka" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Products",
+                columns: new[] { "Id", "CatalogId", "Currency", "Discriminator", "FullDescription", "InStock", "IsPublished", "Name", "Price", "ShortDescription", "Slug" },
+                values: new object[,]
+                {
+                    { "e1f9c6d2-5b4b-4b8e-9f2a-bbbb00000001", "d1f9c6d2-4b4b-4b8e-9f2a-aaaa00000001", "RUB", "Product", null, 0, true, "Курс C# с нуля", 1999.99m, null, "c#-for-beginners" },
+                    { "e1f9c6d2-5b4b-4b8e-9f2a-bbbb00000002", "d1f9c6d2-4b4b-4b8e-9f2a-aaaa00000002", "RUB", "Product", null, 0, true, "Трехуровневая заготовка ASP.NET MVC", 1299.00m, null, "3-tier-web-template" },
+                    { "e1f9c6d2-5b4b-4b8e-9f2a-bbbb00000003", "d1f9c6d2-4b4b-4b8e-9f2a-aaaa00000003", "RUB", "Product", null, 0, true, "Дипломгая работа", 30000m, null, "diploma-work" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "ProductImages",
+                columns: new[] { "Id", "ImageData", "IsMain", "Name", "ProductId" },
+                values: new object[,]
+                {
+                    { "f1f9c6d2-6b4b-4b8e-9f2a-cccc00000001", null, true, "itcubic-main.jpg", "e1f9c6d2-5b4b-4b8e-9f2a-bbbb00000001" },
+                    { "f1f9c6d2-6b4b-4b8e-9f2a-cccc00000002", null, true, "codespark-main.jpg", "e1f9c6d2-5b4b-4b8e-9f2a-bbbb00000002" },
+                    { "f1f9c6d2-6b4b-4b8e-9f2a-cccc00000003", null, true, "montazhka-main.jpg", "e1f9c6d2-5b4b-4b8e-9f2a-bbbb00000003" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -309,25 +332,36 @@ namespace CodeSparkNET.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CourseAssignment_ModuleId",
-                table: "CourseAssignment",
-                column: "ModuleId");
+                name: "IX_Catalogs_Slug",
+                table: "Catalogs",
+                column: "Slug",
+                unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Lessons_ModuleId",
-                table: "Lessons",
-                column: "ModuleId");
+                name: "IX_ProductImages_ProductId",
+                table: "ProductImages",
+                column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Modules_CourseId",
-                table: "Modules",
+                name: "IX_Products_CatalogId_Slug",
+                table: "Products",
+                columns: new[] { "CatalogId", "Slug" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Products_Price",
+                table: "Products",
+                column: "Price");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserCourse_CourseId",
+                table: "UserCourse",
                 column: "CourseId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Products_Slug",
-                table: "Products",
-                column: "Slug",
-                unique: true);
+                name: "IX_UserCourse_UserId",
+                table: "UserCourse",
+                column: "UserId");
         }
 
         /// <inheritdoc />
@@ -349,10 +383,10 @@ namespace CodeSparkNET.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "CourseAssignment");
+                name: "ProductImages");
 
             migrationBuilder.DropTable(
-                name: "Lessons");
+                name: "UserCourse");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -361,13 +395,10 @@ namespace CodeSparkNET.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Modules");
-
-            migrationBuilder.DropTable(
-                name: "CourseDetails");
-
-            migrationBuilder.DropTable(
                 name: "Products");
+
+            migrationBuilder.DropTable(
+                name: "Catalogs");
         }
     }
 }

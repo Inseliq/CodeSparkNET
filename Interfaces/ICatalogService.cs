@@ -11,5 +11,6 @@ namespace CodeSparkNET.Interfaces
         Task<List<CatalogNamesDto>> GetCatalogNamesAsync();
         Task<List<CatalogProductsDto>> GetCatalogProductsAsync(string catalogSlug);
         Task<CatalogProductDetailsDto> GetCatalogProductDetailsAsync(string catalogSlug, string productSlug);
+        Task<CatalogDto> GetCatalogBySlugAsync(string catalogSlug);
     }
 }

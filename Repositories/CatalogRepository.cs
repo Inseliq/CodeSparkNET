@@ -18,13 +18,18 @@ namespace CodeSparkNET.Repositories
         }
         public async Task<List<Catalog>> GetCatalogsAsync()
         {
-            return await _context.Catalogs.ToListAsync();
+            return await _context.Catalogs
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<Catalog> GetCatalogBySlugAsync(string catalogSlug)
         {
             return await _context.Catalogs
-                .Where(c => c.Name == catalogSlug)
+                .AsNoTracking()
+                .Where(c => c.Slug == catalogSlug)
+                .Include(c => c.Products)
+                    .ThenInclude(p => p.ProductImages)
                 .FirstOrDefaultAsync();
         }
     }

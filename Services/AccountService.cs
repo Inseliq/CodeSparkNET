@@ -88,7 +88,7 @@ namespace CodeSparkNET.Services
             //Get user
             var user = await _userManager.FindByEmailAsync(email);
 
-            if (user == null || (await _userManager.IsEmailConfirmedAsync(user))) //TODO: add inverse(add !) in email.IsConfirmed
+            if (user == null || (!await _userManager.IsEmailConfirmedAsync(user))) //TODO: add inverse(add !) in email.IsConfirmed
                 return false;
 
             //Generate unique token

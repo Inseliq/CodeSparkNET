@@ -28,7 +28,8 @@ namespace CodeSparkNET.Services
             return catalogs
                     .Select(c => new CatalogNamesDto
                     {
-                        Name = c.Name
+                        Name = c.Name,
+                        Slug = c.Slug
                     }).ToList();
         }
 
@@ -76,6 +77,22 @@ namespace CodeSparkNET.Services
                         ImageData = img.ImageData,
                         IsMain = img.IsMain
                     }).ToList()
+            };
+        }
+
+        public async Task<CatalogDto> GetCatalogBySlugAsync(string catalogSlug)
+        {
+            var catalog = await _catalogRepository.GetCatalogBySlugAsync(catalogSlug);
+
+            if (catalog == null)
+                return new CatalogDto();
+
+            return new CatalogDto
+            {
+                Name = catalog.Name,
+                Slug = catalog.Slug,
+                IsVisible = catalog.IsVisible,
+                Products = catalog.Products
             };
         }
     }

@@ -19,6 +19,9 @@ namespace CodeSparkNET.Data
         public DbSet<Product> Products { get; set; } = null!;
         public DbSet<ProductImage> ProductImages { get; set; } = null!;
         public DbSet<Catalog> Catalogs { get; set; } = null!;
+        public DbSet<Course> Courses { get; set; } = null!;
+        public DbSet<Template> Templates { get; set; } = null!;
+        public DbSet<Diploma> Diplomas { get; set; } = null!;
 
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -91,6 +94,89 @@ namespace CodeSparkNET.Data
                     .HasForeignKey(pi => pi.ProductId)
                     .OnDelete(DeleteBehavior.Restrict);
             });
+
+
+            // Seed: Catalogs
+            builder.Entity<Catalog>().HasData(
+                new Catalog
+                {
+                    Id = "d1f9c6d2-4b4b-4b8e-9f2a-aaaa00000001",
+                    Name = "It-Cubic",
+                    Slug = "it-cubic",
+                    IsVisible = true
+                },
+                new Catalog
+                {
+                    Id = "d1f9c6d2-4b4b-4b8e-9f2a-aaaa00000002",
+                    Name = "Code Spark",
+                    Slug = "code-spark",
+                    IsVisible = true
+                },
+                new Catalog
+                {
+                    Id = "d1f9c6d2-4b4b-4b8e-9f2a-aaaa00000003",
+                    Name = "Монтажка",
+                    Slug = "montazhka",
+                    IsVisible = true
+                }
+            );
+
+            // Seed: Products (по одному продукту в каждом каталоге)
+            builder.Entity<Product>().HasData(
+                new Product
+                {
+                    Id = "e1f9c6d2-5b4b-4b8e-9f2a-bbbb00000001",
+                    CatalogId = "d1f9c6d2-4b4b-4b8e-9f2a-aaaa00000001",
+                    Name = "Курс C# с нуля",
+                    Slug = "c#-for-beginners",
+                    Price = 1999.99m,
+
+                },
+                new Product
+                {
+                    Id = "e1f9c6d2-5b4b-4b8e-9f2a-bbbb00000002",
+                    CatalogId = "d1f9c6d2-4b4b-4b8e-9f2a-aaaa00000002",
+                    Name = "Трехуровневая заготовка ASP.NET MVC",
+                    Slug = "3-tier-web-template",
+                    Price = 1299.00m,
+                },
+                new Product
+                {
+                    Id = "e1f9c6d2-5b4b-4b8e-9f2a-bbbb00000003",
+                    CatalogId = "d1f9c6d2-4b4b-4b8e-9f2a-aaaa00000003",
+                    Name = "Дипломгая работа",
+                    Slug = "diploma-work",
+                    Price = 30000m,
+                }
+            );
+
+            builder.Entity<ProductImage>().HasData(
+                new ProductImage
+                {
+                    Id = "f1f9c6d2-6b4b-4b8e-9f2a-cccc00000001",
+                    ProductId = "e1f9c6d2-5b4b-4b8e-9f2a-bbbb00000001",
+                    Name = "itcubic-main.jpg",
+                    ImageData = null,
+                    IsMain = true
+                },
+                new ProductImage
+                {
+                    Id = "f1f9c6d2-6b4b-4b8e-9f2a-cccc00000002",
+                    ProductId = "e1f9c6d2-5b4b-4b8e-9f2a-bbbb00000002",
+                    Name = "codespark-main.jpg",
+                    ImageData = null,
+                    IsMain = true
+                },
+                new ProductImage
+                {
+                    Id = "f1f9c6d2-6b4b-4b8e-9f2a-cccc00000003",
+                    ProductId = "e1f9c6d2-5b4b-4b8e-9f2a-bbbb00000003",
+                    Name = "montazhka-main.jpg",
+                    ImageData = null,
+                    IsMain = true
+                }
+            );
+
         }
     }
 }

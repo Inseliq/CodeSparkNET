@@ -3,6 +3,7 @@ using CodeSparkNET.Dtos.Account;
 using CodeSparkNET.Dtos.Profile;
 using CodeSparkNET.Interfaces;
 using CodeSparkNET.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -14,6 +15,7 @@ namespace CodeSparkNET.Controllers
     /// <summary>
     /// Controller responsible for handling account-related actions such as registration, login, and password management.
     /// </summary>
+    [Authorize]
     public class AccountController : Controller
     {
         private readonly IAccountService _accountService;
@@ -33,6 +35,7 @@ namespace CodeSparkNET.Controllers
         /// </summary>
         /// <returns>A view for the register page.</returns>
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Register()
         {
             return View();
@@ -44,6 +47,7 @@ namespace CodeSparkNET.Controllers
         /// <param name="registerDto">The data transfer object containing the user's registration details.</param>
         /// <returns>A view for the registration page.</returns>
         [HttpPost]
+        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterDto registerDto)
         {
@@ -76,6 +80,7 @@ namespace CodeSparkNET.Controllers
         /// </summary>
         /// <returns>A view for the login page.</returns>
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Login()
         {
             return View();
@@ -87,6 +92,7 @@ namespace CodeSparkNET.Controllers
         /// <param name="loginDto">The data transfer object containing the user's login credentials.</param>
         /// <returns>A view for the login page.</returns>
         [HttpPost]
+        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginDto loginDto)
         {
@@ -145,6 +151,7 @@ namespace CodeSparkNET.Controllers
         /// <param name="model">The data transfer object containing the email for which the password reset link is requested.</param>
         /// <returns>A view for requesting a password reset.</returns>
         [HttpPost]
+        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordDto model)
         {
@@ -169,6 +176,7 @@ namespace CodeSparkNET.Controllers
         /// <param name="token">The token used to verify the password reset request.</param>
         /// <returns>A view for resetting the password with pre-filled email and token.</returns>
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult ResetPassword(string email, string token)
         {
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(token))
@@ -183,6 +191,7 @@ namespace CodeSparkNET.Controllers
         /// <param name="model">The data transfer object containing the email, token, and new password.</param>
         /// <returns>A JSON response indicating the success or failure of the password reset operation.</returns>
         [HttpPost]
+        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword(ResetPasswordDto model)
         {
@@ -199,7 +208,8 @@ namespace CodeSparkNET.Controllers
             var result = await _accountService.ResetPasswordAsync(model);
             if (result.Succeeded)
             {
-                return Json(new { success = true, message = "Пароль успешно восстановлен." });
+                TempData["SuccessMessage"] = "Пароль успешно восстановлен.";
+                return RedirectToAction("Index", "Home");
             }
 
             var errors = result.Errors.Select(e => e.Description).ToArray();

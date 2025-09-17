@@ -1,3 +1,4 @@
+@model CodeSparkNET.Dtos.Catalog.CatalogDto
 @{
   ViewData["Title"] = "Каталог";
 }
@@ -8,11 +9,43 @@
 <partial name="_WebApp_Navbar_header" />
 
 <aside class="filter controller">
-  
+
 </aside>
 
 <div class="__container catalog">
+  <h1>@Model?.Name</h1>
 
+  @if (Model?.Products == null || !Model.Products.Any())
+  {
+    <p>Товары не найдены.</p>
+  }
+  else
+  {
+    <div class="grid">
+      @foreach (var p in Model.Products)
+      {
+        <article class="card">
+                    <a asp-controller="Catalog" asp-action="ProductDetails"
+                       asp-route-catalogSlug="@Model.Slug"
+                       asp-route-productSlug="@p.Slug">
+                        >
+            @if (p.ProductImages?.Any() == true && p.ProductImages.First().ImageData != null)
+            {
+              <img src="data:image/jpeg;base64,@(Convert.ToBase64String(p.ProductImages.First().ImageData))" alt="@p.Name" />
+            }
+            else
+            {
+              <img src="~/images/no-image.png" alt="no image" />
+            }
+
+            <h3>@p.Name</h3>
+            <p>@p.ShortDescription</p>
+            <div>@p.Price @p.Currency</div>
+          </a>
+        </article>
+      }
+    </div>
+  }
 </div>
 
 <partial name="_WebApp_Navbar_footer" />

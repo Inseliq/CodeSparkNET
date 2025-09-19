@@ -13,12 +13,7 @@
     <section class="left">
       <a asp-action="Index" asp-controller="Home" banner-CS></a>
       <button js-list-catalog-view-btn>Каталог</button>
-      <div js-list-catalog-view class="list hidden">
-        @* <a filter="course">Курсы</a>
-        <a filter="course_work">Курсовые работы</a>
-        <a filter="diplome_work">Дипломные работы</a>
-        <a filter="desigen">Дизайны</a>
-        <a filter="create_site">Создание сайта</a> *@
+      <div js-list-catalog-view class="list hidden" hidden="!">
         @foreach (var catalog in catalogs)
         {
           <a asp-controller="Catalog" asp-action="Catalog" asp-route-catalogSlug="@catalog.Slug">
@@ -37,11 +32,11 @@
       @if (!User?.Identity?.IsAuthenticated == true)
       {
         <a asp-controller="Account" asp-action="Login">Войти</a>
-        <a filter="course">Курсы</a>
+        <a>Каталог</a>
       }
       else
       {
-        <a filrer="course">Курсы</a>
+        <a>Каталог</a>
       }
     </section>
   </nav>

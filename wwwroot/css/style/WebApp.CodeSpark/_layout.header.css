@@ -1,0 +1,25 @@
+html[cross-browser] {
+  main[data-layout="main"][role="main"] {
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px 10px;
+    min-height: 100vh;
+
+    header.webapp-nav {
+      display: flex;
+      width: 100%;
+      height: auto;
+      align-items: center;
+      justify-content: center;
+
+      .__container {
+        flex-direction: row;
+        width: 100%;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1440px;
+      }
+    }
+  }
+}

@@ -2,20 +2,176 @@
     ViewData["Title"] = "Главная страница";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about</p>
-    @if (User?.Identity?.IsAuthenticated == true)
-    {
-        <a asp-controller="Catalog" asp-action="Catalog" asp-route-catalogSlug="it-cubic" hover
-           data-style="hyper-button"><span>Catalog --temp-link</span></a>
-    }
+@section Styles {
+    <link rel="stylesheet" href="~/css/style/WebApp.CodeSpark/_layout.header.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/css/style/WebApp.CodeSpark/_layout.footer.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/css/style/index.mainPage.css" asp-append-version="true">
+}
+@section Meta {
+    <meta name="CodeSpark" content="_Navbar.header">
+    <meta name="CodeSpark" content="_Navbar.footer">
+}
 
-    @* @if (TempData["SuccessMessage"] != null) *@
-    @* { *@
-        <div>
-            @TempData["SuccessMessage"]
+<partial name="_WebApp_Navbar_header" />
+
+<div class="__container">
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="floating-shapes">
+            <div class="shape shape1"></div>
+            <div class="shape shape2"></div>
+            <div class="shape shape3"></div>
         </div>
-    @* } *@
 
+        <div class="logo-container">
+            <h1 class="logo">
+                CodeSpark
+            </h1>
+        </div>
+
+        <p class="tagline">Создаём цифровое будущее вместе</p>
+
+        <p class="hero-description">
+            От идеи до реализации — мы воплощаем ваши амбиции в код.
+            Современные веб-решения, обучение программированию и полный спектр IT-услуг
+            для студентов и бизнеса.
+        </p>
+
+        <div class="cta-buttons">
+            <a data-style="hyper-button" hover>Начать проект</a>
+            <a href="#" class="btn-secondary" data-style="hyper-button" hover>Узнать больше</a>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services-section scroll-animate">
+        <h2 class="section-title">Наши услуги</h2>
+        <p class="section-subtitle">Комплексные решения для вашего успеха</p>
+
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">💻</div>
+                <h3 class="service-title">Full-Stack разработка</h3>
+                <p class="service-description">
+                    Создание современных веб-приложений на ASP.NET Core.
+                    От архитектуры до развёртывания — полный цикл разработки.
+                </p>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">🎓</div>
+                <h3 class="service-title">Курсы программирования</h3>
+                <p class="service-description">
+                    Обучение от основ до продвинутого уровня.
+                    Практический подход и актуальные технологии.
+                </p>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">🎨</div>
+                <h3 class="service-title">UI/UX дизайн</h3>
+                <p class="service-description">
+                    Создаём интерфейсы, которые влюбляют с первого клика.
+                    Современный дизайн и удобство использования.
+                </p>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">📚</div>
+                <h3 class="service-title">Академические проекты</h3>
+                <p class="service-description">
+                    Курсовые и дипломные работы под ключ:
+                    документация, дизайн и рабочее приложение.
+                </p>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">🚀</div>
+                <h3 class="service-title">Готовые решения</h3>
+                <p class="service-description">
+                    Шаблоны и готовые модули для быстрого старта.
+                    Экономьте время на типовых задачах.
+                </p>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">⚙️</div>
+                <h3 class="service-title">Техническая поддержка</h3>
+                <p class="service-description">
+                    Монтаж, настройка и сопровождение проектов.
+                    Ваш надёжный технический партнёр.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tech Stack -->
+    <section class="tech-stack scroll-animate">
+        <h3 class="tech-title">Технологии, которые мы используем</h3>
+        <div class="tech-logos">
+            <div class="tech-item">ASP.NET</div>
+            <div class="tech-item">React</div>
+            <div class="tech-item">TypeScript</div>
+            <div class="tech-item">Azure</div>
+            <div class="tech-item">Docker</div>
+            <div class="tech-item">SQL</div>
+        </div>
+    </section>
+
+    <!-- Footer CTA -->
+    <section class="footer-cta scroll-animate">
+        <h2>Готовы зажечь искру вашего проекта?</h2>
+        <p>Давайте создадим что-то невероятное вместе</p>
+        <a data-style="link-new" hover>Связаться с нами</a>
+    </section>
 </div>
+
+@section Scripts {
+    <script defer asp-append-version="true">
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.scroll-animate').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Parallax effect for shapes
+        document.addEventListener('mousemove', (e) => {
+            const shapes = document.querySelectorAll('.shape');
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+
+            shapes.forEach((shape, index) => {
+                const speed = (index + 1) * 20;
+                const xOffset = (x - 0.5) * speed;
+                const yOffset = (y - 0.5) * speed;
+
+                shape.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+            });
+        });
+
+        // Smooth scroll for buttons
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+}
+
+<partial name="_WebApp_Navbar_footer" />

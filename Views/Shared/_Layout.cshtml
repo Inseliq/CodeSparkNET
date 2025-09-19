@@ -9,13 +9,13 @@
     <title>@ViewData["Title"] - CodeSpark</title>
 
     @* Рендер секции Styles из дочерних view (если она есть) *@
-    @RenderSection("Styles", required: false)
     @RenderSection("Meta", required: false)
-    <link rel="stylesheet" href="~/css/assemble.site.css">
+    <link rel="stylesheet" href="~/css/assemble.site.css" asp-append-version="true">
+    @RenderSection("Styles", required: false)
 
-    @* <script src="~/js/app/get.info_about_device.js" defer></script> *@
-    <script src="~/js/app/assemble.app.js" defer></script>
-    <script src="~/js/windows/js-window.err-w.js" defer></script>
+    @* <script src="~/js/app/get.info_about_device.js" defer asp-append-version="true"></script> *@
+    <script src="~/js/app/assemble.app.js" defer asp-append-version="true"></script>
+    <script src="~/js/windows/js-window.err-w.js" defer asp-append-version="true"></script>
 
     <noscript title="keyword"></noscript>
 </head>

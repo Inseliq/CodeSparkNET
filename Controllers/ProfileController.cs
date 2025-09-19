@@ -182,37 +182,57 @@ public async Task<IActionResult> UpdateProfile([Bind(Prefix = "UpdatePersonalPro
         /// </summary>
         /// <param name="model">The data transfer object containing the old and new passwords.</param>
         /// <returns>A JSON response indicating the success or failure of the password change operation.</returns>
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ChangePassword([Bind(Prefix = "ChangePasswordDto")] ChangePasswordDto model)
+      [HttpPost]
+[ValidateAntiForgeryToken]
+public async Task<IActionResult> ChangePassword([Bind(Prefix = "ChangePasswordDto")] ChangePasswordDto model)
+{
+    try
+    {
+        if (!ModelState.IsValid)
         {
-            try
+            return Json(new
             {
-                if (!ModelState.IsValid)
-                {
-                    ModelState.AddModelError(string.Empty, "Ошибка смены пароля.");
-                    return Json(new { success = false, message = "Ошибка смены пароля" });
-                }
-
-                // var user = await _cacheService.GetCachedUserAsync(User.FindFirstValue(ClaimTypes.Email));
-                var user = await _accountService.GetUserAsync(User);
-                var result = await _profileService.ChangePasswordAsync(user.Email, model);
-
-                if (result.Succeeded)
-                    return Json(new { success = true, message = "Пароль успешно изменен." });
-
-                foreach (var err in result.Errors)
-                    ModelState.AddModelError(string.Empty, err.Description);
-
-                return Json(new { success = false, message = "Ошибка смены пароля." });
-            }
-            catch (Exception ex)
-            {
-                var user = await _accountService.GetUserAsync(User);
-                _logger.LogError(ex, "Ошибка смены пароля у пользователя {email}", user.Email);
-                return Json(new { success = false, message = "Ошибка смены пароля" });
-            }
+                success = false,
+                message = "Ошибка смены пароля",
+                desc = "Пожалуйста, проверьте введённые данные и попробуйте снова."
+            });
         }
+
+        var user = await _accountService.GetUserAsync(User);
+        var result = await _profileService.ChangePasswordAsync(user.Email, model);
+
+        if (result.Succeeded)
+        {
+            return Json(new
+            {
+                success = true,
+                message = "Пароль успешно изменен.",
+                desc = "Теперь вы можете войти с новым паролем."
+            });
+        }
+
+        // Для безопасности не передаем конкретные ошибки Identity
+        return Json(new
+        {
+            success = false,
+            message = "Ошибка смены пароля",
+            desc = "Текущий пароль неверен или новый пароль не соответствует требованиям. Попробуйте снова."
+        });
+    }
+    catch (Exception ex)
+    {
+        var user = await _accountService.GetUserAsync(User);
+        _logger.LogError(ex, "Ошибка смены пароля у пользователя {email}", user.Email);
+
+        return Json(new
+        {
+            success = false,
+            message = "Ошибка смены пароля",
+            desc = "Произошла непредвиденная ошибка. Попробуйте позже."
+        });
+    }
+}
+
 
 
 

@@ -1,14 +1,9 @@
 using System.Diagnostics;
 using CodeSparkNET.Dtos.Account;
-using CodeSparkNET.Dtos.Profile;
 using CodeSparkNET.Interfaces;
 using CodeSparkNET.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace CodeSparkNET.Controllers
 {
@@ -38,6 +33,9 @@ namespace CodeSparkNET.Controllers
         [AllowAnonymous]
         public IActionResult Register()
         {
+            if (User?.Identity?.IsAuthenticated is true)
+                return RedirectToAction("Index", "Home");
+
             return View();
         }
 
@@ -83,6 +81,9 @@ namespace CodeSparkNET.Controllers
         [AllowAnonymous]
         public IActionResult Login()
         {
+            if (User?.Identity?.IsAuthenticated is true)
+                return RedirectToAction("Index", "Home");
+
             return View();
         }
 

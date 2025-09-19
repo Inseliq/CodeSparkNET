@@ -4,16 +4,16 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CodeSparkNET.Controllers
 {
-  public class CatalogController : Controller
+  public class CatalogsController : Controller
   {
-        private readonly ILogger<CatalogController> _logger;
+        private readonly ILogger<CatalogsController> _logger;
         private readonly ICatalogService _catalogService;
-        public CatalogController(ILogger<CatalogController> logger, ICatalogService catalogService)
+        public CatalogsController(ILogger<CatalogsController> logger, ICatalogService catalogService)
         {
             _logger = logger;
             _catalogService = catalogService;
         }
-        [HttpGet("/Catalog/Catalog/{catalogSlug}")]
+        [HttpGet("/Catalogs/Catalog/{catalogSlug}")]
         public async Task<IActionResult> Catalog(string catalogSlug)
         {
             var catalog = await _catalogService.GetCatalogBySlugAsync(catalogSlug);

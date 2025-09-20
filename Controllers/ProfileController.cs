@@ -38,7 +38,6 @@ namespace CodeSparkNET.Controllers
         {
             try
             {
-
                 if (!ModelState.IsValid) return View();
 
                 // var user = await _cacheService.GetCachedUserAsync(User.FindFirstValue(ClaimTypes.Email));
@@ -46,10 +45,14 @@ namespace CodeSparkNET.Controllers
 
                 var roles = _accountService.GetRolesAsync(user);
                 var translated = roles.ToRussianListAsync();
-                
+
                 ViewBag.UserName = user.UserName;
                 ViewBag.Email = user.Email;
                 ViewBag.RolesString = await roles.ToRussianStringAsync();
+                ViewBag.EmailAddAt = user.EmailAddAt.ToString("g");
+                ViewBag.EmailConfirmedAt = user.EmailConfirmedAt.ToString("g");
+                ViewBag.EmailChangedAt = user.EmailChangedAt.ToString("g");
+
                 return View();
             }
             catch (Exception ex)
@@ -67,61 +70,68 @@ namespace CodeSparkNET.Controllers
         /// <param name="model">The data transfer object containing the updated personal profile information.</param>
         /// <returns>Returns the updated profile view with the result of the operation.</returns>
         [HttpPost]
-[ValidateAntiForgeryToken]
-public async Task<IActionResult> UpdateProfile([Bind(Prefix = "UpdatePersonalProfileDto")] UpdatePersonalProfileDto model)
-{
-    try
-    {
-        if (!ModelState.IsValid)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateProfile([Bind(Prefix = "UpdatePersonalProfileDto")] UpdatePersonalProfileDto model)
         {
-            var modelErrors = ModelState.Values
-                .SelectMany(v => v.Errors)
-                .Select(e => e.ErrorMessage)
-                .ToArray();
-
-            return Json(new
+            try
             {
-                success = false,
-                message = "Ошибка изменения данных.",
-                desc = string.Join(" ", modelErrors)
-            });
-        }
+                if (!ModelState.IsValid)
+                {
+                    var modelErrors = ModelState.Values
+                        .SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage)
+                        .ToArray();
 
-        var user = await _accountService.GetUserAsync(User);
-        var result = await _profileService.UpdatePersonalProfileAsync(user.Email, model);
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Ошибка изменения данных.",
+                        desc = string.Join(" ", modelErrors)
+                    });
+                }
 
-        if (result.Succeeded)
-        {
-            await _profileService.UpdateUserClaims(user);
+                var user = await _accountService.GetUserAsync(User);
 
-            return Json(new
+                if (await _accountService.UserWithEmailExistsAsync(user.Email))
+                    return Json(new { success = false,message = "Ошибка обновления профиля", desc = "Пользователь с такой почтой уже существует." });
+                
+                if (await _accountService.UserWithUserNameExistsAsync(user.UserName))
+                    return Json(new {success = false,message = "Ошибка обновления профиля", desc = "Пользователь с таким именем уже существует."});
+
+                var result = await _profileService.UpdatePersonalProfileAsync(user.Email, model);
+
+                if (result.Succeeded)
+                {
+                    await _profileService.UpdateUserClaims(user);
+
+                    return Json(new
+                    {
+                        success = true,
+                        message = "Профиль успешно обновлен.",
+                        desc = "Изменение имени успешно сохранено. Следующее изменение будет доступно через 7 дней."
+                    });
+                }
+
+                return Json(new
+                {
+                    success = false,
+                    message = "Ошибка изменения данных.",
+                    desc = "Не удалось сохранить изменения, попробуйте ещё раз."
+                });
+            }
+            catch (Exception ex)
             {
-                success = true,
-                message = "Профиль успешно обновлен.",
-                desc = "Изменение имени успешно сохранено. Следующее изменение будет доступно через 7 дней."
-            });
+                var email = User.FindFirstValue(ClaimTypes.Email);
+                _logger.LogError(ex, "Ошибка обновления персональных данных в профиле у пользователя {email}", email);
+
+                return Json(new
+                {
+                    success = false,
+                    message = "Внутренняя ошибка сервера.",
+                    desc = "Попробуйте ещё раз позже или обратитесь в поддержку."
+                });
+            }
         }
-
-        return Json(new
-        {
-            success = false,
-            message = "Ошибка изменения данных.",
-            desc = "Не удалось сохранить изменения, попробуйте ещё раз."
-        });
-    }
-    catch (Exception ex)
-    {
-        var email = User.FindFirstValue(ClaimTypes.Email);
-        _logger.LogError(ex, "Ошибка обновления персональных данных в профиле у пользователя {email}", email);
-
-        return Json(new
-        {
-            success = false,
-            message = "Внутренняя ошибка сервера.",
-            desc = "Попробуйте ещё раз позже или обратитесь в поддержку."
-        });
-    }
-}
 
 
         /// <summary>

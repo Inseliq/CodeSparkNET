@@ -14,7 +14,6 @@ namespace CodeSparkNET.Utils
             ["Prime"] = "Премиум",
         };
 
-        // ---- синхронные расширения ----
         public static string ToRussian(this string? role)
             => string.IsNullOrWhiteSpace(role) ? string.Empty
                : (_map.TryGetValue(role!, out var rus) ? rus : role!);
@@ -28,7 +27,6 @@ namespace CodeSparkNET.Utils
         public static List<string> ToRussian(this List<string>? roles)
             => (roles ?? new List<string>()).Select(r => r.ToRussian()).ToList();
 
-        // ---- async-расширения для Task<IList<string>> / Task<IEnumerable<string>> / Task<List<string>> ----
 
         public static async Task<List<string>> ToRussianListAsync(this Task<IList<string>> rolesTask)
         {
@@ -48,7 +46,6 @@ namespace CodeSparkNET.Utils
             return (roles ?? new List<string>()).Select(r => r.ToRussian()).ToList();
         }
 
-        // ---- async-методы, возвращающие строку с разделителем ----
         public static async Task<string> ToRussianStringAsync(this Task<IList<string>> rolesTask, string separator = ", ")
         {
             var roles = await (rolesTask ?? Task.FromResult((IList<string>)Array.Empty<string>()));

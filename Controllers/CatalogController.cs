@@ -16,36 +16,52 @@ namespace CodeSparkNET.Controllers
         [HttpGet("/Catalog/Catalog/{catalogSlug}")]
         public async Task<IActionResult> Catalog(string catalogSlug)
         {
-            var catalog = await _catalogService.GetCatalogBySlugAsync(catalogSlug);
-
-            var model = new CatalogDto
+            try
             {
-                Name = catalog?.Name,
-                Slug = catalog?.Slug,
-                IsVisible = catalog?.IsVisible,
-                Products = catalog?.Products
-            };
+                var catalog = await _catalogService.GetCatalogBySlugAsync(catalogSlug);
 
-            return View(model);
+                var model = new CatalogDto
+                {
+                    Name = catalog?.Name,
+                    Slug = catalog?.Slug,
+                    IsVisible = catalog?.IsVisible,
+                    Products = catalog?.Products
+                };
+
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while requestiong catalog {Slug} by slug", catalogSlug);
+                return View();
+            }
         }
 
         [HttpGet("/Catalog/ProductDetails/{catalogSlug}/{productSlug}")]
         public async Task<IActionResult> ProductDetails(string catalogSlug, string productSlug)
         {
-            var catalog = await _catalogService.GetCatalogProductDetailsAsync(catalogSlug, productSlug);
-
-            var model = new CatalogProductDetailsDto
+            try
             {
-                Name = catalog?.Name,
-                Slug = catalog?.Slug,
-                FullDescription = catalog?.FullDescription,
-                Price = catalog.Price,
-                Currency = catalog?.Currency,
-                InStock = catalog.InStock,
-                Images = catalog?.Images
-            };
+                var catalog = await _catalogService.GetCatalogProductDetailsAsync(catalogSlug, productSlug);
 
-            return View(model);
+                var model = new CatalogProductDetailsDto
+                {
+                    Name = catalog?.Name,
+                    Slug = catalog?.Slug,
+                    FullDescription = catalog?.FullDescription,
+                    Price = catalog.Price,
+                    Currency = catalog?.Currency,
+                    InStock = catalog.InStock,
+                    Images = catalog?.Images
+                };
+
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while gettin product details {CatalogSlug}-{ProductSlug}", catalogSlug, productSlug);
+                return View();
+            }
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Timers;
 using CodeSparkNET.Dtos.User;
 using CodeSparkNET.Interfaces;
 using CodeSparkNET.Models;
@@ -14,12 +9,20 @@ namespace CodeSparkNET.Services
 {
     /// <summary>
     /// Service for caching user data using Redis.
+    /// Provides methods for caching, retrieving, and clearing user data in Redis.
     /// </summary>
     public class CacheService : ICacheService
     {
         private readonly ILogger<CacheService> _logger;
         private readonly UserManager<AppUser> _userManager;
         private readonly ICacheProvider _cacheProvider;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CacheService"/> class.
+        /// </summary>
+        /// <param name="logger">Logger for logging cache operations.</param>
+        /// <param name="userManager">ASP.NET Core Identity user manager.</param>
+        /// <param name="cacheProvider">Custom cache provider for interacting with Redis.</param>
         public CacheService(
             ILogger<CacheService> logger,
             UserManager<AppUser> userManager,
@@ -30,6 +33,11 @@ namespace CodeSparkNET.Services
             _userManager = userManager;
             _cacheProvider = cacheProvider;
         }
+
+        /// <summary>
+        /// Caches a user in Redis by their email.
+        /// </summary>
+        /// <param name="email">The email of the user to cache.</param>
         public async Task CacheUserAsync(string email)
         {
             if (string.IsNullOrWhiteSpace(email)) return;
@@ -58,16 +66,19 @@ namespace CodeSparkNET.Services
                 };
 
                 await _cacheProvider.SetCache(email, model, options);
-
-                return;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Ошибка кеширования данных пользователя с почтой - {email}", email);
-                return;
+                _logger.LogError(ex, "Error caching user data for email - {email}", email);
             }
         }
 
+        /// <summary>
+        /// Retrieves a cached user from Redis by their email.
+        /// If not found in cache, retrieves the user from the database and caches them.
+        /// </summary>
+        /// <param name="email">The email of the user to retrieve.</param>
+        /// <returns>The <see cref="AppUser"/> instance if found, otherwise null.</returns>
         public async Task<AppUser> GetCachedUserAsync(string email)
         {
             if (string.IsNullOrWhiteSpace(email)) return null;
@@ -85,7 +96,6 @@ namespace CodeSparkNET.Services
                 }
                 else
                 {
-
                     // If not in cache, get from database and cache it
                     var user = await _userManager.FindByEmailAsync(email);
                     if (user != null)
@@ -99,11 +109,15 @@ namespace CodeSparkNET.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Ошибка получения кешированных данных пользователя с почтой - {email}", email);
+                _logger.LogError(ex, "Error retrieving cached user data for email - {email}", email);
                 return null;
             }
         }
 
+        /// <summary>
+        /// Clears a cached user entry from Redis by their email.
+        /// </summary>
+        /// <param name="email">The email of the user to clear from cache.</param>
         public async Task ClearCachedUserAsync(string email)
         {
             await _cacheProvider.ClearCache(email);

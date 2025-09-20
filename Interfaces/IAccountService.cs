@@ -20,5 +20,7 @@ namespace CodeSparkNET.Interfaces
         Task<IdentityResult> ResetPasswordAsync(ResetPasswordDto model);
         Task<IdentityResult> ConfirmEmailAsync(ConfirmEmailDto model);
         Task<AppUser> GetUserAsync(ClaimsPrincipal user);
+        Task<bool> UserWithEmailExistsAsync(string email);
+        Task<bool> UserWithUserNameExistsAsync(string userName);
     }
 }

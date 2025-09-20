@@ -338,17 +338,6 @@ main[data-layout="main"][role="main"] {
   width: 200%;
   height: 200%;
   background: linear-gradient(45deg, transparent, rgba(151, 128, 229, 0.1), transparent);
-  animation: sweep 3s ease-in-out infinite;
-}
-
-@keyframes sweep {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  100% {
-    transform: rotate(360deg);
-  }
 }
 
 .__container .footer-cta h2 {

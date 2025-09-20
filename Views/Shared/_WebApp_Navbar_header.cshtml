@@ -16,7 +16,7 @@
       <div js-list-catalog-view class="list hidden" hidden="!">
         @foreach (var catalog in catalogs)
         {
-          <a asp-controller="Catalog" asp-action="Catalog" asp-route-catalogSlug="@catalog.Slug">
+          <a asp-controller="Catalogs" asp-action="Catalog" asp-route-catalogSlug="@catalog.Slug">
             @catalog.Name
           </a>
         }

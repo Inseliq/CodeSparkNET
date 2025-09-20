@@ -84,7 +84,9 @@
                 <div class="block body confirm">
                     <div class="left" hover>
                         <h3 title="Электронная почта">@ViewBag.Email</h3>
-                        <span>Email добавлен: $data-confirm-email</span>
+                        <span>Email добавлен: @ViewBag.EmailAddAt</span>
+                        <span>@ViewBag.EmailConfirmedAt</span>
+                        <span>@ViewBag.EmailChangedAt</span>
                     </div>
                     <button data-function="editEmailBtn" class="btn right" data-style="link" hover>Изменить</button>
                 </div>

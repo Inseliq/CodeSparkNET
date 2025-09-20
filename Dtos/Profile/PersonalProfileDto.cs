@@ -14,5 +14,9 @@ namespace CodeSparkNET.Dtos.Profile
         public string? Email { get; set; }
         [Required]
         public string? Role { get; set; }
+        [Required]
+        public DateTime EmailAddAt { get; set; }
+        public DateTime EmailConfirmedAt { get; set; }
+        public DateTime EmailChangedAt { get; set; }
     }
 }

@@ -1,4 +1,6 @@
 using System.Globalization;
+using System.Net;
+using System.Threading.RateLimiting;
 using CodeSparkNET.Data;
 using CodeSparkNET.Interfaces;
 using CodeSparkNET.Models;
@@ -52,7 +54,6 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
     .AddDefaultTokenProviders();
 
 //Sessions
-// builder.Services.AddDistributedMemoryCache(); // in prod — Redis or SQL
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);
@@ -70,6 +71,9 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
     // for production
     options.Secure = CookieSecurePolicy.Always;
 });
+
+// builder.Services.AddDistributedMemoryCache(); // in prod — Redis or SQL
+builder.Services.AddDistributedMemoryCache(); // in debug
 
 //Add Redis
 // builder.Services.AddStackExchangeRedisCache(options =>
@@ -100,6 +104,33 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 //     .PersistKeysToStackExchangeRedis(redis, "DataProtection-Keys")
 //     .SetApplicationName("CodeSparkNET");
 
+//Custom Rate Limitter
+builder.Services.AddRateLimiter(options =>
+{
+    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: context.Connection.RemoteIpAddress.ToString(),
+            factory: partion => new FixedWindowRateLimiterOptions
+            {
+                AutoReplenishment = true,
+                PermitLimit = 200,
+                Window = TimeSpan.FromMinutes(1),
+                QueueLimit = 0,
+            }));
+
+    options.OnRejected = (context, _) =>
+    {
+        if (context.HttpContext.Response.HasStarted)
+            return new ValueTask();
+
+        context.HttpContext.Response.StatusCode = 429;
+
+        context.HttpContext.Response.Redirect("/Error/StatusCode/429");
+
+        return new ValueTask();
+    };
+});
+
 var app = builder.Build();
 
 // Localization
@@ -115,10 +146,17 @@ var requestLocalizationOptions = new RequestLocalizationOptions
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
+    app.UseExceptionHandler("/Error");
+    app.UseHsts();
 }
-app.UseStaticFiles();
+
 app.UseRouting();
+
+app.UseStatusCodePagesWithReExecute("/Error/StatusCode/{0}");
+
+app.UseRateLimiter(); // Enable rate limitting middleware
+
+app.UseStaticFiles();
 
 app.UseCookiePolicy();
 

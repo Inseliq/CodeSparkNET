@@ -20,7 +20,7 @@
 
         @if (!string.IsNullOrEmpty(parentCatalogSlug))
         {
-            <a class="breadcrumb__link" asp-controller="Catalog" asp-action="Catalog" asp-route-catalogSlug="@parentCatalogSlug">Каталог</a>
+            <a class="breadcrumb__link" asp-controller="Catalogs" asp-action="Catalog" asp-route-catalogSlug="@parentCatalogSlug">Каталог</a>
             <span class="breadcrumb__sep">›</span>
         }
 

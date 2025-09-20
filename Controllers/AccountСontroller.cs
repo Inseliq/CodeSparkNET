@@ -37,6 +37,9 @@ namespace CodeSparkNET.Controllers
         [AllowAnonymous]
         public IActionResult Register()
         {
+            if (User?.Identity?.IsAuthenticated is true)
+                return RedirectToAction("Index", "Home");
+
             return View();
         }
 
@@ -92,6 +95,9 @@ namespace CodeSparkNET.Controllers
         [AllowAnonymous]
         public IActionResult Login()
         {
+            if (User?.Identity?.IsAuthenticated is true)
+                return RedirectToAction("Index", "Home");
+
             return View();
         }
 

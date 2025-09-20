@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
               window.location.reload();
             }, 300); // перезагрузка через 300ms после закрытия
-          }, 300); // сначала закрытие через 300ms
+          }, 400); // сначала закрытие через 400ms
           break;
 
         case 'js-window-update-profile-name-return':

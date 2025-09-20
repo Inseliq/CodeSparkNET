@@ -3,7 +3,13 @@
   ViewData["Title"] = "Каталог";
 }
 @section Styles {
-  <link rel="stylesheet" href="~/css/style/catalog.css">
+  <link rel="stylesheet" href="~/css/style/WebApp.CodeSpark/_layout.header.css" asp-append-version="true">
+  <link rel="stylesheet" href="~/css/style/WebApp.CodeSpark/_layout.footer.css" asp-append-version="true">
+  <link rel="stylesheet" href="~/css/style/catalog.css" asp-append-version="true">
+}
+@section Meta {
+  <meta name="CodeSpark" content="_Navbar.header">
+  <meta name="CodeSpark" content="_Navbar.footer">
 }
 
 <partial name="_WebApp_Navbar_header" />
@@ -25,10 +31,9 @@
       @foreach (var p in Model.Products)
       {
         <article class="card">
-                    <a asp-controller="Catalog" asp-action="ProductDetails"
-                       asp-route-catalogSlug="@Model.Slug"
-                       asp-route-productSlug="@p.Slug">
-                        >
+          <a asp-controller="Catalogs" asp-action="ProductDetails" asp-route-catalogSlug="@Model.Slug"
+            asp-route-productSlug="@p.Slug">
+            >
             @if (p.ProductImages?.Any() == true && p.ProductImages.First().ImageData != null)
             {
               <img src="data:image/jpeg;base64,@(Convert.ToBase64String(p.ProductImages.First().ImageData))" alt="@p.Name" />

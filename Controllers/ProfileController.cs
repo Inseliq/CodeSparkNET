@@ -94,7 +94,7 @@ namespace CodeSparkNET.Controllers
 
                 if (await _accountService.UserWithEmailExistsAsync(user.Email))
                     return Json(new { success = false,message = "Ошибка обновления профиля", desc = "Пользователь с такой почтой уже существует." });
-                
+
                 if (await _accountService.UserWithUserNameExistsAsync(user.UserName))
                     return Json(new {success = false,message = "Ошибка обновления профиля", desc = "Пользователь с таким именем уже существует."});
 
@@ -192,6 +192,7 @@ namespace CodeSparkNET.Controllers
                 return Json(new { success = false, message = "Ошибка подтверждения email." });
             }
         }
+
         /// <summary>
         /// Change user password
         /// </summary>
@@ -205,31 +206,48 @@ namespace CodeSparkNET.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    ModelState.AddModelError(string.Empty, "Ошибка смены пароля.");
-                    return Json(new { success = false, message = "Ошибка смены пароля" });
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Ошибка смены пароля",
+                        desc = "Пожалуйста, проверьте введённые данные и попробуйте снова."
+                    });
                 }
 
-                // var user = await _cacheService.GetCachedUserAsync(User.FindFirstValue(ClaimTypes.Email));
                 var user = await _accountService.GetUserAsync(User);
                 var result = await _profileService.ChangePasswordAsync(user.Email, model);
 
                 if (result.Succeeded)
-                    return Json(new { success = true, message = "Пароль успешно изменен." });
+                {
+                    return Json(new
+                    {
+                        success = true,
+                        message = "Пароль успешно изменен.",
+                        desc = "Теперь вы можете войти с новым паролем."
+                    });
+                }
 
-                foreach (var err in result.Errors)
-                    ModelState.AddModelError(string.Empty, err.Description);
-
-                return Json(new { success = false, message = "Ошибка смены пароля." });
+                // Для безопасности не передаем конкретные ошибки Identity
+                return Json(new
+                {
+                    success = false,
+                    message = "Ошибка смены пароля",
+                    desc = "Текущий пароль неверен или новый пароль не соответствует требованиям. Попробуйте снова."
+                });
             }
             catch (Exception ex)
             {
                 var user = await _accountService.GetUserAsync(User);
                 _logger.LogError(ex, "Ошибка смены пароля у пользователя {email}", user.Email);
-                return Json(new { success = false, message = "Ошибка смены пароля" });
+
+                return Json(new
+                {
+                    success = false,
+                    message = "Ошибка смены пароля",
+                    desc = "Произошла непредвиденная ошибка. Попробуйте позже."
+                });
             }
         }
-
-
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

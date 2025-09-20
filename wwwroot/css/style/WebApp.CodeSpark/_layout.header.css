@@ -5,13 +5,17 @@ html[cross-browser] {
     align-items: center;
     padding: 0px 10px;
     min-height: 100vh;
+    position: relative;
 
     header.webapp-nav {
+      position: absolute;
       display: flex;
       width: 100%;
       height: auto;
       align-items: center;
       justify-content: center;
+      background-color: #1f1f1f90;
+
 
       .__container {
         flex-direction: row;
@@ -19,6 +23,26 @@ html[cross-browser] {
         justify-content: space-between;
         align-items: center;
         max-width: 1440px;
+
+        .left {
+          display: flex;
+          position: relative;
+          justify-content: center;
+          align-items: center;
+          gap: 10px;
+
+          button {
+            background: none;
+            color: var(--palette-text-shadow);
+            font-size: var(--fs-btn);
+            border: none;
+
+          }
+        }
+
+        .right {
+          display: flex;
+        }
       }
     }
   }

@@ -11,31 +11,34 @@
 <header class="webapp-nav">
   <nav class="__container">
     <section class="left">
-      <a asp-action="Index" asp-controller="Home" banner-CS></a>
-      <button js-list-catalog-view-btn>Каталог</button>
-      <div js-list-catalog-view class="list hidden" hidden="!">
+      <a asp-action="Index" asp-controller="Home" banner-CS hover></a>
+      <button js-list-catalog-btn hover>Каталог</button>
+      <div js-list-catalog class="list visible">
         @foreach (var catalog in catalogs)
         {
-          <a asp-controller="Catalogs" asp-action="Catalog" asp-route-catalogSlug="@catalog.Slug">
+          <a asp-controller="Catalogs" asp-action="Catalog" asp-route-catalogSlug="@catalog.Slug" hover>
             @catalog.Name
           </a>
         }
       </div>
-      <button js-list-documents-btn>Документация</button>
-      <div js-list-documents-view class="list hidden" hidden="!">
+      <button js-list-documents-btn hover>Документация</button>
+      <div js-list-documents class="list hidden" hidden="!">
       </div>
-      <button js-list-socials-btn>Соц. сети</button>
+      <button js-list-socials-btn hover>Соц. сети</button>
       <div js-list-socials class="list hidden" hidden="!"></div>
+    </section>
+    <section class="mobile">
+
     </section>
     <section class="right">
       @if (!User?.Identity?.IsAuthenticated == true)
       {
-        <a asp-controller="Account" asp-action="Login">Войти</a>
-        <a>Каталог</a>
+        <a asp-controller="Account" asp-action="Login" hover>Войти</a>
+        <a asp-controller="Catalogs" asp-action="Catalog" hover>Каталог</a>
       }
       else
       {
-        <a>Каталог</a>
+        <a asp-controller="Catalogs" asp-action="Catalog" hover>Каталог</a>
       }
     </section>
   </nav>

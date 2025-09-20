@@ -9,37 +9,37 @@
 
 @font-face {
   font-family: 'Jost__static';
-  src: url('~/fonts/Jost-VariableFont_wght.ttf');
+  src: url('~/../../assets/fonts/Jost-VariableFont_wght.ttf');
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Jost__static';
-  src: url('~/fonts/Jost-Italic-VariableFont_wght.ttf');
+  src: url('~/../../assets/fonts/Jost-Italic-VariableFont_wght.ttf');
   font-style: italic;
 }
 
 @font-face {
   font-family: 'Motserrat__static';
-  src: url('~/fonts/Montserrat-VariableFont_wght.ttf');
+  src: url('~/../../assets/fonts/Montserrat-VariableFont_wght.ttf');
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Motserrat__static';
-  src: url('~/fonts/Montserrat-Italic-VariableFont_wght.ttf');
+  src: url('~/../../assets/fonts/Montserrat-Italic-VariableFont_wght.ttf');
   font-style: italic;
 }
 
 @font-face {
   font-family: 'Roboto__static';
-  src: url('~/fonts/Roboto-VariableFont_wdth.ttf');
+  src: url('~/../../assets/fonts/Roboto-VariableFont_wdth.ttf');
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Roboto__static';
-  src: url('~/fonts/Roboto-Italic-VariableFont_wdth.ttf');
+  src: url('~/../../assets/fonts/Roboto-Italic-VariableFont_wdth.ttf');
   font-style: italic;
 }
 

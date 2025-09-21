@@ -10,10 +10,10 @@
 
 <header class="webapp-nav">
   <nav class="__container">
-    <section class="left">
+    <section class="left" style="--docs-width: 0px; --catalog-width: 0px;">
       <a asp-action="Index" asp-controller="Home" banner-CS hover></a>
       <button js-list-catalog-btn hover>Каталог</button>
-      <div js-list-catalog class="list visible">
+      <div js-list-catalog class="list hidden">
         @foreach (var catalog in catalogs)
         {
           <a asp-controller="Catalogs" asp-action="Catalog" asp-route-catalogSlug="@catalog.Slug" hover>
@@ -22,10 +22,21 @@
         }
       </div>
       <button js-list-documents-btn hover>Документация</button>
-      <div js-list-documents class="list hidden" hidden="!">
+      <div js-list-documents class="list hidden">
+        <a hover>Политика конфиденциальности</a>
+        <a hover>Руководство пользователя</a>
+        <a hover>Лицензионное соглашение</a>
+        <a hover>Политика использования</a>
+        <a hover>Авторские права</a>
+        <a hover>О нас</a>
       </div>
       <button js-list-socials-btn hover>Соц. сети</button>
-      <div js-list-socials class="list hidden" hidden="!"></div>
+      <div js-list-socials class="list hidden">
+        <a el="icon-tg">Телеграмм</a>
+        <a el="icon-vk">Вконтакте</a>
+        <a el="icon-git">GitHub</a>
+        <a el="icon-youtube">YouTube</a>
+      </div>
     </section>
     <section class="mobile">
 
@@ -43,3 +54,52 @@
     </section>
   </nav>
 </header>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const section = document.querySelector("section.left");
+
+    const listButtons = section.querySelectorAll("[js-list-catalog-btn], [js-list-documents-btn], [js-list-socials-btn]");
+    const lists = section.querySelectorAll("[js-list-catalog], [js-list-documents], [js-list-socials]");
+
+    const btnDocuments = section.querySelector("[js-list-documents-btn]");
+    const btnSocials = section.querySelector("[js-list-socials-btn]");
+
+    function setWidths() {
+      section.style.setProperty("--docs-width", btnDocuments.offsetWidth + "px");
+      section.style.setProperty("--catalog-width", btnSocials.offsetWidth + "px");
+    }
+
+    setWidths();
+
+    window.addEventListener("resize", setWidths);
+
+    function closeAll() {
+      lists.forEach(list => list.classList.remove("visible"));
+    }
+
+    listButtons.forEach(button => {
+      button.addEventListener("click", (e) => {
+        e.stopPropagation();
+
+        const listAttr = button.getAttributeNames().find(attr => attr.startsWith("js-list-") && attr.endsWith("-btn"));
+        const listName = listAttr.replace("-btn", "");
+        const targetList = section.querySelector(`[${listName}]`);
+
+        if (targetList.classList.contains("visible")) {
+          targetList.classList.remove("visible");
+        } else {
+          closeAll();
+          targetList.classList.add("visible");
+        }
+      });
+    });
+
+    // === Клик вне секции закрывает все ===
+    document.addEventListener("click", (e) => {
+      if (!section.contains(e.target)) {
+        closeAll();
+      }
+    });
+  });
+</script>

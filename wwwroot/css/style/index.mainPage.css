@@ -134,6 +134,7 @@ main[data-layout="main"][role="main"] {
 
 .__container .hero-section .tagline {
   font-size: clamp(1.2rem, 3vw, 1.8rem);
+  font-weight: 600;
   color: var(--palette-text-shadow);
   margin-bottom: 30px;
   opacity: 0;
@@ -227,11 +228,11 @@ main[data-layout="main"][role="main"] {
   transition: transform 0.3s ease;
 }
 
-.__container .services-section .service-card:hover::before {
+.__container .services-section .service-card.hover::before {
   transform: translateX(0);
 }
 
-.__container .services-section .service-card:hover {
+.__container .services-section .service-card.hover {
   transform: translateY(-10px);
   box-shadow: 0 20px 40px rgba(151, 128, 229, 0.2);
   border-color: var(--palette-acient);
@@ -310,13 +311,13 @@ main[data-layout="main"][role="main"] {
   z-index: -1;
 }
 
-.__container .tech-stack .tech-item:hover::before {
+.__container .tech-stack .tech-item.hover::before {
   width: 100%;
   height: 100%;
   border-radius: 15px;
 }
 
-.__container .tech-stack .tech-item:hover {
+.__container .tech-stack .tech-item.hover {
   transform: translateY(-10px) rotate(5deg);
   color: var(--palette-text-inv);
 }

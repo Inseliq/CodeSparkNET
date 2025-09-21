@@ -136,14 +136,18 @@ html[cross-browser] {
           padding: 7.5px;
           gap: 5px;
           z-index: 3;
+          overflow: hidden;
+          transition: .3s ease;
 
           a {
             position: relative;
             transition: .3s ease;
             color: var(--palette-text-shadow);
+            font-size: calc(1.1 * var(--fs-btn));
 
             &::before {
               content: "›";
+              margin-right: 5px;
             }
           }
 
@@ -152,12 +156,37 @@ html[cross-browser] {
           }
         }
 
-        div.list[js-list-socials] {}
+        div.list[js-list-socials] {
+          left: calc(82px + var(--docs-width) + var(--catalog-width));
 
-        div.list[js-list-documents] {}
+          a {
+            white-space: nowrap;
+            &::before {
+              display: inline-block;
+              content: "";
+              width: calc(1.1 * var(--fs-btn));
+              height: calc(1.1 * var(--fs-btn));
+              background-image: url(../../../assets/icon/attention.svg);
+              background-position: center;
+              background-repeat: no-repeat;
+              background-size: cover;
+              transform: translateY(2px);
+            }
+          }
+        }
+
+        div.list[js-list-documents] {
+          left: calc(67px + var(--catalog-width));
+
+          a {
+            &::before {
+              content: "»";
+            }
+          }
+        }
 
         div.list[js-list-catalog] {
-          left: 67px;
+          left: calc(52px + 5px + 10px);
         }
 
         div.list.hidden {

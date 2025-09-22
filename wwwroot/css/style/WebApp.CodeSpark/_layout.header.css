@@ -161,16 +161,90 @@ html[cross-browser] {
 
           a {
             white-space: nowrap;
+
             &::before {
               display: inline-block;
               content: "";
               width: calc(1.1 * var(--fs-btn));
               height: calc(1.1 * var(--fs-btn));
-              background-image: url(../../../assets/icon/attention.svg);
-              background-position: center;
-              background-repeat: no-repeat;
-              background-size: cover;
+              mask-position: center;
+              mask-repeat: no-repeat;
+              mask-size: cover;
+              background-color: var(--palette-text-shadow);
               transform: translateY(2px);
+              transition: .3s ease;
+            }
+
+            &::after {
+              position: absolute;
+              content: "";
+              width: calc(1.06 * var(--fs-btn));
+              height: calc(1.06 * var(--fs-btn));
+              border-radius: 10em;
+              transition: .3s ease;
+              background: #f5f5f5;
+              opacity: 0;
+              top: calc(50% + 1px);
+              left: 9px;
+              z-index: -1;
+              transform: translate(-55%, -51%);
+            }
+          }
+
+          [el="icon-tg"] {
+            &::before {
+              mask-image: url(../../../assets/icon/tg.svg);
+            }
+          }
+
+          [el="icon-vk"] {
+            &::before {
+              mask-image: url(../../../assets/icon/vk.svg);
+            }
+          }
+
+          [el="icon-git"] {
+            &::after {
+              background: #000000;
+            }
+            &::before {
+              mask-image: url(../../../assets/icon/github.svg);
+            }
+          }
+
+          [el="icon-youtube"] {
+            &::before {
+              mask-image: url(../../../assets/icon/youtube.svg);
+            }
+          }
+
+          a.hover {
+            &::after {
+              opacity: 1;
+            }
+          }
+
+          [el="icon-tg"].hover {
+            &::before {
+              background-color: #188fca;
+            }
+          }
+
+          [el="icon-git"].hover {
+            &::before {
+              background-color: #a164ba;
+            }
+          }
+
+          [el="icon-vk"].hover {
+            &::before {
+              background-color: #006ce8;
+            }
+          }
+
+          [el="icon-youtube"].hover {
+            &::before {
+              background-color: #e80000;
             }
           }
         }

@@ -1,0 +1,340 @@
+/* Спиннер 1 */
+/* HTML: <div class="loader"></div> */
+.loader.spinner1 {
+  width: 50px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background:
+    radial-gradient(farthest-side, #ffa516 94%, #0000) top/8px 8px no-repeat,
+    conic-gradient(#0000 30%, #ffa516);
+  -webkit-mask: radial-gradient(farthest-side, #0000 calc(100% - 8px), #000 0);
+  animation: spinner1_load 1s infinite linear;
+}
+
+@keyframes spinner1_load {
+  100% {
+    transform: rotate(1turn)
+  }
+}
+
+/* Спиннер 2 */
+.loader.spinner2 {
+  width: 50px;
+  aspect-ratio: 1;
+  display: grid;
+}
+
+.loader.spinner2::before,
+.loader.spinner2::after {
+  content: "";
+  grid-area: 1/1;
+  --c: no-repeat radial-gradient(farthest-side, #9780e5 92%, #0000);
+  background:
+    var(--c) 50% 0,
+    var(--c) 50% 100%,
+    var(--c) 100% 50%,
+    var(--c) 0 50%;
+  background-size: 12px 12px;
+  animation: spinner2_load 1s infinite;
+}
+
+.loader.spinner2::before {
+  margin: 4px;
+  filter: hue-rotate(45deg);
+  background-size: 8px 8px;
+  animation-timing-function: linear
+}
+
+@keyframes spinner2_load {
+  100% {
+    transform: rotate(.5turn)
+  }
+}
+
+/* Спиннер 3 */
+.loader.spinner3 {
+  width: 50px;
+  aspect-ratio: 1;
+  display: grid;
+  border: 4px solid #0000;
+  border-radius: 50%;
+  border-right-color: #25b09b;
+  animation: spinner3_load 1s infinite linear;
+}
+
+.loader.spinner3::before,
+.loader.spinner3::after {
+  content: "";
+  grid-area: 1/1;
+  margin: 2px;
+  border: inherit;
+  border-radius: 50%;
+  animation: l15 2s infinite;
+}
+
+.loader.spinner3::after {
+  margin: 8px;
+  animation-duration: 3s;
+}
+
+@keyframes spinner3_load {
+  100% {
+    transform: rotate(1turn)
+  }
+}
+
+/* Сборка проекта 1 */
+.loader.pack1 {
+  width: 40px;
+  aspect-ratio: 1;
+  color: #f03355;
+  position: relative;
+  background:
+    conic-gradient(from 134deg at top, currentColor 92deg, #0000 0) top,
+    conic-gradient(from -46deg at bottom, currentColor 92deg, #0000 0) bottom;
+  background-size: 100% 50%;
+  background-repeat: no-repeat;
+}
+
+.loader.pack1:before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  --g: currentColor 14.5px, #0000 0 calc(100% - 14.5px), currentColor 0;
+  background:
+    linear-gradient(45deg, var(--g)),
+    linear-gradient(-45deg, var(--g));
+  animation: pack1_load 1.5s infinite cubic-bezier(0.3, 1, 0, 1);
+}
+
+@keyframes pack1_load {
+  33% {
+    inset: -10px;
+    transform: rotate(0deg)
+  }
+
+  66% {
+    inset: -10px;
+    transform: rotate(90deg)
+  }
+
+  100% {
+    inset: 0;
+    transform: rotate(90deg)
+  }
+}
+
+/* Сборка проекта 2 */
+.loader.pack2 {
+  width: 40px;
+  aspect-ratio: 1;
+  color: #f03355;
+  position: relative;
+  background: radial-gradient(10px, currentColor 94%, #0000);
+}
+
+.loader.pack2:before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(9px at bottom right, #0000 94%, currentColor) top left,
+    radial-gradient(9px at bottom left, #0000 94%, currentColor) top right,
+    radial-gradient(9px at top right, #0000 94%, currentColor) bottom left,
+    radial-gradient(9px at top left, #0000 94%, currentColor) bottom right;
+  background-size: 20px 20px;
+  background-repeat: no-repeat;
+  animation: pack2_load 1.5s infinite cubic-bezier(0.3, 1, 0, 1);
+}
+
+@keyframes pack2_load {
+  33% {
+    inset: -10px;
+    transform: rotate(0deg)
+  }
+
+  66% {
+    inset: -10px;
+    transform: rotate(90deg)
+  }
+
+  100% {
+    inset: 0;
+    transform: rotate(90deg)
+  }
+}
+
+/* Связь */
+.loader.connection {
+  width: 60px;
+  height: 50px;
+  --m: no-repeat linear-gradient(90deg, #000 70%, #0000 0);
+  -webkit-mask:
+    var(--m) calc(0*100%/4) 100%/calc(100%/5) calc(1*100%/5),
+    var(--m) calc(1*100%/4) 100%/calc(100%/5) calc(2*100%/5),
+    var(--m) calc(2*100%/4) 100%/calc(100%/5) calc(3*100%/5),
+    var(--m) calc(3*100%/4) 100%/calc(100%/5) calc(4*100%/5),
+    var(--m) calc(4*100%/4) 100%/calc(100%/5) calc(5*100%/5);
+  background: linear-gradient(#ffa216 0 0) left/0% 100% no-repeat #ddd;
+  animation: connection_load 2s infinite steps(6);
+}
+
+@keyframes connection_load {
+  100% {
+    background-size: 120% 100%
+  }
+}
+
+/* Прогресс бар лоадер */
+.loader.progress {
+  height: 4px;
+  width: 130px;
+  --c: no-repeat linear-gradient(#6100ee 0 0);
+  background: var(--c), var(--c), #d7b8fc;
+  background-size: 60% 100%;
+  animation: progress_laod 3s infinite;
+}
+
+@keyframes progress_laod {
+  0% {
+    background-position: -150% 0, -150% 0
+  }
+
+  66% {
+    background-position: 250% 0, -150% 0
+  }
+
+  100% {
+    background-position: 250% 0, 250% 0
+  }
+}
+
+/* Призрачный лоадер */
+.loader.ghost {
+  height: 80px;
+  aspect-ratio: 1;
+  padding: 10px;
+  border-radius: 50%;
+  box-sizing: border-box;
+  position: relative;
+  mask: conic-gradient(#000 0 0) content-box exclude, conic-gradient(#000 0 0);
+  filter: blur(12px);
+}
+
+.loader.ghost:before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-conic-gradient(#0000 0 5%, #C02942, #0000 20% 50%);
+  animation: ghost_load 1.5s linear infinite;
+}
+
+@keyframes ghost_load {
+  to {
+    rotate: 1turn
+  }
+}
+
+/* Мышка мерцающая */
+.loader.bat {
+  width: 100px;
+  height: 45px;
+  position: relative;
+  --async-color-bat: #fff;
+  --time-animate-bat: 1s;
+}
+
+.loader.bat:before,
+.loader.bat:after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--async-color-bat);
+  box-shadow: 0 0 0 50px var(--async-color-bat);
+  clip-path: polygon(-50px -20px, 10% -12px, 20% 0, calc(50% - 15px) 0, calc(50% - 10px) -20px, calc(50% - 8px) -15px, calc(50% + 8px) -15px, calc(50% + 10px) -20px, calc(50% + 15px) 0, 80% 0, 90% -12px, calc(100% + 50px) -20px, 100% 80%, calc(100% + 10px) calc(100% + 10px), 60% 100%, 50% calc(100% + 15px), 40% 100%, -10px calc(100% + 10px), 0 80%);
+}
+
+.loader.bat:after {
+  animation: bat_mirror var(--time-animate-bat) infinite;
+  transform: perspective(300px) translateZ(0px)
+}
+
+@keyframes bat_mirror {
+  to {
+    transform: perspective(300px) translateZ(100px);
+    opacity: 0
+  }
+}
+
+/* Песочные часы лоадер */
+.loader.sand_clock {
+  width: 25px;
+  height: 50px;
+  display: grid;
+  color: #000;
+  background:
+    linear-gradient(currentColor 0 0) top/100% 2px,
+    radial-gradient(farthest-side at top, #0000 calc(100% - 2px), currentColor calc(100% - 1px), #0000) top,
+    linear-gradient(currentColor 0 0) bottom/100% 2px,
+    radial-gradient(farthest-side at bottom, #0000 calc(100% - 2px), currentColor calc(100% - 1px), #0000) bottom;
+  background-size: 100% 1px, 100% 50%;
+  background-repeat: no-repeat;
+  animation: sand_clock-load 4s infinite linear;
+}
+
+.loader.sand_clock::before,
+.loader.sand_clock::after {
+  content: "";
+  grid-area: 1/1;
+  background: inherit;
+  border: inherit;
+  animation: inherit;
+}
+
+.loader.sand_clock::after {
+  animation-duration: 2s;
+}
+
+@keyframes sand_clock-load {
+  100% {
+    transform: rotate(1turn)
+  }
+}
+
+/* Собрщик лоадер */
+.loader.packed {
+  width: 60px;
+  aspect-ratio: 1;
+  background:
+    linear-gradient(45deg, #60B99A 50%, #0000 0),
+    linear-gradient(45deg, #0000 50%, #60B99A 0),
+    linear-gradient(-45deg, #f77825 50%, #0000 0),
+    linear-gradient(-45deg, #0000 50%, #f77825 0),
+    linear-gradient(#554236 0 0);
+  background-size: 50% 50%;
+  background-repeat: no-repeat;
+  animation: packed_load 1.5s infinite;
+}
+
+@keyframes packed_load {
+  0% {
+    background-position: 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%
+  }
+
+  25% {
+    background-position: 0 100%, 100% 0, 50% 50%, 50% 50%, 50% 50%
+  }
+
+  50% {
+    background-position: 0 100%, 100% 0, 100% 100%, 0 0, 50% 50%
+  }
+
+  75% {
+    background-position: 50% 50%, 50% 50%, 100% 100%, 0 0, 50% 50%
+  }
+
+  100% {
+    background-position: 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%
+  }
+}

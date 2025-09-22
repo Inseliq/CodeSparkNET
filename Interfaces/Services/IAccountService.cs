@@ -8,7 +8,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace CodeSparkNET.Interfaces
+namespace CodeSparkNET.Interfaces.Services
 {
     public interface IAccountService
     {
@@ -22,5 +22,6 @@ namespace CodeSparkNET.Interfaces
         Task<AppUser> GetUserAsync(ClaimsPrincipal user);
         Task<bool> UserWithEmailExistsAsync(string email);
         Task<bool> UserWithUserNameExistsAsync(string userName);
+        Task<bool> AddCourseToUserAsync(AppUser user, string courseSlug);
     }
 }

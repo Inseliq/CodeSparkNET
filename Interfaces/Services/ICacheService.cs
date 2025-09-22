@@ -5,7 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using CodeSparkNET.Models;
 
-namespace CodeSparkNET.Interfaces
+namespace CodeSparkNET.Interfaces.Services
 {
     public interface ICacheService
     {

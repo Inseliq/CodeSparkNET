@@ -22,6 +22,7 @@ namespace CodeSparkNET.Data
         public DbSet<Course> Courses { get; set; } = null!;
         public DbSet<Template> Templates { get; set; } = null!;
         public DbSet<Diploma> Diplomas { get; set; } = null!;
+        public DbSet<UserCourse> UserCourses { get; set; } = null!;
 
 
         protected override void OnModelCreating(ModelBuilder builder)

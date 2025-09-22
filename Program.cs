@@ -2,7 +2,8 @@ using System.Globalization;
 using System.Net;
 using System.Threading.RateLimiting;
 using CodeSparkNET.Data;
-using CodeSparkNET.Interfaces;
+using CodeSparkNET.Interfaces.Repositories;
+using CodeSparkNET.Interfaces.Services;
 using CodeSparkNET.Models;
 using CodeSparkNET.Redis;
 using CodeSparkNET.Repositories;
@@ -85,12 +86,13 @@ builder.Services.AddDistributedMemoryCache(); // in debug
 //Add Services
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
-builder.Services.AddScoped<IProfileService, AccountService>();
+builder.Services.AddScoped<IProfileService, ProfileService>();
 builder.Services.AddScoped<ICatalogService, CatalogService>();
 
 //Add repositories
 builder.Services.AddScoped<ICatalogRepository, CatalogRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 //Add Redis Service
 // builder.Services.AddScoped<ICacheService, CacheService>();

@@ -1,6 +1,7 @@
 using CodeSparkNET.Dtos.Account;
 using CodeSparkNET.Dtos.Profile;
-using CodeSparkNET.Interfaces;
+using CodeSparkNET.Interfaces.Repositories;
+using CodeSparkNET.Interfaces.Services;
 using CodeSparkNET.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
@@ -12,23 +13,26 @@ namespace CodeSparkNET.Services
     /// <summary>
     /// Service responsible for handling user accounts (registration, authentication, profile, password reset, email confirmation).
     /// </summary>
-    public class AccountService : IAccountService, IProfileService
+    public class AccountService : IAccountService
     {
         private readonly IUserRepository _userRepository;
         private readonly IEmailService _emailService;
         private readonly IConfiguration _configuration;
+        private readonly IProductRepository _productRepository;
         private readonly ILogger<AccountService> _logger;
 
         public AccountService(
             IUserRepository userRepository,
             IEmailService emailService,
             IConfiguration configuration,
+            IProductRepository productRepository,
             ILogger<AccountService> logger
             )
         {
             _userRepository = userRepository;
             _emailService = emailService;
             _configuration = configuration;
+            _productRepository = productRepository;
             _logger = logger;
         }
 
@@ -40,10 +44,10 @@ namespace CodeSparkNET.Services
             try
             {
                 if (await _userRepository.GetUserByEmailAsync(model.Email) != null)
-                    return IdentityResult.Failed(new IdentityError { Description = "A user with this email already exists." });
+                    return IdentityResult.Failed(new IdentityError { Description = "Пользователь с такой почтой уже зарегистрирован." });
 
                 if (await _userRepository.GetUserByUserNameAsync(model.UserName) != null)
-                    return IdentityResult.Failed(new IdentityError { Description = "A user with this username already exists." });
+                    return IdentityResult.Failed(new IdentityError { Description = "Пользователь с таким имененм уже заругистрирован." });
 
                 var user = new AppUser
                 {
@@ -238,93 +242,6 @@ namespace CodeSparkNET.Services
         }
 
         /// <summary>
-        /// Updates user's personal profile.
-        /// </summary>
-        public async Task<IdentityResult> UpdatePersonalProfileAsync(string email, UpdatePersonalProfileDto model)
-        {
-            try
-            {
-                var user = await _userRepository.GetUserByEmailAsync(email);
-                if (user == null && model == null)
-                    return null;
-
-                user.UserName = model.UserName;
-                user.Email = model.Email;
-
-                return await _userRepository.UpdateUserAsync(user);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error while updating personal profile for {Email}", email);
-                throw;
-            }
-        }
-
-        /// <summary>
-        /// Changes the user's password.
-        /// </summary>
-        public async Task<IdentityResult> ChangePasswordAsync(string email, ChangePasswordDto model)
-        {
-            try
-            {
-                var user = await _userRepository.GetUserByEmailAsync(email);
-                if (user == null)
-                    return null;
-
-                return await _userRepository.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error while changing password for {Email}", email);
-                throw;
-            }
-        }
-
-        /// <summary>
-        /// Sends email confirmation link.
-        /// </summary>
-        public async Task<bool> SendEmailConfirmationLinkAsync(string email)
-        {
-            try
-            {
-                var user = await _userRepository.GetUserByEmailAsync(email);
-                if (user is null || (await _userRepository.IsEmailConfirmedAsync(user)))
-                    return false;
-
-                var token = await _userRepository.GenerateEmailConfirmationTokenAsync(user);
-                var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
-
-                var baseUrl = _configuration["AppSettings:BaseUrl"]?.TrimEnd('/');
-                var emailEscaped = System.Net.WebUtility.UrlEncode(user.Email);
-                var confirmationLink = $"{baseUrl}/Profile/ConfirmEmail/?email={emailEscaped}&token={encodedToken}";
-
-                await _emailService.SendEmailConfirmationAsync(user.Email!, user.UserName, confirmationLink);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error while sending email confirmation link to {Email}", email);
-                throw;
-            }
-        }
-
-        /// <summary>
-        /// Updates claims for the user (refreshes sign-in).
-        /// </summary>
-        public async Task UpdateUserClaims(AppUser user)
-        {
-            try
-            {
-                await _userRepository.RefreshSignInAsync(user);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error while updating claims for {UserName}", user.UserName);
-                throw;
-            }
-        }
-
-        /// <summary>
         /// Checks if a user exists by email.
         /// </summary>
         public async Task<bool> UserWithEmailExistsAsync(string email)
@@ -354,6 +271,19 @@ namespace CodeSparkNET.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error while checking if user exists with username {UserName}", userName);
+                throw;
+            }
+        }
+    
+        public async Task<bool> AddCourseToUserAsync(AppUser user, string courseSlug)
+        {
+            try
+            {
+                return await _productRepository.AddCourseToUserAsync(user, courseSlug);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while adding course {CourseSlug} to user {UserName}", courseSlug, user.UserName);
                 throw;
             }
         }

@@ -9,6 +9,11 @@ namespace CodeSparkNET.Controllers
     [DisableRateLimiting]
     public class ErrorController : Controller
     {
+        /// <summary>
+        /// Returns an error view for a specific HTTP status code with a localized message and action.
+        /// </summary>
+        /// <param name="statusCode">The HTTP status code to display.</param>
+        /// <returns>Error view with details for the specified status code.</returns>
         [Route("Error/StatusCode/{statusCode}")]
         public IActionResult StatusCode(int statusCode)
         {
@@ -78,6 +83,10 @@ namespace CodeSparkNET.Controllers
             return View("Error", model);
         }
 
+        /// <summary>
+        /// Returns a generic error view for unexpected server errors (HTTP 500).
+        /// </summary>
+        /// <returns>Error view with default error details.</returns>
         [Route("/Error")]
         public IActionResult Error()
         {

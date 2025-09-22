@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using System.Security.Claims;
 using CodeSparkNET.Dtos.Account;
-using CodeSparkNET.Interfaces;
+using CodeSparkNET.Interfaces.Services;
 using CodeSparkNET.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

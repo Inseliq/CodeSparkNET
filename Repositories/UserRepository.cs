@@ -1,5 +1,5 @@
 ﻿using CodeSparkNET.Dtos.Account;
-using CodeSparkNET.Interfaces;
+using CodeSparkNET.Interfaces.Repositories;
 using CodeSparkNET.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
@@ -25,6 +25,11 @@ namespace CodeSparkNET.Repositories
             _logger = logger;
         }
 
+        /// <summary>
+        /// Gets a user by their email address.
+        /// </summary>
+        /// <param name="email">The user's email address.</param>
+        /// <returns>The user with the specified email, or null if not found.</returns>
         public async Task<AppUser> GetUserByEmailAsync(string email)
         {
             try
@@ -38,6 +43,11 @@ namespace CodeSparkNET.Repositories
             }
         }
 
+        /// <summary>
+        /// Gets a user by their unique identifier.
+        /// </summary>
+        /// <param name="id">The user's unique identifier.</param>
+        /// <returns>The user with the specified ID, or null if not found.</returns>
         public async Task<AppUser> GetUserByIdAsync(string id)
         {
             try
@@ -51,6 +61,11 @@ namespace CodeSparkNET.Repositories
             }
         }
 
+        /// <summary>
+        /// Gets a user by their username.
+        /// </summary>
+        /// <param name="userName">The user's username.</param>
+        /// <returns>The user with the specified username, or null if not found.</returns>
         public async Task<AppUser> GetUserByUserNameAsync(string userName)
         {
             try
@@ -64,6 +79,11 @@ namespace CodeSparkNET.Repositories
             }
         }
 
+        /// <summary>
+        /// Gets a user from a ClaimsPrincipal.
+        /// </summary>
+        /// <param name="user">The ClaimsPrincipal representing the user.</param>
+        /// <returns>The user associated with the ClaimsPrincipal, or null if not found.</returns>
         public Task<AppUser> GetUserAsync(ClaimsPrincipal user)
         {
             try
@@ -77,6 +97,12 @@ namespace CodeSparkNET.Repositories
             }
         }
 
+        /// <summary>
+        /// Creates a new user with the specified password.
+        /// </summary>
+        /// <param name="user">The user to create.</param>
+        /// <param name="password">The password for the user.</param>
+        /// <returns>The result of the creation operation.</returns>
         public async Task<IdentityResult> CreateUserAsync(AppUser user, string password)
         {
             try
@@ -90,6 +116,11 @@ namespace CodeSparkNET.Repositories
             }
         }
 
+        /// <summary>
+        /// Updates an existing user.
+        /// </summary>
+        /// <param name="user">The user to update.</param>
+        /// <returns>The result of the update operation.</returns>
         public async Task<IdentityResult> UpdateUserAsync(AppUser user)
         {
             try
@@ -103,6 +134,11 @@ namespace CodeSparkNET.Repositories
             }
         }
 
+        /// <summary>
+        /// Deletes a user.
+        /// </summary>
+        /// <param name="user">The user to delete.</param>
+        /// <returns>The result of the delete operation.</returns>
         public async Task<IdentityResult> DeleteUserAsync(AppUser user)
         {
             try
@@ -116,6 +152,12 @@ namespace CodeSparkNET.Repositories
             }
         }
 
+        /// <summary>
+        /// Adds a user to a specified role.
+        /// </summary>
+        /// <param name="user">The user to add to the role.</param>
+        /// <param name="role">The role to add the user to.</param>
+        /// <returns>The result of the add-to-role operation.</returns>
         public async Task<IdentityResult> AddToRoleAsync(AppUser user, string role)
         {
             try
@@ -129,6 +171,11 @@ namespace CodeSparkNET.Repositories
             }
         }
 
+        /// <summary>
+        /// Gets the roles assigned to a user.
+        /// </summary>
+        /// <param name="user">The user whose roles to retrieve.</param>
+        /// <returns>A list of role names assigned to the user.</returns>
         public async Task<IList<string>> GetUserRolesAsync(AppUser user)
         {
             try
@@ -142,6 +189,11 @@ namespace CodeSparkNET.Repositories
             }
         }
 
+        /// <summary>
+        /// Checks if a user's email is confirmed.
+        /// </summary>
+        /// <param name="user">The user to check.</param>
+        /// <returns>True if the email is confirmed; otherwise, false.</returns>
         public async Task<bool> IsEmailConfirmedAsync(AppUser user)
         {
             try
@@ -155,6 +207,11 @@ namespace CodeSparkNET.Repositories
             }
         }
 
+        /// <summary>
+        /// Generates a password reset token for a user.
+        /// </summary>
+        /// <param name="user">The user to generate the token for.</param>
+        /// <returns>The password reset token.</returns>
         public async Task<string> GeneratePasswordResetTokenAsync(AppUser user)
         {
             try
@@ -168,6 +225,13 @@ namespace CodeSparkNET.Repositories
             }
         }
 
+        /// <summary>
+        /// Changes a user's password.
+        /// </summary>
+        /// <param name="user">The user whose password to change.</param>
+        /// <param name="currentPassword">The current password.</param>
+        /// <param name="newPassword">The new password.</param>
+        /// <returns>The result of the password change operation.</returns>
         public async Task<IdentityResult> ChangePasswordAsync(AppUser user, string currentPassword, string newPassword)
         {
             try
@@ -181,12 +245,23 @@ namespace CodeSparkNET.Repositories
             }
         }
 
+        /// <summary>
+        /// Resets a user's password using a token. (Not implemented)
+        /// </summary>
+        /// <param name="user">The user whose password to reset.</param>
+        /// <param name="token">The password reset token.</param>
+        /// <param name="newPassword">The new password.</param>
+        /// <returns>The result of the password reset operation.</returns>
         public Task<IdentityResult> ResetPasswordAsync(AppUser user, string token, string newPassword)
         {
             _logger.LogWarning("Method ResetPasswordAsync is not implemented yet.");
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Updates the security stamp for a user.
+        /// </summary>
+        /// <param name="user">The user whose security stamp to update.</param>
         public async Task UpdateSecurityStampAsync(AppUser user)
         {
             try
@@ -200,6 +275,12 @@ namespace CodeSparkNET.Repositories
             }
         }
 
+        /// <summary>
+        /// Confirms a user's email using a token.
+        /// </summary>
+        /// <param name="user">The user whose email to confirm.</param>
+        /// <param name="token">The email confirmation token.</param>
+        /// <returns>The result of the email confirmation operation.</returns>
         public async Task<IdentityResult> ConfirmEmailAsync(AppUser user, string token)
         {
             try
@@ -213,6 +294,11 @@ namespace CodeSparkNET.Repositories
             }
         }
 
+        /// <summary>
+        /// Generates an email confirmation token for a user.
+        /// </summary>
+        /// <param name="user">The user to generate the token for.</param>
+        /// <returns>The email confirmation token.</returns>
         public async Task<string> GenerateEmailConfirmationTokenAsync(AppUser user)
         {
             try
@@ -226,6 +312,11 @@ namespace CodeSparkNET.Repositories
             }
         }
 
+        /// <summary>
+        /// Signs in a user using their email and password.
+        /// </summary>
+        /// <param name="model">The login data transfer object containing email, password, and remember me flag.</param>
+        /// <returns>The result of the sign-in operation.</returns>
         public async Task<SignInResult> PasswordSignInAsync(LoginDto model)
         {
             try
@@ -240,6 +331,10 @@ namespace CodeSparkNET.Repositories
             }
         }
 
+        /// <summary>
+        /// Refreshes the sign-in session for a user.
+        /// </summary>
+        /// <param name="user">The user whose sign-in session to refresh.</param>
         public async Task RefreshSignInAsync(AppUser user)
         {
             try
@@ -253,6 +348,9 @@ namespace CodeSparkNET.Repositories
             }
         }
 
+        /// <summary>
+        /// Signs out the current user.
+        /// </summary>
         public async Task SignOutAsync()
         {
             try
@@ -266,6 +364,11 @@ namespace CodeSparkNET.Repositories
             }
         }
 
+        /// <summary>
+        /// Gets the roles assigned to a user by their email address.
+        /// </summary>
+        /// <param name="userEmail">The user's email address.</param>
+        /// <returns>A list of role names assigned to the user.</returns>
         public async Task<IList<string>> GetUserRolesByEmailAsync(string userEmail)
         {
             try

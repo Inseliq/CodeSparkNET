@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using CodeSparkNET.Dtos.Catalog;
 
-namespace CodeSparkNET.Interfaces
+namespace CodeSparkNET.Interfaces.Services
 {
     public interface ICatalogService
     {

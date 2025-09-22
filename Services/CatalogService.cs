@@ -1,5 +1,6 @@
 using CodeSparkNET.Dtos.Catalog;
-using CodeSparkNET.Interfaces;
+using CodeSparkNET.Interfaces.Repositories;
+using CodeSparkNET.Interfaces.Services;
 
 namespace CodeSparkNET.Services
 {

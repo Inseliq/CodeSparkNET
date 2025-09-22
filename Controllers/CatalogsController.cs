@@ -18,6 +18,21 @@ namespace CodeSparkNET.Controllers
             _catalogService = catalogService;
             _accountService = accountService;
         }
+
+        public async Task<IActionResult> Catalogs()
+        {
+            try
+            {
+                var catalogs = await _catalogService.GetCatalogNamesAsync();
+                return View(catalogs);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while requestiong catalogs");
+                return View();
+            }
+        }
+
         [HttpGet("/Catalogs/Catalog/{catalogSlug}")]
         public async Task<IActionResult> Catalog(string catalogSlug)
         {

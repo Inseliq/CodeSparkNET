@@ -46,11 +46,11 @@
       @if (!User?.Identity?.IsAuthenticated == true)
       {
         <a asp-controller="Account" asp-action="Login" hover>Войти</a>
-        <a asp-controller="Catalogs" asp-action="Catalog" hover>Каталог</a>
+        <a asp-controller="Catalogs" asp-action="Catalogs" hover>Каталог</a>
       }
       else
       {
-        <a asp-controller="Catalogs" asp-action="Catalog" hover>Каталог</a>
+        <a asp-controller="Catalogs" asp-action="Catalogs" hover>Каталог</a>
       }
     </section>
   </nav>

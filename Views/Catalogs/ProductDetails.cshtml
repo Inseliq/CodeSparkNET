@@ -90,6 +90,10 @@
                 @* { *@
                 @*     <a href="#">Связаться с нами</a> *@
                 @* } *@
+                <form asp-action="AddCourseToUser" asp-controller="Catalogs" method="post">
+					<input type="hidden" name="productId" value="@Model?.Slug" />
+                    <button type="submit" id="addToCartBtn">Добавить</button> 
+                </form>
             </div>
 
             <section class="description" aria-labelledby="desc-heading">

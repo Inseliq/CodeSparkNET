@@ -1,5 +1,5 @@
 using CodeSparkNET.Dtos.User;
-using CodeSparkNET.Interfaces;
+using CodeSparkNET.Interfaces.Services;
 using CodeSparkNET.Models;
 using CodeSparkNET.Redis;
 using Microsoft.AspNetCore.Identity;

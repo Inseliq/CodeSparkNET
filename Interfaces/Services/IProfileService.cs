@@ -4,7 +4,7 @@ using CodeSparkNET.Dtos.Profile;
 using CodeSparkNET.Models;
 using Microsoft.AspNetCore.Identity;
 
-namespace CodeSparkNET.Interfaces
+namespace CodeSparkNET.Interfaces.Services
 {
     public interface IProfileService
     {
@@ -12,6 +12,6 @@ namespace CodeSparkNET.Interfaces
         Task<bool> SendEmailConfirmationLinkAsync(string email);
         Task<IdentityResult> ChangePasswordAsync(string email, ChangePasswordDto model);
         Task UpdateUserClaims(AppUser user);
-
+        Task<List<AllUserCoursesDto>> GetAllUserCoursesAsync(AppUser user);
     }
 }

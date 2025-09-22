@@ -1,5 +1,5 @@
 using CodeSparkNET.Dtos.Catalog;
-using CodeSparkNET.Interfaces;
+using CodeSparkNET.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CodeSparkNET.Controllers
@@ -8,10 +8,15 @@ namespace CodeSparkNET.Controllers
   {
         private readonly ILogger<CatalogsController> _logger;
         private readonly ICatalogService _catalogService;
-        public CatalogsController(ILogger<CatalogsController> logger, ICatalogService catalogService)
+        private readonly IAccountService _accountService;
+        public CatalogsController(
+            ILogger<CatalogsController> logger, 
+            ICatalogService catalogService,
+            IAccountService accountService)
         {
             _logger = logger;
             _catalogService = catalogService;
+            _accountService = accountService;
         }
         [HttpGet("/Catalogs/Catalog/{catalogSlug}")]
         public async Task<IActionResult> Catalog(string catalogSlug)
@@ -61,6 +66,30 @@ namespace CodeSparkNET.Controllers
             {
                 _logger.LogError(ex, "Error while gettin product details {CatalogSlug}-{ProductSlug}", catalogSlug, productSlug);
                 return View();
+            }
+        }
+
+        [HttpPost]
+        [Route("/Catalogs/AddCourseToUser/{productSlug}")]
+        public async Task<IActionResult> AddCourseToUser(string productSlug)
+        {
+            try
+            {
+                var user = await _accountService.GetUserAsync(User);
+                var result = await _accountService.AddCourseToUserAsync(user, productSlug);
+                if (result)
+                {
+                    return Json(new {success = true, message = "Курс успешно добавлен."});
+                }
+                else
+                {
+                    return Json(new {success = false, message = "Ошибка добавления курса."});
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while adding course {ProductSlug} to user", productSlug);
+                return View("Error!");
             }
         }
 

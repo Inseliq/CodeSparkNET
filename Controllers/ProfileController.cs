@@ -1,10 +1,10 @@
 using System.Security.Claims;
 using CodeSparkNET.Dtos.Account;
 using CodeSparkNET.Dtos.Profile;
-using CodeSparkNET.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using CodeSparkNET.Utils;
+using CodeSparkNET.Interfaces.Services;
 
 namespace CodeSparkNET.Controllers
 {
@@ -46,12 +46,15 @@ namespace CodeSparkNET.Controllers
                 var roles = _accountService.GetRolesAsync(user);
                 var translated = roles.ToRussianListAsync();
 
+                var userCourses = await _profileService.GetAllUserCoursesAsync(user);
+
                 ViewBag.UserName = user.UserName;
                 ViewBag.Email = user.Email;
                 ViewBag.RolesString = await roles.ToRussianStringAsync();
                 ViewBag.EmailAddAt = user.EmailAddAt.ToString("g");
                 ViewBag.EmailConfirmedAt = user.EmailConfirmedAt.ToString("g");
                 ViewBag.EmailChangedAt = user.EmailChangedAt.ToString("g");
+                ViewBag.Courses = userCourses;
 
                 return View();
             }

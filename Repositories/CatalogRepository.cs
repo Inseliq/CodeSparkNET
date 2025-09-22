@@ -1,5 +1,5 @@
 using CodeSparkNET.Data;
-using CodeSparkNET.Interfaces;
+using CodeSparkNET.Interfaces.Repositories;
 using CodeSparkNET.Models;
 using Microsoft.EntityFrameworkCore;
 

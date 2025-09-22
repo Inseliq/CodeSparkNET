@@ -1,4 +1,4 @@
-using CodeSparkNET.Interfaces;
+using CodeSparkNET.Interfaces.Services;
 using MailKit.Net.Smtp;
 using MimeKit;
 

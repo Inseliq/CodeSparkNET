@@ -4,7 +4,7 @@ using CodeSparkNET.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 
-namespace CodeSparkNET.Interfaces
+namespace CodeSparkNET.Interfaces.Repositories
 {
     public interface IUserRepository
     {

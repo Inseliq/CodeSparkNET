@@ -64,6 +64,7 @@ namespace CodeSparkNET.Models
         /// Navigation property to the parent catalog.
         /// </summary>
         public Catalog Catalog { get; set; }
+        public string ProductType { get; set; }
 
         /// <summary>
         /// Collection of images associated with the product.

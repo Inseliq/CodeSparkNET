@@ -83,17 +83,21 @@
             </div>
 
             <div class="product-actions">
-                @* @if(Model?.ProductType == ProductType.Course) *@
-                @* { *@
-                @*     <button type="button" id="addToCartBtn">Добавить в корзину</button> *@
-                @* } else *@
-                @* { *@
-                @*     <a href="#">Связаться с нами</a> *@
-                @* } *@
-                <form asp-action="AddCourseToUser" asp-controller="Catalogs" method="post">
-					<input type="hidden" name="productId" value="@Model?.Slug" />
-                    <button type="submit" id="addToCartBtn">Добавить</button> 
-                </form>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    @if (Model.ProductType == "Course")
+                    {
+                        <a asp-controller="Catalogs" asp-action="AddCourseToUser" asp-route-productSlug="@Model.Slug">Добавить</a>
+                    }
+                    else
+                    {
+                        <a href="#">Связаться с нами</a>
+                    }
+                }
+                else
+                {
+                    <a asp-controller="Account" asp-action="Login">Войти</a>
+                }
             </div>
 
             <section class="description" aria-labelledby="desc-heading">

@@ -73,6 +73,7 @@ namespace CodeSparkNET.Services
                         Price = p.Price,
                         Currency = p.Currency,
                         InStock = p.InStock,
+                        ProductType = p.ProductType,
                         Image = p.ProductImages?.FirstOrDefault(img => img.IsMain)?.ImageData
                             ?? p.ProductImages?.FirstOrDefault()?.ImageData
                     }).ToList();
@@ -108,6 +109,7 @@ namespace CodeSparkNET.Services
                     Price = productDetails.Price,
                     Currency = productDetails.Currency,
                     InStock = productDetails.InStock,
+                    ProductType = productDetails.ProductType,
                     Images = productDetails.ProductImages?
                         .Select(img => new CatalogProductImageDto
                         {

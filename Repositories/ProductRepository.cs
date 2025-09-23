@@ -32,7 +32,9 @@ namespace CodeSparkNET.Repositories
         public async Task<bool> AddCourseToUserAsync(AppUser user, string courseSlug)
         {
             // Find the course by slug
-            var course = await _context.Courses.FirstOrDefaultAsync(c => c.Slug == courseSlug);
+            var course = await _context.Products
+                .OfType<Course>()
+                .FirstOrDefaultAsync(c => c.Slug == courseSlug);
             if (course == null)
                 return false;
 

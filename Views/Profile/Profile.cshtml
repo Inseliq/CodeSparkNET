@@ -29,7 +29,7 @@
                 <h2>Личные данные</h2>
             </div>
             <div class="block body">
-                <h3 hover el="user-name" title="Имя пользователя">@ViewBag.UserName</h3>
+                <h3 hover el="user-name" title="Имя пользователя">@Model.PersonalProfileDto.UserName</h3>
                 @if (UserManager.IsEmailConfirmedAsync(user).Result is false)
                 {
                     <button class="edit" disabled data-style="link" hover
@@ -45,8 +45,7 @@
                 }
             </div>
             <div class="block body">
-                @* <h3>@ViewBag.Role</h3> *@
-                <h3 hover el="role" title="Роль">@((string?)ViewBag.RolesString ?? "—")</h3>
+                <h3 hover el="role" title="Роль">@((string?)Model.PersonalProfileDto.Roles ?? "—")</h3>
             </div>
             <div class="block body">
                 <h3 hover el="p-time" title="Время до окончания подписки">$prime-time</h3>
@@ -72,7 +71,7 @@
             {
                 <div class="block body n_confirm">
                     <div class="left" hover>
-                        <h3 title="Подтвердите адрес электронной почты">@ViewBag.Email</h3>
+                        <h3 title="Подтвердите адрес электронной почты">@Model.PersonalProfileDto.Email</h3>
                         <span>Ваш Email не подтвержден!</span>
                     </div>
                     <button data-function="send-confirmation-email" class="btn right" data-style="link" hover
@@ -83,10 +82,10 @@
             {
                 <div class="block body confirm">
                     <div class="left" hover>
-                        <h3 title="Электронная почта">@ViewBag.Email</h3>
-                        <span>Email добавлен: @ViewBag.EmailAddAt</span>
-                        <span>@ViewBag.EmailConfirmedAt</span>
-                        <span>@ViewBag.EmailChangedAt</span>
+                        <h3 title="Электронная почта">@Model.PersonalProfileDto.</h3>
+                        <span>Email добавлен: @Model.PersonalProfileDto.EmailAddAt</span>
+                        <span>@Model.PersonalProfileDto.EmailConfirmedAt</span>
+                        <span>@Model.PersonalProfileDto.EmailChangedAt</span>
                     </div>
                     <button data-function="editEmailBtn" class="btn right" data-style="link" hover>Изменить</button>
                 </div>
@@ -141,6 +140,12 @@
         <div class="content">
             <div class="left">
                 <h2>$Защита данных</h2>
+                @foreach (var course in Model.PersonalProfileDto.AllUserCourses)
+                {
+                    <div>
+                        <span>@course.Name | @(course.IsCompleted ? "Пройден" : "Не пройден")</span>
+                    </div>
+                }
                 <span>$desc</span>
             </div>
             <div class="right">
@@ -178,8 +183,8 @@ else
                         <span asp-validation-for="UpdatePersonalProfileDto.UserName"></span>
                         <label asp-for="UpdatePersonalProfileDto.UserName">Имя пользователя</label>
                         <input asp-for="UpdatePersonalProfileDto.UserName" id="names" type="text" required hover
-                            placeholder="@ViewBag.UserName">
-                        <input asp-for="UpdatePersonalProfileDto.Email" id="email" type="email" value="@ViewBag.Email"
+                               placeholder="@Model.PersonalProfileDto.UserName">
+                        <input asp-for="UpdatePersonalProfileDto.Email" id="email" type="email" value="@Model.PersonalProfileDto.Email"
                             required hover hidden="!">
                     </div>
                     <div class="block-button">
@@ -221,8 +226,8 @@ else
                         <span asp-validation-for="UpdatePersonalProfileDto.Email"></span>
                         <label asp-for="UpdatePersonalProfileDto.Email">Новый Email</label>
                         <input asp-for="UpdatePersonalProfileDto.UserName" id="names" type="text" required hover
-                            value="@ViewBag.UserName" hidden="!">
-                        <input asp-for="UpdatePersonalProfileDto.Email" id="email" type="email" placeholder="@ViewBag.Email"
+                               value="@Model.PersonalProfileDto.UserName" hidden="!">
+                        <input asp-for="UpdatePersonalProfileDto.Email" id="email" type="email" placeholder="@Model.PersonalProfileDto.Email"
                             required hover>
                     </div>
                     <div class="block-button">

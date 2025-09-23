@@ -9,5 +9,6 @@ namespace CodeSparkNET.Dtos.Profile
     {
         public UpdatePersonalProfileDto UpdatePersonalProfileDto { get; set; }
         public ChangePasswordDto ChangePasswordDto { get; set; }
+        public PersonalProfileDto PersonalProfileDto { get; set; }
     }
 }

@@ -48,15 +48,23 @@ namespace CodeSparkNET.Controllers
 
                 var userCourses = await _profileService.GetAllUserCoursesAsync(user);
 
-                ViewBag.UserName = user.UserName;
-                ViewBag.Email = user.Email;
-                ViewBag.RolesString = await roles.ToRussianStringAsync();
-                ViewBag.EmailAddAt = user.EmailAddAt.ToString("g");
-                ViewBag.EmailConfirmedAt = user.EmailConfirmedAt.ToString("g");
-                ViewBag.EmailChangedAt = user.EmailChangedAt.ToString("g");
-                ViewBag.Courses = userCourses;
+                var personalProfileModel = new PersonalProfileDto
+                {
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    Roles = await roles.ToRussianStringAsync(),
+                    EmailAddAt = user.EmailAddAt,
+                    EmailConfirmedAt = user.EmailConfirmedAt,
+                    EmailChangedAt = user.EmailChangedAt,
+                    AllUserCourses = userCourses
+                };
 
-                return View();
+                ProfileDto model = new ProfileDto
+                {
+                    PersonalProfileDto = personalProfileModel
+                };
+
+                return View(model);
             }
             catch (Exception ex)
             {

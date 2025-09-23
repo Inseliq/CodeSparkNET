@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using CodeSparkNET.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -16,19 +12,19 @@ namespace CodeSparkNET.Data
         {
         }
 
-        public DbSet<Product> Products { get; set; } = null!;
         public DbSet<ProductImage> ProductImages { get; set; } = null!;
         public DbSet<Catalog> Catalogs { get; set; } = null!;
         public DbSet<Course> Courses { get; set; } = null!;
         public DbSet<Template> Templates { get; set; } = null!;
         public DbSet<Diploma> Diplomas { get; set; } = null!;
         public DbSet<UserCourse> UserCourses { get; set; } = null!;
-
+        public DbSet<Product> Products { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
+            // --- Roles seed ---
             var roles = new List<IdentityRole>
             {
                 new IdentityRole
@@ -53,10 +49,9 @@ namespace CodeSparkNET.Data
                     ConcurrencyStamp = "e3f9c6d2-3f4b-4b8e-9f2a-333333333333"
                 }
             };
-
             builder.Entity<IdentityRole>().HasData(roles);
 
-            //Catalog
+            // --- Catalog ---
             builder.Entity<Catalog>(entity =>
             {
                 entity.HasKey(c => c.Id);
@@ -66,44 +61,93 @@ namespace CodeSparkNET.Data
                 entity.Property(c => c.IsVisible).HasDefaultValue(true);
             });
 
-            //Product
+            // --- Product (base type) ---
             builder.Entity<Product>(entity =>
             {
                 entity.HasKey(p => p.Id);
+
                 entity.Property(p => p.Name).IsRequired();
                 entity.Property(p => p.Slug).IsRequired();
+                entity.HasIndex(p => p.Slug).IsUnique();
+
                 entity.Property(p => p.Price).HasColumnType("decimal(18,2)");
                 entity.HasIndex(p => p.Price);
+
                 entity.HasIndex(p => new { p.CatalogId, p.Slug }).IsUnique();
 
-                //Links
                 entity.HasOne(p => p.Catalog)
-                    .WithMany(p => p.Products)
-                    .HasForeignKey(p => p.CatalogId)
-                    .OnDelete(DeleteBehavior.Restrict);
+                      .WithMany(cat => cat.Products)
+                      .HasForeignKey(p => p.CatalogId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasMany(p => p.ProductImages)
+                      .WithOne(pi => pi.Product)
+                      .HasForeignKey(pi => pi.ProductId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasDiscriminator(p => p.ProductType)
+                      .HasValue<Product>("Product")
+                      .HasValue<Course>("Course")
+                      .HasValue<Template>("Template")
+                      .HasValue<Diploma>("Diploma");
             });
 
-            //User Course
+            // --- Course (derived) ---
+            builder.Entity<Course>(entity =>
+            {
+                entity.Property(c => c.Level).HasMaxLength(100);
+
+                entity.HasMany(c => c.UserCourses)
+                      .WithOne(uc => uc.Course)
+                      .HasForeignKey(uc => uc.CourseSlug)
+                      .HasPrincipalKey(c => c.Slug);
+            });
+
+            // --- Template (derived) ---
+            builder.Entity<Template>(entity =>
+            {
+            });
+
+            // --- Diploma (derived) ---
+            builder.Entity<Diploma>(entity =>
+            {
+                entity.Property(d => d.Issuer).HasMaxLength(200);
+            });
+
+            // --- UserCourse ---
             builder.Entity<UserCourse>(entity =>
             {
-                entity.HasKey(c => c.Id);
+                entity.HasKey(uc => uc.Id);
+
+                entity.Property(uc => uc.UserId).IsRequired();
+                entity.Property(uc => uc.CourseSlug).IsRequired();
+
+                entity.HasOne(uc => uc.User)
+                      .WithMany()
+                      .HasForeignKey(uc => uc.UserId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasIndex(uc => new { uc.UserId, uc.CourseSlug }).IsUnique(false);
             });
 
-            //Product Image
+            // --- ProductImage ---
             builder.Entity<ProductImage>(entity =>
             {
                 entity.HasKey(pi => pi.Id);
                 entity.Property(pi => pi.ProductId).IsRequired();
+                entity.Property(pi => pi.Name).IsRequired(false);
 
-                //Links
                 entity.HasOne(pi => pi.Product)
-                    .WithMany(pi => pi.ProductImages)
-                    .HasForeignKey(pi => pi.ProductId)
-                    .OnDelete(DeleteBehavior.Restrict);
+                      .WithMany(p => p.ProductImages)
+                      .HasForeignKey(pi => pi.ProductId)
+                      .OnDelete(DeleteBehavior.Restrict);
             });
 
+            // ---------------------------
+            // Seed data: Catalogs, Course/Template/Diploma, ProductImages
+            // ---------------------------
 
-            // Seed: Catalogs
+            // Catalogs
             builder.Entity<Catalog>().HasData(
                 new Catalog
                 {
@@ -128,35 +172,57 @@ namespace CodeSparkNET.Data
                 }
             );
 
-            // Seed: Products (по одному продукту в каждом каталоге)
-            builder.Entity<Product>().HasData(
-                new Product
+            // Seed: Course 
+            builder.Entity<Course>().HasData(
+                new
                 {
                     Id = "e1f9c6d2-5b4b-4b8e-9f2a-bbbb00000001",
                     CatalogId = "d1f9c6d2-4b4b-4b8e-9f2a-aaaa00000001",
                     Name = "Курс C# с нуля",
                     Slug = "c#-for-beginners",
                     Price = 1999.99m,
+                    Level = "Beginner",
+                    ProductType = "Course",
+                    Currency = "RUB",
+                    InStock = 10,
+                    IsPublished = true
+                }
+            );
 
-                },
-                new Product
+            // Seed: Template
+            builder.Entity<Template>().HasData(
+                new
                 {
                     Id = "e1f9c6d2-5b4b-4b8e-9f2a-bbbb00000002",
                     CatalogId = "d1f9c6d2-4b4b-4b8e-9f2a-aaaa00000002",
                     Name = "Трехуровневая заготовка ASP.NET MVC",
                     Slug = "3-tier-web-template",
                     Price = 1299.00m,
-                },
-                new Product
-                {
-                    Id = "e1f9c6d2-5b4b-4b8e-9f2a-bbbb00000003",
-                    CatalogId = "d1f9c6d2-4b4b-4b8e-9f2a-aaaa00000003",
-                    Name = "Дипломгая работа",
-                    Slug = "diploma-work",
-                    Price = 30000m,
+                    ProductType = "Template",
+                    Currency = "RUB",
+                    InStock = 10,
+                    IsPublished = true
                 }
             );
 
+            // Seed: Diploma
+            builder.Entity<Diploma>().HasData(
+                new
+                {
+                    Id = "e1f9c6d2-5b4b-4b8e-9f2a-bbbb00000003",
+                    CatalogId = "d1f9c6d2-4b4b-4b8e-9f2a-aaaa00000003",
+                    Name = "Дипломная работа",
+                    Slug = "diploma-work",
+                    Price = 30000m,
+                    Issuer = "Code Spark Academy",
+                    ProductType = "Diploma",
+                    Currency = "RUB",
+                    InStock = 10,
+                    IsPublished = true
+                }
+            );
+
+            // ProductImage seeds 
             builder.Entity<ProductImage>().HasData(
                 new ProductImage
                 {
@@ -183,7 +249,6 @@ namespace CodeSparkNET.Data
                     IsMain = true
                 }
             );
-
         }
     }
 }

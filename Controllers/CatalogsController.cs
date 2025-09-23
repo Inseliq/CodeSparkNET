@@ -72,7 +72,8 @@ namespace CodeSparkNET.Controllers
                     Price = catalog.Price,
                     Currency = catalog?.Currency,
                     InStock = catalog.InStock,
-                    Images = catalog?.Images
+                    Images = catalog?.Images,
+                    ProductType = catalog?.ProductType
                 };
 
                 return View(model);
@@ -84,8 +85,7 @@ namespace CodeSparkNET.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("/Catalogs/AddCourseToUser/{productSlug}")]
+        [HttpGet("/Catalogs/AddCourseToUser/{productSlug}")]
         public async Task<IActionResult> AddCourseToUser(string productSlug)
         {
             try
@@ -98,7 +98,7 @@ namespace CodeSparkNET.Controllers
                 }
                 else
                 {
-                    return Json(new {success = false, message = "Ошибка добавления курса."});
+                    return Json(new {success = false, message = "Курс уже добавлен."});
                 }
             }
             catch (Exception ex)

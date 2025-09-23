@@ -9,7 +9,7 @@
         /// <summary>
         /// Unique identifier for the user-course relationship.
         /// </summary>
-        public string Id { get; set; }
+        public string Id { get; set; } = Guid.NewGuid().ToString();
 
         /// <summary>
         /// Foreign key referencing the enrolled user.

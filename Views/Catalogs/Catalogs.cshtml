@@ -1,7 +1,7 @@
 ﻿@model List<CodeSparkNET.Dtos.Catalog.CatalogNamesDto>
-@{
-}
-@foreach (var catalog in Model)
-{
-    <a asp-controller="Catalogs" asp-action="Catalog" asp-route-catalogSlug="@catalog.Slug">@catalog.Name </a>
-}
+<div class="__container">
+    @foreach (var catalog in Model)
+    {
+        <a asp-controller="Catalogs" asp-action="Catalog" asp-route-catalogSlug="@catalog.Slug">@catalog.Name </a>
+    }
+</div>

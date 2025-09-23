@@ -14,7 +14,6 @@ main[data-layout="main"][role="main"] {
 
 .__container {
   width: 100%;
-  gap: 100px;
 }
 
 .__container .hero-section {
@@ -98,6 +97,11 @@ main[data-layout="main"][role="main"] {
   position: relative;
 }
 
+.__container .bat-container {
+  padding-top: 100px;
+  padding-bottom: 100px;
+}
+
 .__container .hero-section .logo {
   font-size: clamp(3rem, 8vw, 6rem);
   font-weight: 900;
@@ -177,7 +181,7 @@ main[data-layout="main"][role="main"] {
 
 .__container .services-section {
   width: 100%;
-  padding: 80px 0;
+  padding: 40px 0;
 }
 
 .__container .services-section .section-title {
@@ -266,6 +270,7 @@ main[data-layout="main"][role="main"] {
   width: 100%;
   text-align: center;
   padding: 60px 0;
+  padding-bottom: 100px;
 }
 
 .__container .tech-stack .tech-title {

@@ -22,7 +22,7 @@ html[cross-browser] {
         justify-content: space-between;
         align-items: center;
         max-width: 1440px;
-        padding: 5px 0px;
+        padding: 10px 0px;
 
         .left {
           display: flex;
@@ -81,14 +81,15 @@ html[cross-browser] {
           gap: 15px;
 
           a {
-            padding: 15px 18px;
+            text-transform: uppercase;
+            padding: 15px;
             display: inline-flex;
             justify-content: center;
             align-items: center;
             transition: --color-gradient-for-hyperbutton_start 0.4s, --color-gradient-for-hyperbutton_end 0.4s,
               transform 0.3s ease;
-            font-size: calc(var(--fs-btn) * 1.1);
-            font-weight: 600;
+            font-size: calc(var(--fs-btn) * 0.85);
+            font-weight: 700;
             border-radius: 8px;
             z-index: 3;
 
@@ -253,6 +254,7 @@ html[cross-browser] {
           left: calc(67px + var(--catalog-width));
 
           a {
+            white-space: nowrap;
             &::before {
               content: "»";
             }

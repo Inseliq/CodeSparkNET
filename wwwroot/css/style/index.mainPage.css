@@ -397,10 +397,6 @@ main[data-layout="main"][role="main"] {
 }
 
 @media (max-width: 768px) {
-  .__container {
-    gap: 60px;
-  }
-
   .__container .hero-section .cta-buttons {
     flex-direction: column;
     width: 100%;

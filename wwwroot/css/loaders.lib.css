@@ -58,7 +58,7 @@
   display: grid;
   border: 4px solid #0000;
   border-radius: 50%;
-  border-right-color: #25b09b;
+  border-right-color: var(--palette-acient);
   animation: spinner3_load 1s infinite linear;
 }
 
@@ -69,7 +69,7 @@
   margin: 2px;
   border: inherit;
   border-radius: 50%;
-  animation: l15 2s infinite;
+  animation: spinner3_load 2s infinite;
 }
 
 .loader.spinner3::after {
@@ -87,7 +87,7 @@
 .loader.pack1 {
   width: 40px;
   aspect-ratio: 1;
-  color: #f03355;
+  color: var(--palette-second);
   position: relative;
   background:
     conic-gradient(from 134deg at top, currentColor 92deg, #0000 0) top,
@@ -128,7 +128,7 @@
 .loader.pack2 {
   width: 40px;
   aspect-ratio: 1;
-  color: #f03355;
+  color: var(--palette-acient);
   position: relative;
   background: radial-gradient(10px, currentColor 94%, #0000);
 }
@@ -226,7 +226,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: repeating-conic-gradient(#0000 0 5%, #C02942, #0000 20% 50%);
+  background: repeating-conic-gradient(#0000 0 5%, #ffffff, #0000 20% 50%);
   animation: ghost_load 1.5s linear infinite;
 }
 
@@ -272,7 +272,7 @@
   width: 25px;
   height: 50px;
   display: grid;
-  color: #000;
+  color: #ffffff;
   background:
     linear-gradient(currentColor 0 0) top/100% 2px,
     radial-gradient(farthest-side at top, #0000 calc(100% - 2px), currentColor calc(100% - 1px), #0000) top,
@@ -336,5 +336,70 @@
 
   100% {
     background-position: 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%
+  }
+}
+
+.loader.spinner4 {
+  transform: rotateZ(45deg);
+  perspective: 1000px;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  color: var(--error-message-form);
+}
+
+.loader.spinner4:before,
+.loader.spinner4:after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: inherit;
+  height: inherit;
+  border-radius: 50%;
+  transform: rotateX(70deg);
+  animation: 1s spinner4_load linear infinite;
+}
+
+.loader.spinner4:after {
+  color: var(--err_w-color);
+  transform: rotateY(70deg);
+  animation-delay: .4s;
+}
+
+@keyframes spinner4_load {
+
+  0%,
+  100% {
+    box-shadow: .2em 0px 0 0px currentcolor;
+  }
+
+  12% {
+    box-shadow: .2em .2em 0 0 currentcolor;
+  }
+
+  25% {
+    box-shadow: 0 .2em 0 0px currentcolor;
+  }
+
+  37% {
+    box-shadow: -.2em .2em 0 0 currentcolor;
+  }
+
+  50% {
+    box-shadow: -.2em 0 0 0 currentcolor;
+  }
+
+  62% {
+    box-shadow: -.2em -.2em 0 0 currentcolor;
+  }
+
+  75% {
+    box-shadow: 0px -.2em 0 0 currentcolor;
+  }
+
+  87% {
+    box-shadow: .2em -.2em 0 0 currentcolor;
   }
 }

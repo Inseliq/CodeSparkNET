@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
     modal.innerHTML = `
       <div class="description" hover>
         <button close-btn-err_w hover>×</button>
-        <span class="loader"></span>
+        <span class="loader spinner4"></span>
         <span class="desc">Данный модуль находится в разработке и будет доступен позже.</span>
       </div>
     `;

@@ -8,7 +8,7 @@ namespace CodeSparkNET.Dtos.Catalog
     public class CatalogProductImageDto
     {
         public string? Name { get; set; }
-        public byte[]? ImageData { get; set; }
+        public string Image { get; set; }
         public bool? IsMain { get; set; }
     }
 }

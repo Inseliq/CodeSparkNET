@@ -74,8 +74,8 @@ namespace CodeSparkNET.Services
                         Currency = p.Currency,
                         InStock = p.InStock,
                         ProductType = p.ProductType,
-                        Image = p.ProductImages?.FirstOrDefault(img => img.IsMain)?.ImageData
-                            ?? p.ProductImages?.FirstOrDefault()?.ImageData
+                        Image = p.ProductImages?.FirstOrDefault(img => img.IsMain)?.Url
+                            ?? p.ProductImages?.FirstOrDefault()?.Url
                     }).ToList();
             }
             catch (Exception ex)
@@ -114,7 +114,7 @@ namespace CodeSparkNET.Services
                         .Select(img => new CatalogProductImageDto
                         {
                             Name = img.Name,
-                            ImageData = img.ImageData,
+                            Image = img.Url,
                             IsMain = img.IsMain
                         }).ToList()
                 };

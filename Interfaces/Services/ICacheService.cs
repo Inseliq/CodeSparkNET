@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
 using CodeSparkNET.Models;
 
 namespace CodeSparkNET.Interfaces.Services
@@ -12,5 +7,7 @@ namespace CodeSparkNET.Interfaces.Services
         Task CacheUserAsync(string email);
         Task<AppUser> GetCachedUserAsync(string email);
         Task ClearCachedUserAsync(string email);
+        Task CacheCatalogsAsync();
+        Task<List<Catalog>> GetCachedCatalogsAsync();
     }
 }

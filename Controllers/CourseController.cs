@@ -1,21 +1,18 @@
-﻿using CodeSparkNET.Data;
-using CodeSparkNET.Dtos.Course;
+﻿using CodeSparkNET.Dtos.Course;
 using CodeSparkNET.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace CodeSparkNET.Controllers
 {
     [AllowAnonymous]
     public class CoursesController : Controller
     {
-        private readonly AppDbContext _db;
         private readonly ICourseService _courseService;
 
-        public CoursesController(AppDbContext db, ICourseService courseService)
+        public CoursesController(
+            ICourseService courseService)
         {
-            _db = db;
             _courseService = courseService;
         }
 

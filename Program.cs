@@ -1,5 +1,4 @@
 using System.Globalization;
-using System.Net;
 using System.Threading.RateLimiting;
 using CodeSparkNET.Data;
 using CodeSparkNET.Interfaces.Repositories;
@@ -73,15 +72,13 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
     options.Secure = CookieSecurePolicy.Always;
 });
 
-// builder.Services.AddDistributedMemoryCache(); // in prod — Redis or SQL
-builder.Services.AddDistributedMemoryCache(); // in debug
+//builder.Services.AddDistributedMemoryCache(); // in debug
 
-//Add Redis
-// builder.Services.AddStackExchangeRedisCache(options =>
-// {
-//     options.Configuration = builder.Configuration.GetConnectionString("Redis");
-//     options.InstanceName = "CodeSparkNET:";
-// });
+
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration["Redis:ConnectionString"];
+});
 
 //Add Services
 builder.Services.AddScoped<IAccountService, AccountService>();
@@ -96,16 +93,16 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 //Add Redis Service
-// builder.Services.AddScoped<ICacheService, CacheService>();
+builder.Services.AddScoped<ICacheService, CacheService>();
 
 //Add Redis singleton
-// builder.Services.AddSingleton<ICacheProvider, CacheProvider>();
+builder.Services.AddSingleton<ICacheProvider, CacheProvider>();
 
 //Add keys
-// var redis = ConnectionMultiplexer.Connect(builder.Configuration["REDIS_CONNECTION"]);
-// builder.Services.AddDataProtection()
-//     .PersistKeysToStackExchangeRedis(redis, "DataProtection-Keys")
-//     .SetApplicationName("CodeSparkNET");
+var redis = ConnectionMultiplexer.Connect(builder.Configuration["Redis:ConnectionString"]);
+    builder.Services.AddDataProtection()
+    .PersistKeysToStackExchangeRedis(redis, "DataProtection-Keys")
+    .SetApplicationName("CodeSparkNET");
 
 //Custom Rate Limitter
 builder.Services.AddRateLimiter(options =>

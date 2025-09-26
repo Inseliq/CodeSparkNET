@@ -1,4 +1,5 @@
 using CodeSparkNET.Dtos.User;
+using CodeSparkNET.Interfaces.Repositories;
 using CodeSparkNET.Interfaces.Services;
 using CodeSparkNET.Models;
 using CodeSparkNET.Redis;
@@ -16,6 +17,7 @@ namespace CodeSparkNET.Services
         private readonly ILogger<CacheService> _logger;
         private readonly UserManager<AppUser> _userManager;
         private readonly ICacheProvider _cacheProvider;
+        private readonly ICatalogRepository _catalogRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CacheService"/> class.
@@ -26,12 +28,14 @@ namespace CodeSparkNET.Services
         public CacheService(
             ILogger<CacheService> logger,
             UserManager<AppUser> userManager,
-            ICacheProvider cacheProvider
+            ICacheProvider cacheProvider,
+            ICatalogRepository catalogRepository
             )
         {
             _logger = logger;
             _userManager = userManager;
             _cacheProvider = cacheProvider;
+            _catalogRepository = catalogRepository;
         }
 
         /// <summary>
@@ -121,6 +125,55 @@ namespace CodeSparkNET.Services
         public async Task ClearCachedUserAsync(string email)
         {
             await _cacheProvider.ClearCache(email);
+        }
+
+        public async Task CacheCatalogsAsync()
+        {
+            try
+            {
+                var key = $"catalog-names";
+                var catalogs = await _catalogRepository.GetCatalogsAsync();
+
+                var options = new DistributedCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(24)
+                };
+
+                await _cacheProvider.SetCache(key, catalogs, options);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error saving catalogs name in cache");
+            }
+        }
+
+        public async Task<List<Catalog>> GetCachedCatalogsAsync()
+        {
+            try
+            {
+                var key = $"catalog-names";
+                var cachedCatalogs = await _cacheProvider.GetFromCache<List<Catalog>>(key);
+
+                if (cachedCatalogs != null)
+                {
+                    return cachedCatalogs;
+                }
+                else
+                {
+                    var catalogs = await _catalogRepository.GetCatalogsAsync();
+
+                    if (catalogs != null)
+                    {
+                        return catalogs;
+                    }
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting catalog from cache");
+                return null;
+            }
         }
     }
 }

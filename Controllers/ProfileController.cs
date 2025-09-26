@@ -14,19 +14,19 @@ namespace CodeSparkNET.Controllers
         private readonly ILogger<ProfileController> _logger;
         private readonly IProfileService _profileService;
         private readonly IAccountService _accountService;
-        // private readonly ICacheService _cacheService;
+        private readonly ICacheService _cacheService;
 
         public ProfileController(
             ILogger<ProfileController> logger,
             IProfileService profileService,
-            IAccountService accountService
-            // ICacheService cacheService
+            IAccountService accountService,
+             ICacheService cacheService
             )
         {
             _logger = logger;
             _profileService = profileService;
             _accountService = accountService;
-            // _cacheService = cacheService;
+            _cacheService = cacheService;
         }
 
         /// <summary>
@@ -40,10 +40,9 @@ namespace CodeSparkNET.Controllers
             {
                 if (!ModelState.IsValid) return View();
 
-                // var user = await _cacheService.GetCachedUserAsync(User.FindFirstValue(ClaimTypes.Email));
-                var user = await _accountService.GetUserAsync(User);
+                var user = await _cacheService.GetCachedUserAsync(User.FindFirstValue(ClaimTypes.Email));
 
-                var roles = await _accountService.GetRolesAsync(user);
+                var roles = await _accountService.GetRolesAsync(user); //TODO
                 var translated = roles.ToRussianList();
 
                 var userCourses = await _profileService.GetAllUserCoursesAsync(user);
@@ -101,7 +100,7 @@ namespace CodeSparkNET.Controllers
                     });
                 }
 
-                var user = await _accountService.GetUserAsync(User);
+                var user = await _cacheService.GetCachedUserAsync(User.FindFirstValue(ClaimTypes.Email));
 
                 if (await _accountService.UserWithEmailExistsAsync(user.Email))
                     return Json(new { success = false,message = "Ошибка обновления профиля", desc = "Пользователь с такой почтой уже существует." });
@@ -163,7 +162,7 @@ namespace CodeSparkNET.Controllers
 
                     return BadRequest(new { success = false, errors = modelErrors });
                 }
-                var user = await _accountService.GetUserAsync(User);
+                var user = await _cacheService.GetCachedUserAsync(User.FindFirstValue(ClaimTypes.Email));
 
                 await _profileService.SendEmailConfirmationLinkAsync(user.Email);
                 return Json(new { success = true, message = "Проверьте вашу почту." });
@@ -225,7 +224,7 @@ namespace CodeSparkNET.Controllers
                     });
                 }
 
-                var user = await _accountService.GetUserAsync(User);
+                var user = await _cacheService.GetCachedUserAsync(User.FindFirstValue(ClaimTypes.Email));
                 var result = await _profileService.ChangePasswordAsync(user.Email, model);
 
                 if (result.Succeeded)

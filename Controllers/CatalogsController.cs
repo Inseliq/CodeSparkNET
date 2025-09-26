@@ -1,7 +1,7 @@
 using CodeSparkNET.Dtos.Catalog;
 using CodeSparkNET.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.RegularExpressions;
+using System.Security.Claims;
 
 namespace CodeSparkNET.Controllers
 {
@@ -10,14 +10,17 @@ namespace CodeSparkNET.Controllers
         private readonly ILogger<CatalogsController> _logger;
         private readonly ICatalogService _catalogService;
         private readonly IAccountService _accountService;
+        private readonly ICacheService _cacheService;
         public CatalogsController(
             ILogger<CatalogsController> logger, 
             ICatalogService catalogService,
-            IAccountService accountService)
+            IAccountService accountService,
+            ICacheService cacheService)
         {
             _logger = logger;
             _catalogService = catalogService;
             _accountService = accountService;
+            _cacheService = cacheService;
         }
 
         public async Task<IActionResult> Catalogs()
@@ -64,7 +67,7 @@ namespace CodeSparkNET.Controllers
             try
             {
                 var catalog = await _catalogService.GetCatalogProductDetailsAsync(catalogSlug, productSlug);
-                var user = await _accountService.GetUserAsync(User);
+                var user = await _cacheService.GetCachedUserAsync(User.FindFirstValue(ClaimTypes.Email));
                 var model = new CatalogProductDetailsDto
                 {
                     Name = catalog?.Name,
@@ -92,7 +95,7 @@ namespace CodeSparkNET.Controllers
         {
             try
             {
-                var user = await _accountService.GetUserAsync(User);
+                var user = await _cacheService.GetCachedUserAsync(User.FindFirstValue(ClaimTypes.Email));
                 var result = await _accountService.AddCourseToUserAsync(user, productSlug);
                 if (result)
                 {

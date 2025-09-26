@@ -80,7 +80,7 @@ namespace CodeSparkNET.Repositories
                 .AsNoTracking()
                 .Where(c => c.Slug == slug && c.IsPublished)
                 .Include(c => c.Modules)
-                .ThenInclude(c => c.Lessons)
+                    .ThenInclude(c => c.Lessons)
                 .FirstOrDefaultAsync();
         }
 

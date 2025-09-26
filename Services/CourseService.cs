@@ -1,7 +1,6 @@
 ﻿using CodeSparkNET.Dtos.Course;
 using CodeSparkNET.Interfaces.Repositories;
 using CodeSparkNET.Interfaces.Services;
-using Microsoft.AspNetCore.Mvc;
 
 namespace CodeSparkNET.Services
 {

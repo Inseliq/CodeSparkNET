@@ -1,5 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Главная страница";
+    ViewData["App"] = "CodeSpark";
 }
 
 @section Styles {
@@ -131,7 +132,6 @@
 
 @section Scripts {
     <script defer asp-append-version="true">
-        // Scroll animations
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
@@ -149,7 +149,6 @@
             observer.observe(el);
         });
 
-        // Parallax effect for shapes
         document.addEventListener('mousemove', (e) => {
             const shapes = document.querySelectorAll('.shape');
             const x = e.clientX / window.innerWidth;

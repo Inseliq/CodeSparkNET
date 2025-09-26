@@ -1,6 +1,9 @@
 ﻿@model CodeSparkNET.Dtos.Catalog.CatalogProductDetailsDto
 
 @{
+    ViewData["Title"] = "Продукт";
+    ViewData["App"] = "CodeSpark";
+
     var parentCatalogSlug = ViewContext.RouteData.Values["catalogSlug"] as string;
     var firstImage = Model?.Images?.FirstOrDefault(i => i?.ImageData?.Length > 0);
 

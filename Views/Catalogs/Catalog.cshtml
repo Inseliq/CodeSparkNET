@@ -1,6 +1,7 @@
 @model CodeSparkNET.Dtos.Catalog.CatalogDto
 @{
   ViewData["Title"] = "Каталог";
+  ViewData["App"] = "CodeSpark";
 }
 @section Styles {
   <link rel="stylesheet" href="~/css/style/WebApp.CodeSpark/_layout.header.css" asp-append-version="true">
@@ -18,7 +19,7 @@
 
 </aside>
 
-<div class="__container catalog">
+<div class="__container catalog" id="CatalogSectionOn">
   <h1>@Model?.Name</h1>
 
   @if (Model?.Products == null || !Model.Products.Any())

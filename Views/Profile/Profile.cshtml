@@ -1,14 +1,18 @@
 @using Microsoft.AspNetCore.Identity
+@using System.Collections
 @model CodeSparkNET.Dtos.Profile.ProfileDto
 @inject UserManager<AppUser> UserManager
 @{
-    var user = UserManager.GetUserAsync(User).Result;
-}
-@{
     ViewData["Title"] = "Личный кабинет";
+    ViewData["App"] = "CodeSpark";
+
+    var user = await UserManager.GetUserAsync(User);
 }
 @section Styles {
     <link rel="stylesheet" href="~/css/style/profile.css">
+}
+@section Meta {
+
 }
 
 <div logo-banner hover>
@@ -25,14 +29,23 @@
                 <h2>Личные данные</h2>
             </div>
             <div class="block body">
-                <h3 hover el="user-name" title="Имя пользователя">@ViewBag.UserName</h3>
-                <button class="edit" data-function="edit-username" data-style="link" hover>
-                    Изменить
-                </button>
+                <h3 hover el="user-name" title="Имя пользователя">@Model.PersonalProfileDto.UserName</h3>
+                @if (UserManager.IsEmailConfirmedAsync(user).Result is false)
+                {
+                    <button class="edit" disabled data-style="link" hover
+                        title="Для изменения имени необходимо подтвердить почту.">
+                        Изменить
+                    </button>
+                }
+                else
+                {
+                    <button class="edit" data-function="edit-username" data-style="link" hover>
+                        Изменить
+                    </button>
+                }
             </div>
             <div class="block body">
-                @* <h3>@ViewBag.Role</h3> *@
-                <h3 hover el="role" title="Роль">Пользователь</h3>
+                <h3 hover el="role" title="Роль">@((string?)Model.PersonalProfileDto.Roles ?? "—")</h3>
             </div>
             <div class="block body">
                 <h3 hover el="p-time" title="Время до окончания подписки">$prime-time</h3>
@@ -58,25 +71,35 @@
             {
                 <div class="block body n_confirm">
                     <div class="left" hover>
-                        <h3 title="Подтвердите адрес электронной почты">@ViewBag.Email</h3>
+                        <h3 title="Подтвердите адрес электронной почты">@Model.PersonalProfileDto.Email</h3>
                         <span>Ваш Email не подтвержден!</span>
                     </div>
-                    <button data-function="confirmEmailBtn" class="btn right" data-style="link" hover>Подтвердить</button>
+                    <button data-function="send-confirmation-email" class="btn right" data-style="link" hover
+                        data-time="">Подтвердить</button>
                 </div>
             }
             else
             {
                 <div class="block body confirm">
                     <div class="left" hover>
-                        <h3 title="Электронная почта">@ViewBag.Email</h3>
-                        <span>Email добавлен: $data-confirm-email</span>
+                        <h3 title="Электронная почта">@Model.PersonalProfileDto.</h3>
+                        <span>Email добавлен: @Model.PersonalProfileDto.EmailAddAt</span>
+                        <span>@Model.PersonalProfileDto.EmailConfirmedAt</span>
+                        <span>@Model.PersonalProfileDto.EmailChangedAt</span>
                     </div>
                     <button data-function="editEmailBtn" class="btn right" data-style="link" hover>Изменить</button>
                 </div>
             }
             <div class="block body">
-                <h3 hover el="password" title="Ваш пароль">Пароль добавлен: $data-edit-password</h3>
-                <button class="edit" data-function="editPasswordBtn" hover data-style="link">Изменить</button>
+                <h3 hover el="password" title="Ваш пароль">Пароль добавлен: <span>$data-edit-password</span></h3>
+                @if (UserManager.IsEmailConfirmedAsync(user).Result is false)
+                {
+                    <button class="edit pass" disabled hover data-style="link" title="Для изменения пароля необходимо подтвердить почту.">Изменить</button>
+                }
+                else
+                {
+                    <button class="edit pass" data-function="editPasswordBtn" hover data-style="link">Изменить</button>
+                }
             </div>
             <div class="block body">
                 <h3 hover el="2FA" title="Двуфакторная аутентификация. 2FA">Двуфакторная аутентификация</h3>
@@ -117,6 +140,12 @@
         <div class="content">
             <div class="left">
                 <h2>$Защита данных</h2>
+                @foreach (var course in Model.PersonalProfileDto.AllUserCourses)
+                {
+                    <div>
+                        <span>@course.Name | @(course.IsCompleted ? "Пройден" : "Не пройден")</span>
+                    </div>
+                }
                 <span>$desc</span>
             </div>
             <div class="right">
@@ -124,158 +153,148 @@
             </div>
         </div>
     </div>
-
-
-    <div class="js-window hidden" js-window-send-confirmation-email>
-        <div class="description" hover>
-            <h2>Проверьте вашу почту</h2>
-            <a hover data-style="hyper-button"><span>Продолжить</span></a>
-        </div>
-    </div>
-    <div class="js-window hidden" js-window-update-profile>
-        <div class="description" hover>
-            <h2></h2>
-            <a hover data-style="hyper-button" id="continueBtn"><span>Продолжить</span></a>
-        </div>
-    </div>
-    <div class="js-window hidden" js-window-change-password>
-        <div class="description" hover>
-            <h2></h2>
-            <a hover data-style="hyper-button" id="continueBtn"><span>Продолжить</span></a>
-        </div>
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const confirmEmailBtn = document.getElementById('confirmEmailBtn');
-            const updateProfileForm = document.getElementById('updateProfileForm');
-            const changePasswordForm = document.getElementById('changePasswordForm');
-            confirmEmailBtn.addEventListener('click', async (event) => {
-                event.preventDefault();
-
-                showSendEmailResultModal();
-
-                try {
-                    const response = await fetch('@Url.Action("SendEmailConfirmation", "Profile")', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        }
-                    });
-                } catch (error) {
-                    console.error('Произошла ошибка:', error);
-                }
-            });
-
-            updateProfileForm.addEventListener('submit', async (event) => {
-                event.preventDefault();
-
-                if (!jQuery(updateProfileForm).valid())
-                    return;
-
-                const formData = new FormData(updateProfileForm);
-                const tokenInput = updateProfileForm.querySelector('input[name="__RequestVerificationToken"]');
-                const antiForgeryToken = tokenInput ? tokenInput.value : null;
-
-                const headers = {};
-                if (antiForgeryToken) headers['RequestVerificationToken'] = antiForgeryToken;
-
-                try {
-                    const response = await fetch(updateProfileForm.action || window.location.pathname, {
-                        method: 'POST',
-                        headers: headers,
-                        body: formData
-                    });
-
-                    const result = await response.json();
-                    if (result.success) {
-                        showUpdateProfileResultModal(true);
-                    } else if (result.errors) {
-                        showUpdateProfileResultModal(false);
-                    }
-                } catch (error) {
-                    console.error('Произошла ошибка:', error);
-                }
-            });
-
-            changePasswordForm.addEventListener('submit', async (event) => {
-                event.preventDefault();
-
-                if (!jQuery(changePasswordForm).valid())
-                    return;
-
-                const formData = new FormData(changePasswordForm);
-                const tokenInput = changePasswordForm.querySelector('input[name="__RequestVerificationToken"]');
-                const antiForgeryToken = tokenInput ? tokenInput.value : null;
-
-                const headers = {};
-                if (antiForgeryToken) headers['RequestVerificationToken'] = antiForgeryToken;
-
-                try {
-                    const response = await fetch(changePasswordForm.action || window.location.pathname, {
-                        method: 'POST',
-                        headers: headers,
-                        body: formData
-                    });
-
-                    const result = await response.json();
-                    if (result.success) {
-                        showChangePasswordResultModal(true);
-                    } else if (result.errors) {
-                        showChangePasswordResultModal(false);
-                    }
-                } catch (error) {
-                    console.error('Произошла ошибка:', error);
-                }
-            });
-
-            function showSendEmailResultModal() {
-                const modalWindow = document.querySelector('[js-window-send-confirmation-email]');
-
-                if (!modalWindow) {
-                    return;
-                }
-
-                modalWindow.classList.replace('hidden', 'visible');
-            }
-
-            function showUpdateProfileResultModal(success) {
-                const modalWindow = document.querySelector('[js-window-update-profile]');
-                const resultTitle = modalWindow.querySelector('h2');
-
-                if (!modalWindow) {
-                    return;
-                }
-
-                if (success) {
-                    resultTitle.textContent = "Профиль успешно обновлен.";
-                    modalWindow.classList.replace('hidden', 'visible');
-                } else {
-                    resultTitle.textContent = "Произошла ошибка при обновлении профиля.";
-                    modalWindow.classList.replace('hidden', 'visible');
-                }
-            }
-        });
-
-        function showChangePasswordResultModal(success) {
-            const modalWindow = document.querySelector('[js-window-change-password]');
-            const resultTitle = modalWindow.querySelector('h2');
-
-            if (!modalWindow) {
-                return;
-            }
-
-            if (success) {
-                resultTitle.textContent = "Пароль успешно изменен.";
-                modalWindow.classList.replace('hidden', 'visible');
-            } else {
-                resultTitle.textContent = "Произошла ошибка при изменении пароля.";
-                modalWindow.classList.replace('hidden', 'visible');
-            }
-        }
-    </script>
-
 </div>
+
+@if (UserManager.IsEmailConfirmedAsync(user).Result is false)
+{ }
+else
+{
+    <div class="js-window hidden" js-window-update-profile-name>
+        <div class="description" hover step="1">
+            <div class="progress-bar"></div>
+            <div class="main-content step1">
+                <h3 class="headline">Вы можете изменить своё имя на сайте. Переименование доступно не чаще 1 раза в 7
+                    дней.
+                </h3>
+                <span class="desc">Имя должно содержать от 3 до 24 символов. Можно использовать латинские буквы и
+                    цифры.</span>
+                <div class="button-block">
+                    <button hover data-style="hyper-button"
+                        data-function="next-step-JS-UPName"><span>Продолжить</span></button>
+                    <button class="backlink" hover data-style="link-new" type="button"
+                        data-function="close-js-window-update-profile-name">Отмена</button>
+                </div>
+            </div>
+            <div class="main-content step2">
+                <form asp-action="UpdateProfile" asp-controller="Profile" method="post" id="UpdateProfileUserName">
+                    @Html.AntiForgeryToken()
+                    <span asp-validation-summary="ModelOnly" class="error_message_form"></span>
+                    <div class="input_block" hover>
+                        <span asp-validation-for="UpdatePersonalProfileDto.UserName"></span>
+                        <label asp-for="UpdatePersonalProfileDto.UserName">Имя пользователя</label>
+                        <input asp-for="UpdatePersonalProfileDto.UserName" id="names" type="text" required hover
+                               placeholder="@Model.PersonalProfileDto.UserName">
+                        <input asp-for="UpdatePersonalProfileDto.Email" id="email" type="email" value="@Model.PersonalProfileDto.Email"
+                            required hover hidden="!">
+                    </div>
+                    <div class="block-button">
+                        <button type="submit" data-style="hyper-button" hover>Сохранить</button>
+                        <button class="backlink" hover data-style="link-new" type="button"
+                            data-function="close-js-window-update-profile-name">Отмена</button>
+                    </div>
+
+                </form>
+            </div>
+            <div class="main-content step3">
+
+            </div>
+        </div>
+    </div>
+    <script src="~/js/windows/js-window.changeName.js" defer></script>
+
+    <div class="js-window hidden" js-window-update-profile-email>
+        <div class="description" hover step="1">
+            <div class="progress-bar"></div>
+            <div class="main-content step1">
+                <h3 class="headline">Вы можете изменить свой Email на сайте. Изменение доступно не чаще 1 раза в 7
+                    дней.
+                </h3>
+                <span class="desc">Email должен быть рабочим. Так как необходимо в дальнейшем будет его
+                    подтверждение.</span>
+                <div class="button-block">
+                    <button hover data-style="hyper-button"
+                        data-function="next-step-JS-Email"><span>Продолжить</span></button>
+                    <button class="backlink" hover data-style="link-new" type="button"
+                        data-function="close-js-window-update-profile-email">Отмена</button>
+                </div>
+            </div>
+            <div class="main-content step2">
+                <form asp-action="UpdateProfile" asp-controller="Profile" method="post" id="UpdateProfileEmail">
+                    @Html.AntiForgeryToken()
+                    <span asp-validation-summary="ModelOnly" class="error_message_form"></span>
+                    <div class="input_block" hover>
+                        <span asp-validation-for="UpdatePersonalProfileDto.Email"></span>
+                        <label asp-for="UpdatePersonalProfileDto.Email">Новый Email</label>
+                        <input asp-for="UpdatePersonalProfileDto.UserName" id="names" type="text" required hover
+                               value="@Model.PersonalProfileDto.UserName" hidden="!">
+                        <input asp-for="UpdatePersonalProfileDto.Email" id="email" type="email" placeholder="@Model.PersonalProfileDto.Email"
+                            required hover>
+                    </div>
+                    <div class="block-button">
+                        <button type="submit" data-style="hyper-button" hover>Сохранить</button>
+                        <button class="backlink" hover data-style="link-new" type="button"
+                            data-function="close-js-window-update-profile-email">Отмена</button>
+                    </div>
+
+                </form>
+            </div>
+            <div class="main-content step3">
+
+            </div>
+        </div>
+    </div>
+    <script src="~/js/windows/js-window.changeEmail.js" defer></script>
+
+    <div class="js-window hidden" js-window-update-profile-password>
+        <div class="description" hover step="1">
+            <div class="progress-bar"></div>
+            <div class="main-content step1">
+                <h3 class="headline">Вы можете изменить свой Пароль. Изменение доступно не чаще 1 раза в 30 минут.
+                </h3>
+                <span class="desc">Пароль должен содержать строчные и прописные латинские буквы, хотябы одну цыфру. Пароль должен быть не меньше 8 символов.</span>
+                <div class="button-block">
+                    <button hover data-style="hyper-button"
+                        data-function="next-step-JS-Password"><span>Продолжить</span></button>
+                    <button class="backlink" hover data-style="link-new" type="button"
+                        data-function="close-js-window-update-profile-password">Отмена</button>
+                </div>
+            </div>
+            <div class="main-content step2">
+                <form asp-action="ChangePassword" asp-controller="Profile" method="post" class="block body"
+                    id="changePasswordForm">
+                    @Html.AntiForgeryToken()
+                    <span asp-validation-summary="ModelOnly" class="error_message_form"></span>
+                    <div class="input_block">
+                        <div class="password-block">
+                            <span asp-validation-for="ChangePasswordDto.CurrentPassword"></span>
+                            <label asp-for="ChangePasswordDto.CurrentPassword">Текущий пароль</label>
+                            <input asp-for="ChangePasswordDto.CurrentPassword" id="names" type="password" required hover>
+                        </div>
+                        <div class="password-block">
+                            <span asp-validation-for="ChangePasswordDto.NewPassword" class="not_margin_top"></span>
+                            <label asp-for="ChangePasswordDto.NewPassword">Новый пароль</label>
+                            <input asp-for="ChangePasswordDto.NewPassword" id="email" type="password" required hover>
+                        </div>
+                        <div class="password-block">
+                            <span asp-validation-for="ChangePasswordDto.ConfirmPassword" class="not_margin_top"></span>
+                            <label asp-for="ChangePasswordDto.ConfirmPassword">Подтверждение пароля</label>
+                            <input asp-for="ChangePasswordDto.ConfirmPassword" id="email" type="password" required hover>
+                        </div>
+                    </div>
+                    <div class="block-button">
+                        <button type="submit" data-style="hyper-button" hover>Сохранить</button>
+                        <button class="backlink" hover data-style="link-new" type="button"
+                            data-function="close-js-window-update-profile-password">Отмена</button>
+                    </div>
+                </form>
+            </div>
+            <div class="main-content step3">
+
+            </div>
+        </div>
+    </div>
+    <script src="~/js/windows/js-window.changePassword.js" defer></script>
+}
 
 @section Scripts {
     @{

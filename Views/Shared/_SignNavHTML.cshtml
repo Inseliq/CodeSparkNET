@@ -1,38 +1,21 @@
 @using Microsoft.AspNetCore.Identity
 @inject UserManager<AppUser> UserManager
 @{
-    var userName = User.Identity.Name;
-    var user = UserManager.GetUserAsync(User).Result;
+    var userName = User?.Identity?.Name;
+    var user = await UserManager.GetUserAsync(User);
 }
 
-@if (!User?.Identity?.IsAuthenticated == true)
+@if (User?.Identity?.IsAuthenticated is false)
 {
-    <a help data-style="on-hover" hover>Поддержка</a>
+    <a help data-style="on-hover" hover href="@Url.Action("AllSupport", "Help")">Поддержка</a>
     <a login-async href="@Url.Action("Login", "Account")" data-style="on-hover" hover>Войти</a>
     <a register-async href="@Url.Action("Register", "Account")" data-style="on-hover" hover>Регистрация</a>
-    <script defer>
-        document.addEventListener('DOMContentLoaded', () => {
-            const hasLoginContainer = document.querySelector('.__container.login') !== null;
-
-            const loginLink = document.querySelector('a[login-async]');
-            const registerLink = document.querySelector('a[register-async]');
-
-            if (!loginLink || !registerLink) return;
-
-            if (hasLoginContainer) {
-                loginLink.style.display = 'none';
-                registerLink.style.display = 'flex';
-            } else {
-                loginLink.style.display = 'flex';
-                registerLink.style.display = 'none';
-            }
-        });
-    </script>
+    <script src="~/../js/style/async.replace-btn.js" defer></script>
 }
 else
 {
-    <button js-window-profile-btn class="prime none active" hover>@userName</button>
-    <div class="js-window visible" js-window-profile>
+    <button js-window-profile-btn class="prime none" hover>@userName</button>
+    <div class="js-window hidden" js-window-profile>
         <div class="description" hover>
             <div class="block header">
                 <h2>Мой профиль:</h2>
@@ -52,16 +35,17 @@ else
                         <button prime-time err-w hover>
                             $time
                         </button>
-                        <a help data-style="on-hover" hover>
+                        <a help data-style="on-hover" hover href="@Url.Action("AllSupport", "Help")">
                             Поддержка
                         </a>
                     </div>
                     <div class="footer-block">
                         <a el="stocks" hover>Акции и предложения</a>
-                        @if (UserManager.IsEmailConfirmedAsync(user).Result is false)
+                        @if (await UserManager.IsEmailConfirmedAsync(user) is false)
                         {
                             <div class="n_confirm">
-                                <a href="@Url.Action("Profile", "Profile")" hover title="Подтвердите ваш Email в профиле" data-function="send-confirmation-email">Ваш Email не подтвержден!</a>
+                                <button hover title="Подтвердите ваш Email в профиле"
+                                    data-function="send-confirmation-email">Ваш Email не подтвержден!</button>
                             </div>
                         }
                         else
@@ -87,4 +71,12 @@ else
             </div>
         </div>
     </div>
+    <div class="js-window hidden" js-window-send-confirmation-email>
+        <div class="description" hover>
+            <h2>Проверьте вашу почту</h2>
+            <a hover data-style="hyper-button" data-function="close-sendConfirmationEmail-btn"><span>Продолжить</span></a>
+        </div>
+    </div>
+    <script src="~/../js/windows/js-window.profile-w.js" defer></script>
+    <script src="~/../js/windows/js-window.send-email.js" defer></script>
 }

@@ -1,8 +1,11 @@
 using System.Globalization;
+using System.Threading.RateLimiting;
 using CodeSparkNET.Data;
-using CodeSparkNET.Interfaces;
+using CodeSparkNET.Interfaces.Repositories;
+using CodeSparkNET.Interfaces.Services;
 using CodeSparkNET.Models;
 using CodeSparkNET.Redis;
+using CodeSparkNET.Repositories;
 using CodeSparkNET.Services;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
@@ -51,7 +54,6 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
     .AddDefaultTokenProviders();
 
 //Sessions
-builder.Services.AddDistributedMemoryCache(); // in prod — Redis or SQL
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);
@@ -70,27 +72,64 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
     options.Secure = CookieSecurePolicy.Always;
 });
 
-//Add Redis
+//builder.Services.AddDistributedMemoryCache(); // in debug
+
+
 builder.Services.AddStackExchangeRedisCache(options =>
 {
-    options.Configuration = builder.Configuration.GetConnectionString("Redis");
-    options.InstanceName = "CodeSparkNET:";
+    options.Configuration = builder.Configuration["Redis:ConnectionString"];
 });
 
-//Add scoped
+//Add Services
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
-builder.Services.AddScoped<IProfileService, AccountService>();
+builder.Services.AddScoped<IProfileService, ProfileService>();
+builder.Services.AddScoped<ICatalogService, CatalogService>();
+builder.Services.AddScoped<ICourseService, CourseService>();
+
+//Add repositories
+builder.Services.AddScoped<ICatalogRepository, CatalogRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+
+//Add Redis Service
 builder.Services.AddScoped<ICacheService, CacheService>();
 
 //Add Redis singleton
 builder.Services.AddSingleton<ICacheProvider, CacheProvider>();
 
 //Add keys
-var redis = ConnectionMultiplexer.Connect(builder.Configuration["REDIS_CONNECTION"]);
-builder.Services.AddDataProtection()
+var redis = ConnectionMultiplexer.Connect(builder.Configuration["Redis:ConnectionString"]);
+    builder.Services.AddDataProtection()
     .PersistKeysToStackExchangeRedis(redis, "DataProtection-Keys")
     .SetApplicationName("CodeSparkNET");
+
+//Custom Rate Limitter
+builder.Services.AddRateLimiter(options =>
+{
+    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: context.Connection.RemoteIpAddress.ToString(),
+            factory: partion => new FixedWindowRateLimiterOptions
+            {
+                AutoReplenishment = true,
+                PermitLimit = 40000,
+                Window = TimeSpan.FromMinutes(1),
+                QueueLimit = 0,
+            }));
+
+    options.OnRejected = (context, _) =>
+    {
+        if (context.HttpContext.Response.HasStarted)
+            return new ValueTask();
+
+        context.HttpContext.Response.StatusCode = 429;
+
+        context.HttpContext.Response.Redirect("/Error/StatusCode/429");
+
+        return new ValueTask();
+    };
+});
 
 var app = builder.Build();
 
@@ -107,23 +146,22 @@ var requestLocalizationOptions = new RequestLocalizationOptions
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
+    app.UseExceptionHandler("/Error");
+    app.UseHsts();
 }
-app.UseStaticFiles();
+
 app.UseRouting();
+
+app.UseStatusCodePagesWithReExecute("/Error/StatusCode/{0}");
+
+app.UseRateLimiter(); // Enable rate limitting middleware
+
+app.UseStaticFiles();
 
 app.UseCookiePolicy();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
-// миграции при старте
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.Migrate();
-}
-
 
 app.MapStaticAssets();
 

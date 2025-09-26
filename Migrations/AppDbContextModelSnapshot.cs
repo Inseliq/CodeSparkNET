@@ -96,117 +96,17 @@ namespace CodeSparkNET.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("CodeSparkNET.Models.CourseAssignment", b =>
+            modelBuilder.Entity("CodeSparkNET.Models.Catalog", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool?>("IsVisible")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("ModuleId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ModuleId");
-
-                    b.ToTable("CourseAssignment");
-                });
-
-            modelBuilder.Entity("CodeSparkNET.Models.CourseDetail", b =>
-                {
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("FullDescription")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ProductId");
-
-                    b.ToTable("CourseDetails");
-                });
-
-            modelBuilder.Entity("CodeSparkNET.Models.Lesson", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("ModuleId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Order")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ModuleId");
-
-                    b.ToTable("Lessons");
-                });
-
-            modelBuilder.Entity("CodeSparkNET.Models.Module", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CourseId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Order")
-                        .HasColumnType("int")
-                        .HasColumnName("SortOrder");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CourseId");
-
-                    b.ToTable("Modules");
-                });
-
-            modelBuilder.Entity("CodeSparkNET.Models.Product", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsPublished")
-                        .HasColumnType("bit");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("ProductType")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ShortDescription")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -214,20 +114,204 @@ namespace CodeSparkNET.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("ThumbnailUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("Slug")
                         .IsUnique();
 
+                    b.ToTable("Catalogs");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "d1f9c6d2-4b4b-4b8e-9f2a-aaaa00000001",
+                            IsVisible = true,
+                            Name = "It-Cubic",
+                            Slug = "it-cubic"
+                        },
+                        new
+                        {
+                            Id = "d1f9c6d2-4b4b-4b8e-9f2a-aaaa00000002",
+                            IsVisible = true,
+                            Name = "Code Spark",
+                            Slug = "code-spark"
+                        },
+                        new
+                        {
+                            Id = "d1f9c6d2-4b4b-4b8e-9f2a-aaaa00000003",
+                            IsVisible = true,
+                            Name = "Монтажка",
+                            Slug = "montazhka"
+                        });
+                });
+
+            modelBuilder.Entity("CodeSparkNET.Models.Product", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("CatalogId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Currency")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(8)
+                        .HasColumnType("nvarchar(8)");
+
+                    b.Property<string>("FullDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("InStock")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsPublished")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("ShortDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Price");
+
+                    b.HasIndex("CatalogId", "Slug")
+                        .IsUnique();
+
                     b.ToTable("Products");
+
+                    b.HasDiscriminator().HasValue("Product");
+
+                    b.UseTphMappingStrategy();
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "e1f9c6d2-5b4b-4b8e-9f2a-bbbb00000001",
+                            CatalogId = "d1f9c6d2-4b4b-4b8e-9f2a-aaaa00000001",
+                            Currency = "RUB",
+                            InStock = 0,
+                            IsPublished = true,
+                            Name = "Курс C# с нуля",
+                            Price = 1999.99m,
+                            Slug = "c#-for-beginners"
+                        },
+                        new
+                        {
+                            Id = "e1f9c6d2-5b4b-4b8e-9f2a-bbbb00000002",
+                            CatalogId = "d1f9c6d2-4b4b-4b8e-9f2a-aaaa00000002",
+                            Currency = "RUB",
+                            InStock = 0,
+                            IsPublished = true,
+                            Name = "Трехуровневая заготовка ASP.NET MVC",
+                            Price = 1299.00m,
+                            Slug = "3-tier-web-template"
+                        },
+                        new
+                        {
+                            Id = "e1f9c6d2-5b4b-4b8e-9f2a-bbbb00000003",
+                            CatalogId = "d1f9c6d2-4b4b-4b8e-9f2a-aaaa00000003",
+                            Currency = "RUB",
+                            InStock = 0,
+                            IsPublished = true,
+                            Name = "Дипломгая работа",
+                            Price = 30000m,
+                            Slug = "diploma-work"
+                        });
+                });
+
+            modelBuilder.Entity("CodeSparkNET.Models.ProductImage", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<byte[]>("ImageData")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<bool>("IsMain")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProductId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductImages");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "f1f9c6d2-6b4b-4b8e-9f2a-cccc00000001",
+                            IsMain = true,
+                            Name = "itcubic-main.jpg",
+                            ProductId = "e1f9c6d2-5b4b-4b8e-9f2a-bbbb00000001"
+                        },
+                        new
+                        {
+                            Id = "f1f9c6d2-6b4b-4b8e-9f2a-cccc00000002",
+                            IsMain = true,
+                            Name = "codespark-main.jpg",
+                            ProductId = "e1f9c6d2-5b4b-4b8e-9f2a-bbbb00000002"
+                        },
+                        new
+                        {
+                            Id = "f1f9c6d2-6b4b-4b8e-9f2a-cccc00000003",
+                            IsMain = true,
+                            Name = "montazhka-main.jpg",
+                            ProductId = "e1f9c6d2-5b4b-4b8e-9f2a-bbbb00000003"
+                        });
+                });
+
+            modelBuilder.Entity("CodeSparkNET.Models.UserCourse", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("CourseId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("CourseSlug")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("EnrolledAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsCompleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserCourse");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -386,48 +470,72 @@ namespace CodeSparkNET.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("CodeSparkNET.Models.CourseAssignment", b =>
+            modelBuilder.Entity("CodeSparkNET.Models.Course", b =>
                 {
-                    b.HasOne("CodeSparkNET.Models.Module", "Module")
-                        .WithMany("Assignments")
-                        .HasForeignKey("ModuleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasBaseType("CodeSparkNET.Models.Product");
 
-                    b.Navigation("Module");
+                    b.Property<string>("Level")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasDiscriminator().HasValue("Course");
                 });
 
-            modelBuilder.Entity("CodeSparkNET.Models.CourseDetail", b =>
+            modelBuilder.Entity("CodeSparkNET.Models.Diploma", b =>
+                {
+                    b.HasBaseType("CodeSparkNET.Models.Product");
+
+                    b.Property<string>("Issuer")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasDiscriminator().HasValue("Diploma");
+                });
+
+            modelBuilder.Entity("CodeSparkNET.Models.Template", b =>
+                {
+                    b.HasBaseType("CodeSparkNET.Models.Product");
+
+                    b.HasDiscriminator().HasValue("Template");
+                });
+
+            modelBuilder.Entity("CodeSparkNET.Models.Product", b =>
+                {
+                    b.HasOne("CodeSparkNET.Models.Catalog", "Catalog")
+                        .WithMany("Products")
+                        .HasForeignKey("CatalogId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Catalog");
+                });
+
+            modelBuilder.Entity("CodeSparkNET.Models.ProductImage", b =>
                 {
                     b.HasOne("CodeSparkNET.Models.Product", "Product")
-                        .WithOne()
-                        .HasForeignKey("CodeSparkNET.Models.CourseDetail", "ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .WithMany("ProductImages")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("CodeSparkNET.Models.Lesson", b =>
+            modelBuilder.Entity("CodeSparkNET.Models.UserCourse", b =>
                 {
-                    b.HasOne("CodeSparkNET.Models.Module", "Module")
-                        .WithMany("Lessons")
-                        .HasForeignKey("ModuleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("CodeSparkNET.Models.Course", "Course")
+                        .WithMany("UserCourses")
+                        .HasForeignKey("CourseId");
 
-                    b.Navigation("Module");
-                });
-
-            modelBuilder.Entity("CodeSparkNET.Models.Module", b =>
-                {
-                    b.HasOne("CodeSparkNET.Models.CourseDetail", "Course")
-                        .WithMany("Modules")
-                        .HasForeignKey("CourseId")
+                    b.HasOne("CodeSparkNET.Models.AppUser", "User")
+                        .WithMany("UserCourses")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Course");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -481,16 +589,24 @@ namespace CodeSparkNET.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("CodeSparkNET.Models.CourseDetail", b =>
+            modelBuilder.Entity("CodeSparkNET.Models.AppUser", b =>
                 {
-                    b.Navigation("Modules");
+                    b.Navigation("UserCourses");
                 });
 
-            modelBuilder.Entity("CodeSparkNET.Models.Module", b =>
+            modelBuilder.Entity("CodeSparkNET.Models.Catalog", b =>
                 {
-                    b.Navigation("Assignments");
+                    b.Navigation("Products");
+                });
 
-                    b.Navigation("Lessons");
+            modelBuilder.Entity("CodeSparkNET.Models.Product", b =>
+                {
+                    b.Navigation("ProductImages");
+                });
+
+            modelBuilder.Entity("CodeSparkNET.Models.Course", b =>
+                {
+                    b.Navigation("UserCourses");
                 });
 #pragma warning restore 612, 618
         }

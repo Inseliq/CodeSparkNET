@@ -1,0 +1,57 @@
+@model CodeSparkNET.Dtos.Catalog.CatalogDto
+@{
+  ViewData["Title"] = "Каталог";
+  ViewData["App"] = "CodeSpark";
+}
+@section Styles {
+  <link rel="stylesheet" href="~/css/style/WebApp.CodeSpark/_layout.header.css" asp-append-version="true">
+  <link rel="stylesheet" href="~/css/style/WebApp.CodeSpark/_layout.footer.css" asp-append-version="true">
+  <link rel="stylesheet" href="~/css/style/catalog.css" asp-append-version="true">
+}
+@section Meta {
+  <meta name="CodeSpark" content="_Navbar.header">
+  <meta name="CodeSpark" content="_Navbar.footer">
+}
+
+<partial name="_WebApp_Navbar_header" />
+
+<aside class="filter controller">
+
+</aside>
+
+<div class="__container catalog" id="CatalogSectionOn">
+  <h1>@Model?.Name</h1>
+
+  @if (Model?.Products == null || !Model.Products.Any())
+  {
+    <p>Товары не найдены.</p>
+  }
+  else
+  {
+    <div class="grid">
+      @foreach (var p in Model.Products)
+      {
+        <article class="card">
+          <a asp-controller="Catalogs" asp-action="ProductDetails" asp-route-catalogSlug="@Model.Slug"
+            asp-route-productSlug="@p.Slug">
+
+              @if (p.ProductImages?.Any() == true && !string.IsNullOrEmpty(p.ProductImages.First().Url))
+              {
+                  <img src="@p.ProductImages.First().Url" alt="@p.Name" />
+              }
+              else
+              {
+                  <img src="~/images/no-image.png" alt="no image" />
+              }
+
+            <h3>@p.Name</h3>
+            <p>@p.ShortDescription</p>
+            <div>@p.Price @p.Currency</div>
+          </a>
+        </article>
+      }
+    </div>
+  }
+</div>
+
+<partial name="_WebApp_Navbar_footer" />

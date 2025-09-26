@@ -7,25 +7,21 @@ document.addEventListener("DOMContentLoaded", () => {
     modal.innerHTML = `
       <div class="description" hover>
         <button close-btn-err_w hover>×</button>
-        <span class="loader"></span>
+        <span class="loader spinner4"></span>
         <span class="desc">Данный модуль находится в разработке и будет доступен позже.</span>
       </div>
     `;
 
     document.body.appendChild(modal);
 
-    // отключаем скролл
     document.body.style.overflow = "hidden";
 
-    // плавное появление
     setTimeout(() => modal.classList.add("visible"), 100);
 
-    // закрытие
     function closeModal() {
       modal.classList.remove("visible");
       modal.classList.add("hidden");
 
-      // возвращаем скролл
       document.body.style.overflow = "";
 
       setTimeout(() => modal.remove(), 300);

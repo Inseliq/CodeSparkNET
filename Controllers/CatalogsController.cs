@@ -1,6 +1,7 @@
 using CodeSparkNET.Dtos.Catalog;
 using CodeSparkNET.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.RegularExpressions;
 
 namespace CodeSparkNET.Controllers
 {
@@ -83,7 +84,7 @@ namespace CodeSparkNET.Controllers
             try
             {
                 var catalog = await _catalogService.GetCatalogProductDetailsAsync(catalogSlug, productSlug);
-
+                var user = await _accountService.GetUserAsync(User);
                 var model = new CatalogProductDetailsDto
                 {
                     Name = catalog?.Name,
@@ -93,6 +94,7 @@ namespace CodeSparkNET.Controllers
                     Currency = catalog?.Currency,
                     InStock = catalog.InStock,
                     Images = catalog?.Images,
+                    IsAlreadyEnrolled = await _accountService.IsCourseAlreadyEnrolled(user, productSlug),
                     ProductType = catalog?.ProductType
                 };
 

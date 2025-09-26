@@ -34,15 +34,15 @@
         <article class="card">
           <a asp-controller="Catalogs" asp-action="ProductDetails" asp-route-catalogSlug="@Model.Slug"
             asp-route-productSlug="@p.Slug">
-            >
-            @if (p.ProductImages?.Any() == true && p.ProductImages.First().ImageData != null)
-            {
-              <img src="data:image/jpeg;base64,@(Convert.ToBase64String(p.ProductImages.First().ImageData))" alt="@p.Name" />
-            }
-            else
-            {
-              <img src="~/images/no-image.png" alt="no image" />
-            }
+
+              @if (p.ProductImages?.Any() == true && !string.IsNullOrEmpty(p.ProductImages.First().Url))
+              {
+                  <img src="@p.ProductImages.First().Url" alt="@p.Name" />
+              }
+              else
+              {
+                  <img src="~/images/no-image.png" alt="no image" />
+              }
 
             <h3>@p.Name</h3>
             <p>@p.ShortDescription</p>

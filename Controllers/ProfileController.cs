@@ -43,8 +43,8 @@ namespace CodeSparkNET.Controllers
                 // var user = await _cacheService.GetCachedUserAsync(User.FindFirstValue(ClaimTypes.Email));
                 var user = await _accountService.GetUserAsync(User);
 
-                var roles = _accountService.GetRolesAsync(user);
-                var translated = roles.ToRussianListAsync();
+                var roles = await _accountService.GetRolesAsync(user);
+                var translated = roles.ToRussianList();
 
                 var userCourses = await _profileService.GetAllUserCoursesAsync(user);
 
@@ -52,7 +52,7 @@ namespace CodeSparkNET.Controllers
                 {
                     UserName = user.UserName,
                     Email = user.Email,
-                    Roles = await roles.ToRussianStringAsync(),
+                    Roles = roles.ToRussianString(),
                     EmailAddAt = user.EmailAddAt,
                     EmailConfirmedAt = user.EmailConfirmedAt,
                     EmailChangedAt = user.EmailChangedAt,

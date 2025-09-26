@@ -1,6 +1,8 @@
 ﻿using CodeSparkNET.Data;
+using CodeSparkNET.Dtos.Course;
 using CodeSparkNET.Interfaces.Repositories;
 using CodeSparkNET.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace CodeSparkNET.Repositories
@@ -56,6 +58,38 @@ namespace CodeSparkNET.Repositories
             _context.UserCourses.Add(userCourse);
             await _context.SaveChangesAsync();
             return true;
+        }
+
+        public async Task<bool> IsCourseAlreadyEnrolledAsync(AppUser user, string courseSlug)
+        {
+            // Find the course by slug
+            var course = await _context.Products
+                .OfType<Course>()
+                .FirstOrDefaultAsync(c => c.Slug == courseSlug);
+            if (course == null)
+                return false;
+
+            // Check if the user is already enrolled in the course
+            return await _context.UserCourses
+                .AnyAsync(uc => uc.UserId == user.Id && uc.CourseSlug == courseSlug);
+        }
+
+        public async Task<Course> GetCourseBySlugAsync(string slug)
+        {
+            return await _context.Courses
+                .AsNoTracking()
+                .Where(c => c.Slug == slug && c.IsPublished)
+                .Include(c => c.Modules)
+                    .ThenInclude(c => c.Lessons)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<Lesson> GetLessonBySlugAsync(string courseSlug, string lessonSlug)
+        {
+            return await _context.Lessons
+                .AsNoTracking()
+                .Where(l => l.Slug == lessonSlug && l.Module.Course.Slug == courseSlug && l.Module.Course.IsPublished)
+                .FirstOrDefaultAsync();
         }
     }
 }

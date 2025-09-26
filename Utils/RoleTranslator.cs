@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace CodeSparkNET.Utils
+﻿namespace CodeSparkNET.Utils
 {
     public static class RoleTranslatorExtensions
     {
@@ -27,6 +22,11 @@ namespace CodeSparkNET.Utils
         public static List<string> ToRussian(this List<string>? roles)
             => (roles ?? new List<string>()).Select(r => r.ToRussian()).ToList();
 
+        public static string ToRussianString(this IList<string> rolesTask, string separator = ", ")
+        {
+            var roles = (rolesTask ?? (IList<string>)Array.Empty<string>());
+            return string.Join(separator, (roles ?? Enumerable.Empty<string>()).Select(r => r.ToRussian()));
+        }
 
         public static async Task<List<string>> ToRussianListAsync(this Task<IList<string>> rolesTask)
         {

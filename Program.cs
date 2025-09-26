@@ -88,6 +88,7 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IProfileService, ProfileService>();
 builder.Services.AddScoped<ICatalogService, CatalogService>();
+builder.Services.AddScoped<ICourseService, CourseService>();
 
 //Add repositories
 builder.Services.AddScoped<ICatalogRepository, CatalogRepository>();

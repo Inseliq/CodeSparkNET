@@ -284,7 +284,20 @@ namespace CodeSparkNET.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error while adding course {CourseSlug} to user {UserName}", courseSlug, user.UserName);
-                throw;
+                return false;
+            }
+        }
+    
+        public async Task<bool> IsCourseAlreadyEnrolled(AppUser user, string courseSlug)
+        {
+            try
+            {
+                return await _productRepository.IsCourseAlreadyEnrolledAsync(user, courseSlug);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while adding course {CourseSlug} to user {UserName}", courseSlug, user.UserName);
+                return false;
             }
         }
     }

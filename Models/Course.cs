@@ -12,6 +12,8 @@
         /// </summary>
         public string? Level { get; set; }
 
+        public List<CourseModule> Modules { get; set; } = new();
+
         /// <summary>
         /// Navigation property representing users enrolled in this course.
         /// </summary>

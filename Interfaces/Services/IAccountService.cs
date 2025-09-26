@@ -23,5 +23,6 @@ namespace CodeSparkNET.Interfaces.Services
         Task<bool> UserWithEmailExistsAsync(string email);
         Task<bool> UserWithUserNameExistsAsync(string userName);
         Task<bool> AddCourseToUserAsync(AppUser user, string courseSlug);
+        Task<bool> IsCourseAlreadyEnrolled(AppUser user, string courseSlug);
     }
 }

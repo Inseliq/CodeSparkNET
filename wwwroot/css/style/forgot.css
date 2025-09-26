@@ -404,3 +404,31 @@ html[cross-browser] {
     }
   }
 }
+
+@media screen and (max-width: 592px) {
+  html[cross-browser] {
+    & body {
+      & main[data-layout="main"][role="main"] {
+        & .__container.forgot_password {
+          & .form_controller {
+            .description {
+              padding: 0px 25px 0px 15px;
+
+              &::before {
+                width: 100%;
+              }
+            }
+
+            &::after {
+              width: calc(20px + 90% + 20px);
+            }
+
+            .input_block {
+              margin-top: 10px;
+            }
+          }
+        }
+      }
+    }
+  }
+}

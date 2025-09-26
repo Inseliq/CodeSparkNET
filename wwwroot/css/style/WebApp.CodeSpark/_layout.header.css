@@ -94,7 +94,6 @@ html[cross-browser] {
             background: var(--palette-main);
             z-index: 12;
             top: calc(50% + 34px);
-            left: 0;
             transform: translateY(-50%);
             transition: .4s ease;
             border-top-right-radius: 8px;
@@ -114,6 +113,7 @@ html[cross-browser] {
             &::-webkit-scrollbar {
               width: 2px;
             }
+
             &::-webkit-scrollbar-button {
               display: none !important;
             }
@@ -160,30 +160,48 @@ html[cross-browser] {
               border: none;
               display: inline-flex;
               padding: 10px 10px 10px 10px;
-              /* Animate: padding: 10px 10px 10px 40px; */
               font-weight: 400;
+              background: transparent;
               color: var(--palette-text-inv);
               font-size: var(--fs-h2);
               transition: .3s ease;
               position: relative;
+              --async-color-border: var(--palette-text-inv);
 
               &::after {
                 content: "";
                 position: absolute;
-                bottom: 0;
+                top: 50%;
+                transform: translateY(-50%);
                 left: 0;
                 width: 100%;
                 height: 100%;
-                border-style: solid;
-                border-color: var(--palette-text-inv);
-                border-top: 2px;
-                border-bottom: 2px;
+                border-top: var(--async-color-border) 2px solid;
+                border-bottom: var(--async-color-border) 2px solid;
+                border-right: 0px;
+                border-left: 0px;
               }
 
               &::before {
-                content: "";
+                content: "›";
                 position: absolute;
+                right: 15px;
+                top: 50%;
+                transform: translateY(-50%) rotate(90deg);
+                font-size: var(--fs-h2);
+                transition: .3s ease;
+              }
 
+              &:nth-child(5) {
+                &::after {
+                  border-top: var(--async-color-border) 0px solid;
+                }
+              }
+
+              &:nth-child(7) {
+                &::after {
+                  border-top: var(--async-color-border) 0px solid;
+                }
               }
             }
 
@@ -191,28 +209,66 @@ html[cross-browser] {
               font-weight: 700;
               color: var(--palette-acient);
               padding: 10px 10px 10px 40px;
-              background: #f5f5f5d8;
+              background: #fff;
+
+              &:nth-child(5) {
+                &::after {
+                  border-top: var(--async-color-border) 0px solid;
+                }
+              }
+
+              &:nth-child(7) {
+                &::after {
+                  border-top: var(--async-color-border) 0px solid;
+                }
+              }
             }
 
             .local-btn:focus {
+              --async-color-border: var(--palette-acient);
               font-weight: 700;
               color: var(--palette-acient);
               padding: 10px 10px 10px 40px;
-              background: #f5f5f5d8;
+              background: #fff;
 
-              &::after {
-                background: var(--palette-acient);
+              &::before {
+                transform: translateY(-50%) rotate(-90deg);
+              }
+
+              &:nth-child(5) {
+                &::after {
+                  border-top: var(--async-color-border) 2px solid;
+                }
+              }
+
+              &:nth-child(7) {
+                &::after {
+                  border-top: var(--async-color-border) 2px solid;
+                }
               }
             }
 
             .local-btn.active {
+              --async-color-border: var(--palette-acient);
               font-weight: 700;
               color: var(--palette-acient);
               padding: 10px 10px 10px 40px;
-              background: #f5f5f5d8;
+              background: #fff;
 
-              &::after {
-                background: var(--palette-acient);
+              &::before {
+                transform: translateY(-50%) rotate(-90deg);
+              }
+
+              &:nth-child(5) {
+                &::after {
+                  border-top: var(--async-color-border) 2px solid;
+                }
+              }
+
+              &:nth-child(7) {
+                &::after {
+                  border-top: var(--async-color-border) 2px solid;
+                }
               }
             }
 
@@ -220,6 +276,7 @@ html[cross-browser] {
               display: flex;
               flex-direction: column;
               width: 100%;
+              transition: .4s ease;
 
               a {
                 background: none;
@@ -259,6 +316,20 @@ html[cross-browser] {
               }
             }
 
+            .menu.hidden {
+              opacity: 0;
+              visibility: hidden;
+              pointer-events: none;
+              height: 0;
+            }
+
+            .menu.visible {
+              opacity: 1;
+              visibility: visible;
+              pointer-events: auto;
+              height: fit-content;
+            }
+
             [js-menu-socials] {
               a[el="icon-youtube"] {
                 &::after {
@@ -282,13 +353,25 @@ html[cross-browser] {
             }
           }
 
+          aside[menu-mobile].hidden {
+            left: -101%;
+            opacity: 0;
+            visibility: hidden;
+          }
+
+          aside[menu-mobile].visible {
+            left: 0;
+            opacity: 1;
+            visibility: visible;
+          }
+
           .overview {
             position: fixed;
             z-index: 10;
             inset: 0;
             background: #0a0a0a;
-            opacity: 0.45;
-            visibility: visible;
+            opacity: 0;
+            visibility: hidden;
             /* JS-TO: opacity: 0.4; */
           }
 

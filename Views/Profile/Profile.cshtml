@@ -3,10 +3,10 @@
 @model CodeSparkNET.Dtos.Profile.ProfileDto
 @inject UserManager<AppUser> UserManager
 @{
-    var user = await UserManager.GetUserAsync(User);
-}
-@{
     ViewData["Title"] = "Личный кабинет";
+    ViewData["App"] = "CodeSpark";
+
+    var user = await UserManager.GetUserAsync(User);
 }
 @section Styles {
     <link rel="stylesheet" href="~/css/style/profile.css">
@@ -94,7 +94,7 @@
                 <h3 hover el="password" title="Ваш пароль">Пароль добавлен: <span>$data-edit-password</span></h3>
                 @if (UserManager.IsEmailConfirmedAsync(user).Result is false)
                 {
-                    <button class="edit pass" disabled hover data-style="link">Изменить</button>
+                    <button class="edit pass" disabled hover data-style="link" title="Для изменения пароля необходимо подтвердить почту.">Изменить</button>
                 }
                 else
                 {

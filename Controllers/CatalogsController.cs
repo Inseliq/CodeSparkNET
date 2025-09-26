@@ -12,7 +12,7 @@ namespace CodeSparkNET.Controllers
         private readonly IAccountService _accountService;
         private readonly ICacheService _cacheService;
         public CatalogsController(
-            ILogger<CatalogsController> logger, 
+            ILogger<CatalogsController> logger,
             ICatalogService catalogService,
             IAccountService accountService,
             ICacheService cacheService)
@@ -21,6 +21,26 @@ namespace CodeSparkNET.Controllers
             _catalogService = catalogService;
             _accountService = accountService;
             _cacheService = cacheService;
+        }
+
+        public IActionResult MiniApp()
+        {
+            return View();
+        }
+
+        [HttpGet("/media/{fileName}")]
+        public IActionResult GetVideo(string fileName)
+        {
+            var path = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "wwwroot/assets/video",
+                fileName
+            );
+
+            if (!System.IO.File.Exists(path))
+                return NotFound();
+
+            return PhysicalFile(path, "video/mp4", enableRangeProcessing: true);
         }
 
         public async Task<IActionResult> Catalogs()
@@ -99,11 +119,11 @@ namespace CodeSparkNET.Controllers
                 var result = await _accountService.AddCourseToUserAsync(user, productSlug);
                 if (result)
                 {
-                    return Json(new {success = true, message = "Курс успешно добавлен."});
+                    return Json(new {success = true, message = "пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ."});
                 }
                 else
                 {
-                    return Json(new {success = false, message = "Курс уже добавлен."});
+                    return Json(new {success = false, message = "пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ."});
                 }
             }
             catch (Exception ex)

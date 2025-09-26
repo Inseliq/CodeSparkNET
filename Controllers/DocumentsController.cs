@@ -13,6 +13,11 @@ namespace CodeSparkNET.Controllers
         //     _logger = logger;
         // }
 
+        public IActionResult Documentations()
+        {
+            return View();
+        }
+
         public IActionResult PrivacyPolicy()
         {
             return View();

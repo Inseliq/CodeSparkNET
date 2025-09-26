@@ -1,10 +1,11 @@
-using System.Security.Claims;
 using CodeSparkNET.Dtos.Account;
 using CodeSparkNET.Dtos.Profile;
+using CodeSparkNET.Interfaces.Services;
+using CodeSparkNET.Models;
+using CodeSparkNET.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using CodeSparkNET.Utils;
-using CodeSparkNET.Interfaces.Services;
+using System.Security.Claims;
 
 namespace CodeSparkNET.Controllers
 {
@@ -40,10 +41,21 @@ namespace CodeSparkNET.Controllers
             {
                 if (!ModelState.IsValid) return View();
 
-                var user = await _cacheService.GetCachedUserAsync(User.FindFirstValue(ClaimTypes.Email));
+                var cachedDto = await _cacheService.GetCachedUserAsync(User.FindFirstValue(ClaimTypes.Email));
 
-                var roles = await _accountService.GetRolesAsync(user); //TODO
-                var translated = roles.ToRussianList();
+                AppUser user = null;
+
+                if (cachedDto != null)
+                {
+                    user = new AppUser
+                    {
+                        Id = cachedDto.Id,
+                        Email = cachedDto.Email,
+                        UserName = cachedDto.UserName
+                    };
+                }
+
+                var translated = cachedDto.Roles.ToRussianList();
 
                 var userCourses = await _profileService.GetAllUserCoursesAsync(user);
 
@@ -51,7 +63,7 @@ namespace CodeSparkNET.Controllers
                 {
                     UserName = user.UserName,
                     Email = user.Email,
-                    Roles = roles.ToRussianString(),
+                    Roles = translated.ToRussianString(),
                     EmailAddAt = user.EmailAddAt,
                     EmailConfirmedAt = user.EmailConfirmedAt,
                     EmailChangedAt = user.EmailChangedAt,
@@ -100,8 +112,19 @@ namespace CodeSparkNET.Controllers
                     });
                 }
 
-                var user = await _cacheService.GetCachedUserAsync(User.FindFirstValue(ClaimTypes.Email));
+                var cachedDto = await _cacheService.GetCachedUserAsync(User.FindFirstValue(ClaimTypes.Email));
 
+                AppUser user = null;
+
+                if (cachedDto != null)
+                {
+                    user = new AppUser
+                    {
+                        Id = cachedDto.Id,
+                        Email = cachedDto.Email,
+                        UserName = cachedDto.UserName
+                    };
+                }
                 if (await _accountService.UserWithEmailExistsAsync(user.Email))
                     return Json(new { success = false,message = "Ошибка обновления профиля", desc = "Пользователь с такой почтой уже существует." });
 
@@ -113,6 +136,8 @@ namespace CodeSparkNET.Controllers
                 if (result.Succeeded)
                 {
                     await _profileService.UpdateUserClaims(user);
+                    await _cacheService.ClearCachedUserAsync(user.Email);
+                    await _cacheService.CacheUserAsync(user.Email);
 
                     return Json(new
                     {

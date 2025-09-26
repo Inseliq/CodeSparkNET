@@ -22,7 +22,7 @@ namespace CodeSparkNET.Interfaces.Services
         Task<AppUser> GetUserAsync(ClaimsPrincipal user);
         Task<bool> UserWithEmailExistsAsync(string email);
         Task<bool> UserWithUserNameExistsAsync(string userName);
-        Task<bool> AddCourseToUserAsync(AppUser user, string courseSlug);
-        Task<bool> IsCourseAlreadyEnrolled(AppUser user, string courseSlug);
+        Task<bool> AddCourseToUserAsync(string userId, string courseSlug);
+        Task<bool> IsCourseAlreadyEnrolled(string userId, string courseSlug);
     }
 }

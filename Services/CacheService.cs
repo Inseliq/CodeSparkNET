@@ -1,3 +1,4 @@
+using CodeSparkNET.Dtos.Catalog;
 using CodeSparkNET.Dtos.User;
 using CodeSparkNET.Interfaces.Repositories;
 using CodeSparkNET.Interfaces.Services;
@@ -38,6 +39,11 @@ namespace CodeSparkNET.Services
             _catalogRepository = catalogRepository;
         }
 
+        private string GetCatalogKey(string slug) => $"catalog:{slug}:full";
+        private string GetCourseKey(string slug) => $"course:{slug}:full";
+
+        #region User cache oprations
+
         /// <summary>
         /// Caches a user in Redis by their email.
         /// </summary>
@@ -51,16 +57,14 @@ namespace CodeSparkNET.Services
                 var user = await _userManager.FindByEmailAsync(email);
                 if (user == null) return;
 
-                // get roles if you need role in DTO
                 var roles = await _userManager.GetRolesAsync(user);
-                var role = roles?.FirstOrDefault();
 
-                // map to safe DTO — do NOT include PasswordHash or security stamps
                 var model = new UserDto
                 {
+                    Id = user.Id,
                     Email = user.Email,
                     UserName = user.UserName,
-                    Role = role
+                    Roles = roles ?? new List<string>()
                 };
 
                 var options = new DistributedCacheEntryOptions
@@ -83,7 +87,7 @@ namespace CodeSparkNET.Services
         /// </summary>
         /// <param name="email">The email of the user to retrieve.</param>
         /// <returns>The <see cref="AppUser"/> instance if found, otherwise null.</returns>
-        public async Task<AppUser> GetCachedUserAsync(string email)
+        public async Task<UserDto> GetCachedUserAsync(string email)
         {
             if (string.IsNullOrWhiteSpace(email)) return null;
 
@@ -92,20 +96,29 @@ namespace CodeSparkNET.Services
                 var cachedUser = await _cacheProvider.GetFromCache<UserDto>(email);
                 if (cachedUser != null)
                 {
-                    return new AppUser
+                    return new UserDto
                     {
+                        Id = cachedUser.Id,
                         Email = cachedUser.Email,
-                        UserName = cachedUser.UserName
+                        UserName = cachedUser.UserName,
+                        Roles = cachedUser.Roles
                     };
                 }
                 else
                 {
                     // If not in cache, get from database and cache it
                     var user = await _userManager.FindByEmailAsync(email);
+                    var roles = await _userManager.GetRolesAsync(user);
                     if (user != null)
                     {
                         await CacheUserAsync(email);
-                        return user;
+                        return new UserDto
+                        {
+                            Id = user.Id,
+                            Email = user.Email,
+                            UserName = user.UserName,
+                            Roles = roles
+                        };
                     }
 
                     return null;
@@ -126,8 +139,10 @@ namespace CodeSparkNET.Services
         {
             await _cacheProvider.ClearCache(email);
         }
+        #endregion
 
-        public async Task CacheCatalogsAsync()
+        #region Catalog cache oprations
+        public async Task CacheCatalogNamesAsync()
         {
             try
             {
@@ -147,7 +162,7 @@ namespace CodeSparkNET.Services
             }
         }
 
-        public async Task<List<Catalog>> GetCachedCatalogsAsync()
+        public async Task<List<CatalogNamesDto>> GetCachedCatalogNamesAsync()
         {
             try
             {
@@ -156,7 +171,12 @@ namespace CodeSparkNET.Services
 
                 if (cachedCatalogs != null)
                 {
-                    return cachedCatalogs;
+                    return cachedCatalogs
+                            .Select(c => new CatalogNamesDto
+                            {
+                                Name = c.Name,
+                                Slug = c.Slug
+                            }).ToList();
                 }
                 else
                 {
@@ -164,7 +184,12 @@ namespace CodeSparkNET.Services
 
                     if (catalogs != null)
                     {
-                        return catalogs;
+                        return catalogs
+                                .Select(c => new CatalogNamesDto
+                                {
+                                    Name = c.Name,
+                                    Slug = c.Slug
+                                }).ToList();
                     }
                     return null;
                 }
@@ -175,5 +200,89 @@ namespace CodeSparkNET.Services
                 return null;
             }
         }
+
+        public async Task ClearCachedNamesAsync()
+        {
+            try
+            {
+                var key = $"catalog-names";
+
+                await _cacheProvider.ClearCache(key);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting catalog names from cache");
+            }
+        }
+
+        public async Task CacheCatalogBySlugAsync(string slug)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(slug))
+                    return;
+
+                var key = GetCatalogKey(slug);
+
+                var catalog = await _catalogRepository.GetCatalogBySlugAsync(slug);
+
+                var options = new DistributedCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1)
+                };
+
+                await _cacheProvider.SetCache(key, catalog, options);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error setting catalog in cache");
+            }
+        }
+
+        public async Task<Catalog> GetCachedCatalogBySlugAsync(string slug)
+        {
+            try
+            {
+                var key = GetCatalogKey(slug);
+
+                var cachedCatalog = await _cacheProvider.GetFromCache<Catalog>(key);
+
+                if (cachedCatalog != null)
+                {
+                    return cachedCatalog;
+                }
+                else
+                {
+                    var catalog = await _catalogRepository.GetCatalogBySlugAsync(slug);
+
+                    if (catalog != null)
+                    {
+                        await CacheCatalogBySlugAsync(slug);
+                        return catalog;
+                    }
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error get catalog from cache");
+                return null;
+            }
+        }
+
+        public async Task ClearCachedCatalogBySlugAsync(string slug)
+        {
+            try
+            {
+                var key = GetCatalogKey(slug);
+
+                await _cacheProvider.ClearCache(key);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting catalog fom cache");
+            }
+        }
+        #endregion
     }
 }

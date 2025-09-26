@@ -1,5 +1,7 @@
 using CodeSparkNET.Dtos.Catalog;
 using CodeSparkNET.Interfaces.Services;
+using CodeSparkNET.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -62,7 +64,7 @@ namespace CodeSparkNET.Controllers
         {
             try
             {
-                var catalog = await _catalogService.GetCatalogBySlugAsync(catalogSlug);
+                var catalog = await _cacheService.GetCachedCatalogBySlugAsync(catalogSlug);
 
                 var model = new CatalogDto
                 {
@@ -81,13 +83,15 @@ namespace CodeSparkNET.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet("/Catalog/ProductDetails/{catalogSlug}/{productSlug}")]
         public async Task<IActionResult> ProductDetails(string catalogSlug, string productSlug)
         {
             try
             {
                 var catalog = await _catalogService.GetCatalogProductDetailsAsync(catalogSlug, productSlug);
-                var user = await _cacheService.GetCachedUserAsync(User.FindFirstValue(ClaimTypes.Email));
+                var cachedUserDto = await _cacheService.GetCachedUserAsync(User.FindFirstValue(ClaimTypes.Email));
+
                 var model = new CatalogProductDetailsDto
                 {
                     Name = catalog?.Name,
@@ -97,7 +101,7 @@ namespace CodeSparkNET.Controllers
                     Currency = catalog?.Currency,
                     InStock = catalog.InStock,
                     Images = catalog?.Images,
-                    IsAlreadyEnrolled = await _accountService.IsCourseAlreadyEnrolled(user, productSlug),
+                    IsAlreadyEnrolled = await _accountService.IsCourseAlreadyEnrolled(cachedUserDto.Id, productSlug),
                     ProductType = catalog?.ProductType
                 };
 
@@ -115,8 +119,9 @@ namespace CodeSparkNET.Controllers
         {
             try
             {
-                var user = await _cacheService.GetCachedUserAsync(User.FindFirstValue(ClaimTypes.Email));
-                var result = await _accountService.AddCourseToUserAsync(user, productSlug);
+                var cachedUserDto = await _cacheService.GetCachedUserAsync(User.FindFirstValue(ClaimTypes.Email));
+
+                var result = await _accountService.AddCourseToUserAsync(cachedUserDto.Id, productSlug);
                 if (result)
                 {
                     return Json(new {success = true, message = "���� ������� ��������."});

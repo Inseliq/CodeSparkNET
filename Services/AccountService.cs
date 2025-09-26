@@ -275,28 +275,28 @@ namespace CodeSparkNET.Services
             }
         }
     
-        public async Task<bool> AddCourseToUserAsync(AppUser user, string courseSlug)
+        public async Task<bool> AddCourseToUserAsync(string userId, string courseSlug)
         {
             try
             {
-                return await _productRepository.AddCourseToUserAsync(user, courseSlug);
+                return await _productRepository.AddCourseToUserAsync(userId, courseSlug);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error while adding course {CourseSlug} to user {UserName}", courseSlug, user.UserName);
+                _logger.LogError(ex, "Error while adding course {CourseSlug} to user {UserName}", courseSlug, userId);
                 return false;
             }
         }
     
-        public async Task<bool> IsCourseAlreadyEnrolled(AppUser user, string courseSlug)
+        public async Task<bool> IsCourseAlreadyEnrolled(string userId, string courseSlug)
         {
             try
             {
-                return await _productRepository.IsCourseAlreadyEnrolledAsync(user, courseSlug);
+                return await _productRepository.IsCourseAlreadyEnrolledAsync(userId, courseSlug);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error while adding course {CourseSlug} to user {UserName}", courseSlug, user.UserName);
+                _logger.LogError(ex, "Error while adding course {CourseSlug} to user {UserName}", courseSlug, userId);
                 return false;
             }
         }

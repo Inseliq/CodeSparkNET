@@ -31,7 +31,7 @@ namespace CodeSparkNET.Repositories
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<bool> AddCourseToUserAsync(AppUser user, string courseSlug)
+        public async Task<bool> AddCourseToUserAsync(string userId, string courseSlug)
         {
             // Find the course by slug
             var course = await _context.Products
@@ -42,14 +42,14 @@ namespace CodeSparkNET.Repositories
 
             // Check if the user is already enrolled in the course
             var alreadyEnrolled = await _context.UserCourses
-                .AnyAsync(uc => uc.UserId == user.Id && uc.CourseSlug == courseSlug);
+                .AnyAsync(uc => uc.UserId == userId && uc.CourseSlug == courseSlug);
             if (alreadyEnrolled)
                 return false;
 
             // Create new enrollment
             var userCourse = new UserCourse
             {
-                UserId = user.Id,
+                UserId = userId,
                 CourseSlug = courseSlug,
                 Course = course,
                 IsCompleted = false,
@@ -60,7 +60,7 @@ namespace CodeSparkNET.Repositories
             return true;
         }
 
-        public async Task<bool> IsCourseAlreadyEnrolledAsync(AppUser user, string courseSlug)
+        public async Task<bool> IsCourseAlreadyEnrolledAsync(string userId, string courseSlug)
         {
             // Find the course by slug
             var course = await _context.Products
@@ -71,7 +71,7 @@ namespace CodeSparkNET.Repositories
 
             // Check if the user is already enrolled in the course
             return await _context.UserCourses
-                .AnyAsync(uc => uc.UserId == user.Id && uc.CourseSlug == courseSlug);
+                .AnyAsync(uc => uc.UserId == userId && uc.CourseSlug == courseSlug);
         }
 
         public async Task<Course> GetCourseBySlugAsync(string slug)

@@ -10,6 +10,7 @@ namespace CodeSparkNET.Services
     public class CatalogService : ICatalogService
     {
         private readonly ICatalogRepository _catalogRepository;
+        private readonly ICacheService _cacheService;
         private readonly ILogger<CatalogService> _logger;
 
         /// <summary>
@@ -17,10 +18,14 @@ namespace CodeSparkNET.Services
         /// </summary>
         /// <param name="catalogRepository">Repository for accessing catalog data.</param>
         /// <param name="logger">Logger for logging errors and information.</param>
-        public CatalogService(ICatalogRepository catalogRepository, ILogger<CatalogService> logger)
+        public CatalogService(
+            ICatalogRepository catalogRepository, 
+            ICacheService cacheService,
+            ILogger<CatalogService> logger)
         {
             _catalogRepository = catalogRepository;
             _logger = logger;
+            _cacheService = cacheService;
         }
 
         /// <summary>
@@ -31,17 +36,12 @@ namespace CodeSparkNET.Services
         {
             try
             {
-                var catalogs = await _catalogRepository.GetCatalogsAsync();
+                var catalogs = await _cacheService.GetCachedCatalogNamesAsync();
 
                 if (catalogs == null)
                     return new List<CatalogNamesDto>();
 
-                return catalogs
-                        .Select(c => new CatalogNamesDto
-                        {
-                            Name = c.Name,
-                            Slug = c.Slug
-                        }).ToList();
+                return catalogs;
             }
             catch (Exception ex)
             {

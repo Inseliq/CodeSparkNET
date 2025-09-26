@@ -6,8 +6,8 @@ namespace CodeSparkNET.Interfaces.Repositories
     {
         Task<IEnumerable<Course>> GetAllUserCoursesAsync(string userId);
         Task<Course> GetUserCourseBySlugAsync(string userId, string courseSlug);
-        Task<bool> AddCourseToUserAsync(AppUser user, string courseSlug);
-        Task<bool> IsCourseAlreadyEnrolledAsync(AppUser user, string courseSlug);
+        Task<bool> AddCourseToUserAsync(string userId, string courseSlug);
+        Task<bool> IsCourseAlreadyEnrolledAsync(string userId, string courseSlug);
         Task<Course> GetCourseBySlugAsync(string slug);
         Task<Lesson> GetLessonBySlugAsync(string courseSlug, string lessonSlug);
     }

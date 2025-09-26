@@ -3,7 +3,7 @@
 @model CodeSparkNET.Dtos.Profile.ProfileDto
 @inject UserManager<AppUser> UserManager
 @{
-    var user = UserManager.GetUserAsync(User).Result;
+    var user = await UserManager.GetUserAsync(User);
 }
 @{
     ViewData["Title"] = "Личный кабинет";

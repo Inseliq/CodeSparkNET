@@ -15,17 +15,14 @@ namespace CodeSparkNET.Controllers
     public class AccountController : Controller
     {
         private readonly IAccountService _accountService;
-        private readonly ICacheService _cacheService;
         private readonly ILogger<AccountController> _logger;
 
         public AccountController(
             IAccountService accountService,
-             ICacheService cacheService,
             ILogger<AccountController> logger
             )
         {
             _accountService = accountService;
-            _cacheService = cacheService;
             _logger = logger;
         }
 
@@ -74,9 +71,6 @@ namespace CodeSparkNET.Controllers
                 }
 
                 _logger.LogInformation("Registered: {Email}", registerDto.Email);
-
-                // Cache the user after successful registration
-                 await _cacheService.CacheUserAsync(registerDto.Email);
 
                 return RedirectToAction("Login", "Account");
             }
@@ -130,9 +124,6 @@ namespace CodeSparkNET.Controllers
                 }
 
                 _logger.LogInformation("Logged in: {Email}", loginDto.Email);
-
-                // Cache the user after successful login
-                await _cacheService.CacheUserAsync(loginDto.Email);
 
                 return RedirectToAction("Index", "Home");
             }

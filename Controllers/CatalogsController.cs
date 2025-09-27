@@ -12,17 +12,15 @@ namespace CodeSparkNET.Controllers
         private readonly ILogger<CatalogsController> _logger;
         private readonly ICatalogService _catalogService;
         private readonly IAccountService _accountService;
-        private readonly ICacheService _cacheService;
         public CatalogsController(
             ILogger<CatalogsController> logger,
             ICatalogService catalogService,
-            IAccountService accountService,
-            ICacheService cacheService)
+            IAccountService accountService
+            )
         {
             _logger = logger;
             _catalogService = catalogService;
             _accountService = accountService;
-            _cacheService = cacheService;
         }
 
         public IActionResult MiniApp()
@@ -64,7 +62,7 @@ namespace CodeSparkNET.Controllers
         {
             try
             {
-                var catalog = await _cacheService.GetCachedCatalogBySlugAsync(catalogSlug);
+                var catalog = await _catalogService.GetCatalogBySlugAsync(catalogSlug);
 
                 var model = new CatalogDto
                 {
@@ -90,7 +88,7 @@ namespace CodeSparkNET.Controllers
             try
             {
                 var catalog = await _catalogService.GetCatalogProductDetailsAsync(catalogSlug, productSlug);
-                var cachedUserDto = await _cacheService.GetCachedUserAsync(User.FindFirstValue(ClaimTypes.Email));
+                var user = await _accountService.GetUserAsync(User);
 
                 var model = new CatalogProductDetailsDto
                 {
@@ -101,7 +99,7 @@ namespace CodeSparkNET.Controllers
                     Currency = catalog?.Currency,
                     InStock = catalog.InStock,
                     Images = catalog?.Images,
-                    IsAlreadyEnrolled = await _accountService.IsCourseAlreadyEnrolled(cachedUserDto.Id, productSlug),
+                    IsAlreadyEnrolled = await _accountService.IsCourseAlreadyEnrolled(user.Id, productSlug),
                     ProductType = catalog?.ProductType
                 };
 
@@ -119,9 +117,9 @@ namespace CodeSparkNET.Controllers
         {
             try
             {
-                var cachedUserDto = await _cacheService.GetCachedUserAsync(User.FindFirstValue(ClaimTypes.Email));
+                var user = await _accountService.GetUserAsync(User);
 
-                var result = await _accountService.AddCourseToUserAsync(cachedUserDto.Id, productSlug);
+                var result = await _accountService.AddCourseToUserAsync(user.Id, productSlug);
                 if (result)
                 {
                     return Json(new {success = true, message = "���� ������� ��������."});

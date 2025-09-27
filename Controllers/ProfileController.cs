@@ -15,19 +15,16 @@ namespace CodeSparkNET.Controllers
         private readonly ILogger<ProfileController> _logger;
         private readonly IProfileService _profileService;
         private readonly IAccountService _accountService;
-        private readonly ICacheService _cacheService;
 
         public ProfileController(
             ILogger<ProfileController> logger,
             IProfileService profileService,
-            IAccountService accountService,
-             ICacheService cacheService
+            IAccountService accountService
             )
         {
             _logger = logger;
             _profileService = profileService;
             _accountService = accountService;
-            _cacheService = cacheService;
         }
 
         /// <summary>
@@ -41,21 +38,11 @@ namespace CodeSparkNET.Controllers
             {
                 if (!ModelState.IsValid) return View();
 
-                var cachedDto = await _cacheService.GetCachedUserAsync(User.FindFirstValue(ClaimTypes.Email));
+                var user = await _accountService.GetUserAsync(User);
 
-                AppUser user = null;
+                var roles = await _accountService.GetRolesAsync(user);
 
-                if (cachedDto != null)
-                {
-                    user = new AppUser
-                    {
-                        Id = cachedDto.Id,
-                        Email = cachedDto.Email,
-                        UserName = cachedDto.UserName
-                    };
-                }
-
-                var translated = cachedDto.Roles.ToRussianList();
+                var translated = roles.ToRussianList();
 
                 var userCourses = await _profileService.GetAllUserCoursesAsync(user);
 
@@ -112,32 +99,20 @@ namespace CodeSparkNET.Controllers
                     });
                 }
 
-                var cachedDto = await _cacheService.GetCachedUserAsync(User.FindFirstValue(ClaimTypes.Email));
+                var user = await _accountService.GetUserAsync(User);
 
-                AppUser user = null;
+                if (user.Email != model.Email && await _accountService.UserWithEmailExistsAsync(model.Email))
+                    return Json(new { success = false, message = "Ошибка обновления профиля", desc = "Пользователь с такой почтой уже существует." });
 
-                if (cachedDto != null)
-                {
-                    user = new AppUser
-                    {
-                        Id = cachedDto.Id,
-                        Email = cachedDto.Email,
-                        UserName = cachedDto.UserName
-                    };
-                }
-                if (await _accountService.UserWithEmailExistsAsync(user.Email))
-                    return Json(new { success = false,message = "Ошибка обновления профиля", desc = "Пользователь с такой почтой уже существует." });
-
-                if (await _accountService.UserWithUserNameExistsAsync(user.UserName))
-                    return Json(new {success = false,message = "Ошибка обновления профиля", desc = "Пользователь с таким именем уже существует."});
+                if (user.UserName != model.UserName && await _accountService.UserWithUserNameExistsAsync(model.UserName))
+                    return Json(new { success = false, message = "Ошибка обновления профиля", desc = "Пользователь с таким именем уже существует." });
 
                 var result = await _profileService.UpdatePersonalProfileAsync(user.Email, model);
 
                 if (result.Succeeded)
                 {
                     await _profileService.UpdateUserClaims(user);
-                    await _cacheService.ClearCachedUserAsync(user.Email);
-                    await _cacheService.CacheUserAsync(user.Email);
+                    await _accountService.RefrashSignInAsync(user);
 
                     return Json(new
                     {
@@ -168,11 +143,10 @@ namespace CodeSparkNET.Controllers
             }
         }
 
-
         /// <summary>
-        /// Send email confirmation link
-        /// </summary>
-        /// <returns>Returns a JSON result indicating the success or failure of the operation.</returns>
+                /// Send email confirmation link
+                /// </summary>
+                /// <returns>Returns a JSON result indicating the success or failure of the operation.</returns>
         [HttpPost]
         public async Task<IActionResult> SendEmailConfirmation()
         {
@@ -187,7 +161,7 @@ namespace CodeSparkNET.Controllers
 
                     return BadRequest(new { success = false, errors = modelErrors });
                 }
-                var user = await _cacheService.GetCachedUserAsync(User.FindFirstValue(ClaimTypes.Email));
+                var user = await _accountService.GetUserAsync(User);
 
                 await _profileService.SendEmailConfirmationLinkAsync(user.Email);
                 return Json(new { success = true, message = "Проверьте вашу почту." });
@@ -249,7 +223,7 @@ namespace CodeSparkNET.Controllers
                     });
                 }
 
-                var user = await _cacheService.GetCachedUserAsync(User.FindFirstValue(ClaimTypes.Email));
+                var user = await _accountService.GetUserAsync(User);
                 var result = await _profileService.ChangePasswordAsync(user.Email, model);
 
                 if (result.Succeeded)

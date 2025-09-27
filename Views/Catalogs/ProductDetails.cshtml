@@ -7,7 +7,7 @@
     var parentCatalogSlug = ViewContext.RouteData.Values["catalogSlug"] as string;
     var firstImage = Model?.Images?.FirstOrDefault();
 
-    var mainImageSrc = !string.IsNullOrEmpty(firstImage?.Image);
+    var mainImageSrc = !string.IsNullOrEmpty(firstImage?.Url);
 }
 
 <section class="product-details __container" aria-labelledby="product-title">
@@ -39,7 +39,7 @@
                 {
                     foreach (var img in Model.Images)
                     {
-                        var src = !string.IsNullOrEmpty(img?.Image);
+                        var src = !string.IsNullOrEmpty(img?.Url);
                         <button type="button"
                                 class="thumb-btn"
                                 data-src="@src"

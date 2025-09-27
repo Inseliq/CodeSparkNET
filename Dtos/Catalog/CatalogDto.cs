@@ -11,6 +11,6 @@ namespace CodeSparkNET.Dtos.Catalog
         public string? Name { get; set; }
         public string? Slug { get; set; }
         public bool? IsVisible { get; set; }
-        public List<Product>? Products { get; set; }
+        public List<CatalogProductsDto>? Products { get; set; }
     }
 }

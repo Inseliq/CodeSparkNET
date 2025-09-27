@@ -59,7 +59,7 @@ namespace CodeSparkNET.Services
         {
             try
             {
-                var catalog = await _catalogRepository.GetCatalogBySlugAsync(catalogSlug);
+                var catalog = await _cacheService.GetCachedCatalogBySlugAsync(catalogSlug);
 
                 if (catalog == null || catalog.Products == null)
                     return new List<CatalogProductsDto>();
@@ -74,8 +74,12 @@ namespace CodeSparkNET.Services
                         Currency = p.Currency,
                         InStock = p.InStock,
                         ProductType = p.ProductType,
-                        Image = p.ProductImages?.FirstOrDefault(img => img.IsMain)?.Url
-                            ?? p.ProductImages?.FirstOrDefault()?.Url
+                        ProductImages = p.ProductImages.Select(pi => new CatalogProductImageDto
+                        {
+                            Name = pi.Name,
+                            IsMain = pi.IsMain,
+                            Url = pi.Url
+                        }).ToList()
                     }).ToList();
             }
             catch (Exception ex)
@@ -95,7 +99,7 @@ namespace CodeSparkNET.Services
         {
             try
             {
-                var catalog = await _catalogRepository.GetCatalogBySlugAsync(catalogSlug);
+                var catalog = await _cacheService.GetCachedCatalogBySlugAsync(catalogSlug);
                 var productDetails = catalog?.Products?.Find(p => p.Slug == productSlug);
 
                 if (productDetails == null)
@@ -114,7 +118,7 @@ namespace CodeSparkNET.Services
                         .Select(img => new CatalogProductImageDto
                         {
                             Name = img.Name,
-                            Image = img.Url,
+                            Url = img.Url,
                             IsMain = img.IsMain
                         }).ToList()
                 };
@@ -135,7 +139,7 @@ namespace CodeSparkNET.Services
         {
             try
             {
-                var catalog = await _catalogRepository.GetCatalogBySlugAsync(catalogSlug);
+                var catalog = await _cacheService.GetCachedCatalogBySlugAsync(catalogSlug);
 
                 if (catalog == null)
                     return new CatalogDto();
@@ -145,7 +149,22 @@ namespace CodeSparkNET.Services
                     Name = catalog.Name,
                     Slug = catalog.Slug,
                     IsVisible = catalog.IsVisible,
-                    Products = catalog.Products
+                    Products = catalog.Products.Select(p => new CatalogProductsDto
+                    {
+                        Name = p.Name,
+                        Slug = p.Slug,
+                        ShortDescription = p.ShortDescription,
+                        Price = p.Price,
+                        Currency = p.Currency,
+                        InStock = p.InStock,
+                        ProductType = p.ProductType,
+                        ProductImages = p.ProductImages.Select(pi => new CatalogProductImageDto
+                        {
+                            Name = pi.Name,
+                            IsMain = pi.IsMain,
+                            Url = pi.Url
+                        }).ToList()
+                    }).ToList()
                 };
             }
             catch (Exception ex)

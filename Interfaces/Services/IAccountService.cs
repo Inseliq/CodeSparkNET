@@ -15,6 +15,7 @@ namespace CodeSparkNET.Interfaces.Services
         Task<IdentityResult> RegisterAsync(RegisterDto dto, string loginLink);
         Task<SignInResult> PasswordSignInAsync(LoginDto dto);
         Task SignOutAsync();
+        Task RefrashSignInAsync(AppUser user);
         Task<IList<string>> GetRolesAsync(AppUser user);
         Task<bool> SendPasswordResetLinkAsync(string email);
         Task<IdentityResult> ResetPasswordAsync(ResetPasswordDto model);

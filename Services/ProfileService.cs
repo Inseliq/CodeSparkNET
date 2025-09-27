@@ -43,6 +43,11 @@ namespace CodeSparkNET.Services
                 user.UserName = model.UserName;
                 user.Email = model.Email;
 
+                if (model.Email != user.Email)
+                {
+                    user.EmailChangedAt = DateTime.Now;
+                }
+
                 return await _userRepository.UpdateUserAsync(user);
             }
             catch (Exception ex)

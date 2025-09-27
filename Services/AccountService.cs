@@ -119,6 +119,18 @@ namespace CodeSparkNET.Services
                 throw;
             }
         }
+        
+        public async Task RefrashSignInAsync(AppUser user)
+        {
+            try
+            {
+                await _userRepository.RefreshSignInAsync(user); 
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error refrashing claims principal");
+            }
+        }
 
         /// <summary>
         /// Returns roles of the user.
@@ -213,6 +225,8 @@ namespace CodeSparkNET.Services
 
                 if (result.Succeeded)
                 {
+                    user.EmailConfirmedAt = DateTime.Now;
+                    await _userRepository.UpdateUserAsync(user);
                     await _userRepository.UpdateSecurityStampAsync(user);
                 }
 

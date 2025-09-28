@@ -76,7 +76,10 @@ namespace CodeSparkNET.Services
                             .Select(c => new CatalogNamesDto
                             {
                                 Name = c.Name,
-                                Slug = c.Slug
+                                Slug = c.Slug,
+                                IsLinkOnly = c.IsLinkOnly,
+                                PageName = c.PageName,
+                                PageController = c.PageController
                             }).ToList();
                 }
                 else
@@ -132,6 +135,7 @@ namespace CodeSparkNET.Services
                     Name = catalog.Name,
                     Slug = catalog.Slug,
                     IsVisible = catalog.IsVisible,
+                    IsLinkOnly = catalog.IsLinkOnly,
                     Products = catalog.Products
                         .Select(p => new CatalogProductsDto
                         {
@@ -189,6 +193,7 @@ namespace CodeSparkNET.Services
                             Name = catalog.Name,
                             Slug  = catalog.Slug,
                             IsVisible = catalog.IsVisible,
+                            IsLinkOnly = catalog.IsLinkOnly,
                             Products = catalog.Products.Select(p => new CatalogProductsDto
                             {
                                 Name = p.Name,
@@ -198,6 +203,7 @@ namespace CodeSparkNET.Services
                                 Currency = p.Currency,
                                 InStock = p.InStock,
                                 ProductType = p.ProductType,
+                                HasPrice = p.Price != 0m,
                                 ProductImages = p.ProductImages?.Select(img => new CatalogProductImageDto
                                 {
                                     Name = img.Name,

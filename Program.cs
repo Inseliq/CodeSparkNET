@@ -75,10 +75,12 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
 //builder.Services.AddDistributedMemoryCache(); // in debug
 
 
-builder.Services.AddStackExchangeRedisCache(options =>
+builder.Services.AddSingleton<StackExchange.Redis.IConnectionMultiplexer>(sp =>
 {
-    options.Configuration = builder.Configuration["Redis:ConnectionString"];
+    var conn = builder.Configuration["Redis:ConnectionString"];
+    return StackExchange.Redis.ConnectionMultiplexer.Connect(conn);
 });
+
 
 //Add Services
 builder.Services.AddScoped<IAccountService, AccountService>();
@@ -99,10 +101,29 @@ builder.Services.AddScoped<ICacheService, CacheService>();
 builder.Services.AddSingleton<ICacheProvider, CacheProvider>();
 
 //Add keys
-var redis = ConnectionMultiplexer.Connect(builder.Configuration["Redis:ConnectionString"]);
+StackExchange.Redis.ConnectionMultiplexer? redis = null;
+try
+{
+    var cs = builder.Configuration["Redis:ConnectionString"];
+    if (!string.IsNullOrWhiteSpace(cs))
+        redis = StackExchange.Redis.ConnectionMultiplexer.Connect(cs);
+}
+catch
+{
+}
+
+if (redis != null)
+{
+    builder.Services.AddSingleton(redis);
     builder.Services.AddDataProtection()
-    .PersistKeysToStackExchangeRedis(redis, "DataProtection-Keys")
-    .SetApplicationName("CodeSparkNET");
+           .PersistKeysToStackExchangeRedis(redis, "DataProtection-Keys")
+           .SetApplicationName("CodeSparkNET");
+}
+else
+{
+    builder.Services.AddDataProtection()
+           .SetApplicationName("CodeSparkNET");
+}
 
 //Custom Rate Limitter
 builder.Services.AddRateLimiter(options =>

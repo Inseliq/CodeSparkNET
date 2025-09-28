@@ -46,7 +46,10 @@
 
             <h3>@p.Name</h3>
             <p>@p.ShortDescription</p>
-            <div>@p.Price @p.Currency</div>
+            @if (p.HasPrice)
+            {
+                <div>@p.Price @p.Currency</div>
+            }
           </a>
         </article>
       }

@@ -25,23 +25,45 @@
     <div class="card">
         @foreach (var catalog in Model)
         {
-            <a asp-controller="Catalogs" asp-action="Catalog" asp-route-catalogSlug="@catalog.Slug"
-                data-name="@catalog.Name" class="pre-view">
-                <div class="overflow-container">
+            @if (catalog.IsLinkOnly)
+            {
+                <a asp-controller="@catalog.PageController" asp-action="@catalog.PageName"
+                   data-name="@catalog.Name" class="pre-view">
                     <div class="overflow-container">
-                        <span class="name_tag">@catalog.Name</span>
-                        <img class="poster-img" src="@Url.Content("~/assets/img/banner-tag.webp")" />
-                        <video class="content video" muted preload="metadata" playsinline>
-                            <source src="@Url.Action("GetVideo", "Catalogs", new { fileName = catalog.Name + ".mp4" })"
-                                type="video/mp4" />
-                        </video>
-                        <div class="content button" hover><span>Подробнее</span></div>
+                        <div class="overflow-container">
+                            <span class="name_tag">@catalog.Name</span>
+                            <img class="poster-img" src="@Url.Content("~/assets/img/banner-tag.webp")" />
+                            <video class="content video" muted preload="metadata" playsinline>
+                                <source src="@Url.Action("GetVideo", "Catalogs", new { fileName = catalog.Name + ".mp4" })"
+                                        type="video/mp4" />
+                            </video>
+                            <div class="content button" hover><span>Подробнее</span></div>
+                        </div>
+                        <div class="content button" hover>
+                            <span>Подробнее</span>
+                        </div>
                     </div>
-                    <div class="content button" hover>
-                        <span>Подробнее</span>
+                </a>
+            } else
+            {
+                <a asp-controller="Catalogs" asp-action="Catalog" asp-route-catalogSlug="@catalog.Slug"
+                    data-name="@catalog.Name" class="pre-view">
+                    <div class="overflow-container">
+                        <div class="overflow-container">
+                            <span class="name_tag">@catalog.Name</span>
+                            <img class="poster-img" src="@Url.Content("~/assets/img/banner-tag.webp")" />
+                            <video class="content video" muted preload="metadata" playsinline>
+                                <source src="@Url.Action("GetVideo", "Catalogs", new { fileName = catalog.Name + ".mp4" })"
+                                    type="video/mp4" />
+                            </video>
+                            <div class="content button" hover><span>Подробнее</span></div>
+                        </div>
+                        <div class="content button" hover>
+                            <span>Подробнее</span>
+                        </div>
                     </div>
-                </div>
-            </a>
+                </a>
+            }
         }
         <div class="overview-pre-video hidden"></div>
     </div>

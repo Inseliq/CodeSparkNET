@@ -12,6 +12,7 @@ namespace CodeSparkNET.Dtos.Catalog
         public string? Currency { get; set; }
         public int InStock { get; set; }
         public string ProductType { get; set; }
+        public bool HasPrice { get; set; }
         public List<CatalogProductImageDto> ProductImages { get; set; }
     }
 }

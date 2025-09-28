@@ -15,7 +15,7 @@ namespace CodeSparkNET.Models
         /// Unique identifier of the catalog.
         /// </summary>
         public string Id { get; set; }
-
+        
         /// <summary>
         /// Display name of the catalog.
         /// </summary>
@@ -32,8 +32,23 @@ namespace CodeSparkNET.Models
         public bool? IsVisible { get; set; }
 
         /// <summary>
+        /// Indicates whether the catalog is represented only by a link (no products).
+        /// </summary>
+        public bool IsLinkOnly { get; set; }
+
+        /// <summary>
+        /// Represents the name of the Razor Page associated with this catalog, if any.
+        /// </summary>
+        public string? PageName { get; set; } = null!;
+
+        /// <summary>
+        /// Represents the controller name for the Razor Page associated with this catalog, if any.
+        /// </summary>
+        public string? PageController { get; set; } = null!;
+
+        /// <summary>
         /// List of products that belong to this catalog.
         /// </summary>
-        public List<Product> Products { get; set; } = new List<Product>();
+        public List<Product>? Products { get; set; } = new List<Product>();
     }
 }

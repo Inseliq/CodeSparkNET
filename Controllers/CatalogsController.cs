@@ -64,15 +64,7 @@ namespace CodeSparkNET.Controllers
             {
                 var catalog = await _catalogService.GetCatalogBySlugAsync(catalogSlug);
 
-                var model = new CatalogDto
-                {
-                    Name = catalog?.Name,
-                    Slug = catalog?.Slug,
-                    IsVisible = catalog?.IsVisible,
-                    Products = catalog?.Products
-                };
-
-                return View(model);
+                return View(catalog);
             }
             catch (Exception ex)
             {
@@ -87,23 +79,13 @@ namespace CodeSparkNET.Controllers
         {
             try
             {
-                var catalog = await _catalogService.GetCatalogProductDetailsAsync(catalogSlug, productSlug);
+                var product = await _catalogService.GetCatalogProductDetailsAsync(catalogSlug, productSlug);
+
                 var user = await _accountService.GetUserAsync(User);
 
-                var model = new CatalogProductDetailsDto
-                {
-                    Name = catalog?.Name,
-                    Slug = catalog?.Slug,
-                    FullDescription = catalog?.FullDescription,
-                    Price = catalog.Price,
-                    Currency = catalog?.Currency,
-                    InStock = catalog.InStock,
-                    Images = catalog?.Images,
-                    IsAlreadyEnrolled = await _accountService.IsCourseAlreadyEnrolled(user.Id, productSlug),
-                    ProductType = catalog?.ProductType
-                };
+                product.IsAlreadyEnrolled = await _accountService.IsCourseAlreadyEnrolled(user.Id, productSlug);
 
-                return View(model);
+                return View(product);
             }
             catch (Exception ex)
             {

@@ -39,12 +39,12 @@
                 {
                     foreach (var img in Model.Images)
                     {
-                        var src = !string.IsNullOrEmpty(img?.Url);
+                        var src = img?.Url ?? "/images/no-image-thumb.png";
                         <button type="button"
                                 class="thumb-btn"
                                 data-src="@src"
                                 aria-label="Показать изображение @img?.Name">
-                            <img class="thumb-btn__img" alt="@img?.Name" />
+                            <img class="thumb-btn__img" src="@src" alt="@img?.Name" />
                         </button>
                     }
                 }
@@ -59,25 +59,29 @@
         <div class="info">
             <h1 id="product-title" class="product-title">@Model?.Name</h1>
 
-            <div class="product-meta-row">
-                <div class="price">
-                    @if (Model != null)
-                    {
-                        <span class="price__value">@Model.Price.ToString("0.##")</span>
-                        @if (!string.IsNullOrWhiteSpace(Model.Currency))
+            @if (Model.HasPrice)
+            {
+                <div class="product-meta-row">
+                    <div class="price">
+                        @if (Model != null)
                         {
-                            <span class="price__currency">@Model.Currency</span>
+                            <span class="price__value">@Model.Price.ToString("0.##")</span>
+                            @if (!string.IsNullOrWhiteSpace(Model.Currency))
+                            {
+                                <span class="price__currency">@Model.Currency</span>
+                            }
                         }
-                    }
+                    </div>
+
+                    <div class="stock" aria-live="polite">
+                        @if (Model != null)
+                        {
+                            <span class="stock__value">В наличии: @Model.InStock</span>
+                        }
+                    </div>
                 </div>
 
-                <div class="stock" aria-live="polite">
-                    @if (Model != null)
-                    {
-                        <span class="stock__value">В наличии: @Model.InStock</span>
-                    }
-                </div>
-            </div>
+            }
 
             <div class="product-actions">
                 @if (User.Identity.IsAuthenticated)
@@ -92,6 +96,10 @@
                         {
                             <a asp-controller="Catalogs" asp-action="AddCourseToUser" asp-route-productSlug="@Model.Slug">Добавить</a>
                         }
+                    }
+                    else if(Model.ProductType == "Tutorial")
+                    {
+                        <a asp-controller="Course" asp-action="@Model.Slug">Читать</a>
                     }
                     else
                     {

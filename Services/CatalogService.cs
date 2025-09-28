@@ -9,7 +9,6 @@ namespace CodeSparkNET.Services
     /// </summary>
     public class CatalogService : ICatalogService
     {
-        private readonly ICatalogRepository _catalogRepository;
         private readonly ICacheService _cacheService;
         private readonly ILogger<CatalogService> _logger;
 
@@ -19,11 +18,9 @@ namespace CodeSparkNET.Services
         /// <param name="catalogRepository">Repository for accessing catalog data.</param>
         /// <param name="logger">Logger for logging errors and information.</param>
         public CatalogService(
-            ICatalogRepository catalogRepository, 
             ICacheService cacheService,
             ILogger<CatalogService> logger)
         {
-            _catalogRepository = catalogRepository;
             _logger = logger;
             _cacheService = cacheService;
         }
@@ -114,6 +111,7 @@ namespace CodeSparkNET.Services
                     Currency = productDetails.Currency,
                     InStock = productDetails.InStock,
                     ProductType = productDetails.ProductType,
+                    HasPrice = productDetails.Price != 0m,
                     Images = productDetails.ProductImages?
                         .Select(img => new CatalogProductImageDto
                         {
@@ -144,28 +142,7 @@ namespace CodeSparkNET.Services
                 if (catalog == null)
                     return new CatalogDto();
 
-                return new CatalogDto
-                {
-                    Name = catalog.Name,
-                    Slug = catalog.Slug,
-                    IsVisible = catalog.IsVisible,
-                    Products = catalog.Products.Select(p => new CatalogProductsDto
-                    {
-                        Name = p.Name,
-                        Slug = p.Slug,
-                        ShortDescription = p.ShortDescription,
-                        Price = p.Price,
-                        Currency = p.Currency,
-                        InStock = p.InStock,
-                        ProductType = p.ProductType,
-                        ProductImages = p.ProductImages.Select(pi => new CatalogProductImageDto
-                        {
-                            Name = pi.Name,
-                            IsMain = pi.IsMain,
-                            Url = pi.Url
-                        }).ToList()
-                    }).ToList()
-                };
+                return catalog;
             }
             catch (Exception ex)
             {

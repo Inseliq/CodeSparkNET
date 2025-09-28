@@ -20,6 +20,7 @@ namespace CodeSparkNET.Data
         public DbSet<LessonResource> LessonResources { get; set; } = null!;
         public DbSet<Template> Templates { get; set; } = null!;
         public DbSet<Diploma> Diplomas { get; set; } = null!;
+        public DbSet<Tutorial> Tutorials { get; set; } = null!;
         public DbSet<UserCourse> UserCourses { get; set; } = null!;
         public DbSet<Product> Products { get; set; } = null!;
 
@@ -92,7 +93,8 @@ namespace CodeSparkNET.Data
                       .HasValue<Product>("Product")
                       .HasValue<Course>("Course")
                       .HasValue<Template>("Template")
-                      .HasValue<Diploma>("Diploma");
+                      .HasValue<Diploma>("Diploma")
+                      .HasValue<Tutorial>("Tutorial");
             });
 
             // --- Course (derived) ---
@@ -115,6 +117,11 @@ namespace CodeSparkNET.Data
             builder.Entity<Diploma>(entity =>
             {
                 entity.Property(d => d.Issuer).HasMaxLength(200);
+            });
+
+            // --- Tutorial (derived) ---
+            builder.Entity<Tutorial>(entity =>
+            {
             });
 
             // --- UserCourse ---
@@ -209,23 +216,28 @@ namespace CodeSparkNET.Data
                 new Catalog
                 {
                     Id = "d1f9c6d2-4b4b-4b8e-9f2a-aaaa00000001",
-                    Name = "It-Cubic",
-                    Slug = "it-cubic",
-                    IsVisible = true
+                    Name = "Библиотека знаний",
+                    Slug = "library",
+                    IsVisible = true,
+                    IsLinkOnly = false
                 },
                 new Catalog
                 {
                     Id = "d1f9c6d2-4b4b-4b8e-9f2a-aaaa00000002",
-                    Name = "Code Spark",
-                    Slug = "code-spark",
-                    IsVisible = true
+                    Name = "Курсы",
+                    Slug = "courses",
+                    IsVisible = true,
+                    IsLinkOnly = false
                 },
                 new Catalog
                 {
                     Id = "d1f9c6d2-4b4b-4b8e-9f2a-aaaa00000003",
-                    Name = "Монтажка",
-                    Slug = "montazhka",
-                    IsVisible = true
+                    Name = "Искуственный интелект",
+                    Slug = "ai",
+                    IsVisible = true,
+                    IsLinkOnly = true,
+                    PageName = "AI",
+                    PageController = "Home"
                 }
             );
 
@@ -239,6 +251,32 @@ namespace CodeSparkNET.Data
                     Slug = "c#-for-beginners",
                     Price = 1999.99m,
                     Level = "Beginner",
+                    ProductType = "Course",
+                    Currency = "RUB",
+                    InStock = 10,
+                    IsPublished = true
+                },
+                new
+                {
+                    Id = "e1f9c6d2-5b4b-4b8e-9f2a-bbbb00000004",
+                    CatalogId = "d1f9c6d2-4b4b-4b8e-9f2a-aaaa00000002",
+                    Name = "Курс по ASP.NET Core",
+                    Slug = "aspnet-core-web-development",
+                    Price = 2499.99m,
+                    Level = "Intermediate",
+                    ProductType = "Course",
+                    Currency = "RUB",
+                    InStock = 10,
+                    IsPublished = true
+                },
+                new
+                {
+                    Id = "e1f9c6d2-5b4b-4b8e-9f2a-bbbb00000005",
+                    CatalogId = "d1f9c6d2-4b4b-4b8e-9f2a-aaaa00000003",
+                    Name = "Введение в машинное обучение",
+                    Slug = "intro-to-machine-learning",
+                    Price = 2999.99m,
+                    Level = "Advanced",
                     ProductType = "Course",
                     Currency = "RUB",
                     InStock = 10,
@@ -273,6 +311,22 @@ namespace CodeSparkNET.Data
                     Price = 30000m,
                     Issuer = "Code Spark Academy",
                     ProductType = "Diploma",
+                    Currency = "RUB",
+                    InStock = 10,
+                    IsPublished = true
+                }
+            );
+
+            // Seed: Tutorial
+            builder.Entity<Tutorial>().HasData(
+                new
+                {
+                    Id = "e1f9c6d2-5b4b-4b8e-9f2a-bbbb00000006",
+                    CatalogId = "d1f9c6d2-4b4b-4b8e-9f2a-aaaa00000001",
+                    Name = "Руководство по LINQ",
+                    Slug = "linq-tutorial",
+                    Price = 0m,
+                    ProductType = "Tutorial",
                     Currency = "RUB",
                     InStock = 10,
                     IsPublished = true

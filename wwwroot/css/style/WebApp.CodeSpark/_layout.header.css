@@ -481,6 +481,14 @@ html[cross-browser] {
               color: var(--palette-text-inv);
               background: linear-gradient(135deg, var(--color-gradient-for-hyperbutton_start), var(--color-gradient-for-hyperbutton_end));
             }
+
+            &:nth-child(3) {
+              --color-gradient-for-hyperbutton_start: #1f1f1fff;
+              --color-gradient-for-hyperbutton_end: #1f1f1fff;
+              border: 2px solid var(--palette-second);
+              color: var(--palette-text-inv);
+              background: linear-gradient(135deg, var(--color-gradient-for-hyperbutton_start), var(--color-gradient-for-hyperbutton_end));
+            }
           }
 
           a.hover {
@@ -492,6 +500,11 @@ html[cross-browser] {
             }
 
             &:nth-child(2) {
+              --color-gradient-for-hyperbutton_start: #9780e5ff;
+              --color-gradient-for-hyperbutton_end: #da6ad0ff;
+            }
+
+            &:nth-child(3) {
               --color-gradient-for-hyperbutton_start: #9780e5ff;
               --color-gradient-for-hyperbutton_end: #da6ad0ff;
             }

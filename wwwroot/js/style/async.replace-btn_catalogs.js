@@ -6,10 +6,10 @@ document.addEventListener("DOMContentLoaded", function () {
   if (catalogSectionOn) {
     // Если есть CatalogSectionOn
     if (miniApp) miniApp.style.display = "none";
-    if (catalogsSections) catalogsSections.style.display = "inline-block";
+    if (catalogsSections) catalogsSections.style.display = "inline-flex";
   } else {
     // Если нет CatalogSectionOn
-    if (miniApp) miniApp.style.display = "inline-block";
+    if (miniApp) miniApp.style.display = "inline-flex";
     if (catalogsSections) catalogsSections.style.display = "none";
   }
 });

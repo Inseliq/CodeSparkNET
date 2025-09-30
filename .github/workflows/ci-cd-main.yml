@@ -1,0 +1,129 @@
+name: CI/CD — main
+
+on:
+  push:
+    branches: [ "main" ]
+
+env:
+  DOTNET_VERSION: "9.0.x"
+  IMAGE_TAG: ${{ github.sha }}
+  IMAGE_LATEST: latest
+  IMAGE_REGISTRY: docker.io
+  IMAGE_USER: ${{ secrets.DOCKER_USERNAME }}
+  IMAGE_REPO: ${{ secrets.DOCKER_REPOSITORY }}
+
+jobs:
+  test:
+    name: Run tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Run tests
+        run: dotnet test --configuration Release --no-build --verbosity normal
+
+  build:
+    name: Build & Push Docker image
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.IMAGE_REGISTRY }}
+          username: ${{ env.IMAGE_USER }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: |
+            ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_USER }}/${{ env.IMAGE_REPO }}:${{ env.IMAGE_LATEST }}
+            ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_USER }}/${{ env.IMAGE_REPO }}:${{ env.IMAGE_TAG }}
+
+  deploy:
+    name: Deploy to remote server (pull exact sha image, tag as latest, up)
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            set -e
+            
+            REPO_URL="https://github.com/${{ github.repository }}.git"
+            TARGET_DIR="$HOME/CodeSparkNET"
+            BRANCH="main"
+
+            # Проверка, что git установлен
+            if ! command -v git >/dev/null 2>&1; then
+              if command -v apt-get >/dev/null 2>&1; then
+                sudo apt-get update -y
+                sudo apt-get install -y git
+              elif command -v yum >/dev/null 2>&1; then
+                sudo yum install -y git
+              else
+                echo "git not found and cannot auto-install (unknown package manager). Please install git on the server." >&2
+                exit 1
+              fi
+            fi
+
+            # Клонируем репозиторий, либо обновляем существующий checkout
+            if [ -d "${TARGET_DIR}/.git" ]; then
+              echo "Repository exists — fetching latest ${BRANCH}"
+              cd "${TARGET_DIR}"
+              git fetch origin --depth=1
+              git reset --hard "origin/${BRANCH}"
+              git clean -fd
+            else
+              echo "Cloning ${REPO_URL} (branch ${BRANCH}) into ${TARGET_DIR}"
+              rm -rf "${TARGET_DIR}" || true
+              git clone --depth 1 --branch "${BRANCH}" "${REPO_URL}" "${TARGET_DIR}"
+              cd "${TARGET_DIR}"
+            fi
+
+            # Переменные образа (подставляются из workflow до отправки на сервер)
+            IMAGE_FULL="${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_USER }}/${{ env.IMAGE_REPO }}"
+            IMAGE_SHA="${{ env.IMAGE_TAG }}"
+            IMAGE_LATEST="${{ env.IMAGE_LATEST }}"
+
+            # Если реестр приватный — логинимся на сервере перед pull
+            if [ -n "${{ secrets.DOCKER_PASSWORD }}" ]; then
+              echo "${{ secrets.DOCKER_PASSWORD }}" | docker login "${{ env.IMAGE_REGISTRY }}" -u "${{ env.IMAGE_USER }}" --password-stdin
+            fi
+
+            echo "Pulling image: ${IMAGE_FULL}:${IMAGE_SHA}"
+            docker pull "${IMAGE_FULL}:${IMAGE_SHA}"
+
+            # Перемаркируем sha-образ в latest (чтобы docker-compose, ссылающийся на :latest, использовал именно этот образ)
+            docker tag "${IMAGE_FULL}:${IMAGE_SHA}" "${IMAGE_FULL}:${IMAGE_LATEST}"
+
+            # Запускаем compose (compose должен ссылаться на image: ...:latest)
+            docker compose pull || true
+            docker compose up -d --remove-orphans
+
+            # Очистка
+            docker image prune -af || true

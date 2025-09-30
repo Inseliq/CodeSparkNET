@@ -20,7 +20,9 @@
 </aside>
 
 <div class="__container catalog" id="CatalogSectionOn">
-  <h1>@Model?.Name</h1>
+  <div class="name-catalog">
+    <h1>@Model?.Name</h1>
+  </div>
 
   @if (Model?.Products == null || !Model.Products.Any())
   {
@@ -33,7 +35,8 @@
       {
         <article class="card">
           <a asp-controller="Catalogs" asp-action="ProductDetails" asp-route-catalogSlug="@Model.Slug"
-            asp-route-productSlug="@p.Slug">
+
+            asp-route-productSlug="@p.Slug" hover>
 
               @if (p.ProductImages?.Any() == true && !string.IsNullOrEmpty(p.ProductImages.First().Url))
               {
@@ -41,15 +44,14 @@
               }
               else
               {
-                  <img src="~/images/no-image.png" alt="no image" />
+                  <img class="no-image" src="~/assets/img/no-image.png" alt="no image" />
               }
 
-            <h3>@p.Name</h3>
-            <p>@p.ShortDescription</p>
-            @if (p.HasPrice)
-            {
-                <div>@p.Price @p.Currency</div>
-            }
+            <div class="overview-bg">
+              <h3 class="name">@p.Name</h3>
+              <p>@p.ShortDescription</p>
+              <h3 class="cent">@p.Price @p.Currency</h3>
+            </div>
           </a>
         </article>
       }

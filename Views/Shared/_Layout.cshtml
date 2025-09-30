@@ -1,24 +1,23 @@
 ﻿<!DOCTYPE html>
 <html lang="ru" data-theme-color="dark" data-device="desktop" custom-scroll cross-browser>
-
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="" title="" description="" content="">
 
-    <title>@ViewData["Title"] - CodeSpark</title>
+    <title>@ViewData["Title"] – @ViewData["App"]</title>
+
+    <script src="~/js/app/js-load.await.js"></script>
 
     @* Рендер секции Styles из дочерних view (если она есть) *@
+    @RenderSection("Meta", required: false)
+    <link rel="stylesheet" href="~/css/assemble.site.css" asp-append-version="true">
     @RenderSection("Styles", required: false)
-    <link rel="stylesheet" href="~/css/assemble.site.css">
 
-    @* <script src="~/js/app/get.info_about_device.js" defer></script> *@
-    <script src="~/js/app/assemble.app.js" defer></script>
-    <script src="~/js/windows/js-window.err-w.js" defer></script>
-
-    <noscript title="keyword"></noscript>
+    @* <script src="~/js/app/get.info_about_device.js" defer asp-append-version="true"></script> *@
+    <script src="~/js/app/assemble.app.js" defer asp-append-version="true"></script>
+    <script src="~/js/windows/js-window.err-w.js" defer asp-append-version="true"></script>
 </head>
-
 <body>
     <header data-layout="header">
         <nav class="__container" data-layout="navbar-site">
@@ -30,14 +29,14 @@
                 <button select-btn-service data-style="on-hover" hover>Сервисы
                     <span title="arrow">‹</span>
                 </button>
-                <div js-window-select-app class="js-window hidden">
+                <div js-window-select-app class="js-window hidden" hidden="!">
                     <div window>
                         <button>It-Cubic</button>
                         <button>Code Spark</button>
                         <button>Монтажка</button>
                     </div>
                 </div>
-                <div js-window-select-service class="js-window hidden">
+                <div js-window-select-service class="js-window hidden" hidden="!">
                     <div>
                         <button>Каталог товаров</button>
                         <button>Курсовые работы</button>
@@ -60,7 +59,7 @@
     <footer data-layout="footer">
         <div class="__container">
             <div class="l_block">
-                <a privacy_policy href="@Url.Action("Privacy", "Documents")" data-style="on-hover" hover>политика
+                <a privacy_policy href="@Url.Action("PrivacyPolicy", "Documents")" data-style="on-hover" hover>политика
                     конфиденциальности</a>
                 <a user_guide href="@Url.Action("UserGuide", "Documents")" data-style="on-hover" hover>Руководство
                     пользователя</a>

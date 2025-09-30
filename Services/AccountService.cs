@@ -1,215 +1,318 @@
 using CodeSparkNET.Dtos.Account;
 using CodeSparkNET.Dtos.Profile;
-using CodeSparkNET.Interfaces;
+using CodeSparkNET.Interfaces.Repositories;
+using CodeSparkNET.Interfaces.Services;
 using CodeSparkNET.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Caching.Distributed;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace CodeSparkNET.Services
 {
-    public class AccountService : IAccountService, IProfileService
+    /// <summary>
+    /// Service responsible for handling user accounts (registration, authentication, profile, password reset, email confirmation).
+    /// </summary>
+    public class AccountService : IAccountService
     {
-        private readonly UserManager<AppUser> _userManager;
-        private readonly SignInManager<AppUser> _signInManager;
+        private readonly IUserRepository _userRepository;
         private readonly IEmailService _emailService;
         private readonly IConfiguration _configuration;
+        private readonly IProductRepository _productRepository;
+        private readonly ILogger<AccountService> _logger;
 
         public AccountService(
-            UserManager<AppUser> userManager,
-            SignInManager<AppUser> signInManager,
+            IUserRepository userRepository,
             IEmailService emailService,
-            IConfiguration configuration
+            IConfiguration configuration,
+            IProductRepository productRepository,
+            ILogger<AccountService> logger
             )
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
+            _userRepository = userRepository;
             _emailService = emailService;
             _configuration = configuration;
+            _productRepository = productRepository;
+            _logger = logger;
         }
 
+        /// <summary>
+        /// Registers a new user with email, username, and password.
+        /// </summary>
         public async Task<IdentityResult> RegisterAsync(RegisterDto model, string loginLink)
         {
-            if (await _userManager.FindByEmailAsync(model.Email) != null)
-                return IdentityResult.Failed(new IdentityError { Description = "–ü–æ–ª—å–∑–æ–≤–∞—Ç–µ–ª—å —Å —Ç–∞–∫–∏–º email —É–∂–µ –∑–∞—Ä–µ–≥–∏—Å—Ç—Ä–∏—Ä–æ–≤–∞–Ω." });
-
-            if (await _userManager.FindByEmailAsync(model.UserName) != null)
-                return IdentityResult.Failed(new IdentityError { Description = "–ü–æ–ª—å–∑–æ–≤–∞—Ç–µ–ª—å —Å —Ç–∞–∫–∏–º –∏–º–µ–Ω–µ–º –ø–æ–ª—å–∑–æ–≤–∞—Ç–µ–ª—è —É–∂–µ –∑–∞—Ä–µ–≥–∏—Å—Ç—Ä–∏—Ä–æ–≤–∞–Ω." });
-
-            var user = new AppUser
+            try
             {
-                UserName = model.UserName,
-                Email = model.Email,
-                EmailMarketingConsent = model.ConfirmAd
-            };
+                if (await _userRepository.GetUserByEmailAsync(model.Email) != null)
+                    return IdentityResult.Failed(new IdentityError { Description = "œÓÎ¸ÁÓ‚‡ÚÂÎ¸ Ò Ú‡ÍÓÈ ÔÓ˜ÚÓÈ ÛÊÂ Á‡Â„ËÒÚËÓ‚‡Ì." });
 
-            var createResult = await _userManager.CreateAsync(user, model.Password);
-            if (!createResult.Succeeded)
-                return createResult;
+                if (await _userRepository.GetUserByUserNameAsync(model.UserName) != null)
+                    return IdentityResult.Failed(new IdentityError { Description = "œÓÎ¸ÁÓ‚‡ÚÂÎ¸ Ò Ú‡ÍËÏ ËÏÂÌÂÌÏ ÛÊÂ Á‡Û„ËÒÚËÓ‚‡Ì." });
 
-            var roleResult = await _userManager.AddToRoleAsync(user, "User");
-            if (!roleResult.Succeeded)
-            {
-                await _userManager.DeleteAsync(user);
-                return IdentityResult.Failed(new IdentityError { Description = "–û—à–∏–±–∫–∞ —Å–æ–∑–¥–∞–Ω–∏—è –∞–∫–∫–∞—É–Ω—Ç–∞." });
+                var user = new AppUser
+                {
+                    UserName = model.UserName,
+                    Email = model.Email,
+                    EmailMarketingConsent = model.ConfirmAd,
+                    EmailAddAt = DateTime.UtcNow,
+                    EmailChangedAt = DateTime.MinValue,
+                    EmailConfirmedAt = DateTime.MinValue
+                };
+
+                var createResult = await _userRepository.CreateUserAsync(user, model.Password);
+                if (!createResult.Succeeded)
+                    return createResult;
+
+                var roleResult = await _userRepository.AddToRoleAsync(user, "User");
+                if (!roleResult.Succeeded)
+                {
+                    await _userRepository.DeleteUserAsync(user);
+                    return IdentityResult.Failed(new IdentityError { Description = "Account creation failed." });
+                }
+
+                if (!string.IsNullOrEmpty(loginLink))
+                {
+                    await _emailService.SendAccountCratedEmailAsync(user.Email!, user.UserName, loginLink);
+                }
+
+                return IdentityResult.Success;
             }
-
-            if (!string.IsNullOrEmpty(loginLink))
+            catch (Exception ex)
             {
-                await _emailService.SendAccountCratedEmailAsync(user.Email!, user.UserName, loginLink);
+                _logger.LogError(ex, "Error while registering user {Email}", model.Email);
+                throw;
             }
-
-            return IdentityResult.Success;
         }
 
+        /// <summary>
+        /// Signs in a user with email and password.
+        /// </summary>
         public async Task<SignInResult> PasswordSignInAsync(LoginDto model)
         {
-            var user = await _userManager.FindByEmailAsync(model.Email);
-            if (user == null)
-                return SignInResult.Failed;
+            try
+            {
+                var user = await _userRepository.GetUserByEmailAsync(model.Email);
+                if (user == null)
+                    return SignInResult.Failed;
 
-
-            return await _signInManager.PasswordSignInAsync(user.UserName, model.Password, model.RememberMe, lockoutOnFailure: false);
+                return await _userRepository.PasswordSignInAsync(model);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while signing in user {Email}", model.Email);
+                throw;
+            }
         }
 
+        /// <summary>
+        /// Signs out the currently logged-in user.
+        /// </summary>
         public async Task SignOutAsync()
         {
-            await _signInManager.SignOutAsync();
+            try
+            {
+                await _userRepository.SignOutAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while signing out.");
+                throw;
+            }
+        }
+        
+        public async Task RefrashSignInAsync(AppUser user)
+        {
+            try
+            {
+                await _userRepository.RefreshSignInAsync(user); 
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error refrashing claims principal");
+            }
         }
 
+        /// <summary>
+        /// Returns roles of the user.
+        /// </summary>
+        public async Task<IList<string>> GetRolesAsync(AppUser user)
+        {
+            try
+            {
+                return await _userRepository.GetUserRolesAsync(user);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while getting roles for user {UserName}", user.UserName);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Sends a password reset link to the user's email.
+        /// </summary>
         public async Task<bool> SendPasswordResetLinkAsync(string email)
         {
-            //Get user
-            var user = await _userManager.FindByEmailAsync(email);
+            try
+            {
+                var user = await _userRepository.GetUserByEmailAsync(email);
+                if (user == null || (!await _userRepository.IsEmailConfirmedAsync(user)))
+                    return false;
 
-            if (user == null || (await _userManager.IsEmailConfirmedAsync(user))) //TODO: add inverse(add !) in email.IsConfirmed
-                return false;
+                var token = await _userRepository.GeneratePasswordResetTokenAsync(user);
+                var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
 
-            //Generate unique token
-            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var baseUrl = _configuration["AppSettings:BaseUrl"]?.TrimEnd('/');
+                var emailEscaped = System.Net.WebUtility.UrlEncode(user.Email);
+                var resetLink = $"{baseUrl}/Account/ResetPassword/?email={emailEscaped}&token={encodedToken}";
 
-            //Encoded token
-            var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
+                await _emailService.SendResetPasswordEmailAsync(user.Email!, user.UserName, resetLink);
 
-            //Constructing reset url link
-            var baseUrl = _configuration["AppSettings:BaseUrl"]?.TrimEnd('/');
-            var emailEscaped = System.Net.WebUtility.UrlEncode(user.Email);
-            var resetLink = $"{baseUrl}/Account/ResetPassword/?email={emailEscaped}&token={encodedToken}";
-
-            await _emailService.SendResetPasswordEmailAsync(user.Email!, user.UserName, resetLink);
-
-            return true;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while sending password reset link to {Email}", email);
+                throw;
+            }
         }
 
+        /// <summary>
+        /// Resets the user's password.
+        /// </summary>
         public async Task<IdentityResult> ResetPasswordAsync(ResetPasswordDto model)
         {
-            // Find the user associated with the provided email
-            var user = await _userManager.FindByEmailAsync(model.Email);
-            // If user not found, return a generic failure
-            if (user is null)
-                return IdentityResult.Failed(new IdentityError { Description = "Invalid request." });
-
-            var decodedBytes = WebEncoders.Base64UrlDecode(model.Token);
-            var decodedToken = Encoding.UTF8.GetString(decodedBytes);
-
-            // Attempt reset user password
-            var result = await _userManager.ResetPasswordAsync(user, decodedToken, model.Password);
-
-            // If successful, update the Security Stamp to invalidate any active sessions or tokens
-            if (result.Succeeded)
+            try
             {
-                await _userManager.UpdateSecurityStampAsync(user);
+                var user = await _userRepository.GetUserByEmailAsync(model.Email);
+                if (user is null)
+                    return IdentityResult.Failed(new IdentityError { Description = "Invalid request." });
+
+                var decodedBytes = WebEncoders.Base64UrlDecode(model.Token);
+                var decodedToken = Encoding.UTF8.GetString(decodedBytes);
+
+                var result = await _userRepository.ResetPasswordAsync(user, decodedToken, model.Password);
+
+                if (result.Succeeded)
+                {
+                    await _userRepository.UpdateSecurityStampAsync(user);
+                }
+
                 return result;
             }
-
-            return result;
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while resetting password for {Email}", model.Email);
+                throw;
+            }
         }
 
+        /// <summary>
+        /// Confirms the user's email using a token.
+        /// </summary>
         public async Task<IdentityResult> ConfirmEmailAsync(ConfirmEmailDto model)
         {
-            // Find the user associated with the provided email
-            var user = await _userManager.FindByEmailAsync(model.Email);
-            // If user not found, return a generic failure
-            if (user is null)
-                return IdentityResult.Failed(new IdentityError { Description = "Invalid request." });
-
-            var decodedBytes = WebEncoders.Base64UrlDecode(model.Token);
-            var decodedToken = Encoding.UTF8.GetString(decodedBytes);
-
-            // Attempt to confirm the user's email
-            var result = await _userManager.ConfirmEmailAsync(user, decodedToken);
-
-            // If successful, update the Security Stamp to invalidate any active sessions or tokens
-            if (result.Succeeded)
+            try
             {
-                await _userManager.UpdateSecurityStampAsync(user);
+                var user = await _userRepository.GetUserByEmailAsync(model.Email);
+                if (user is null)
+                    return IdentityResult.Failed(new IdentityError { Description = "Invalid request." });
+
+                var decodedBytes = WebEncoders.Base64UrlDecode(model.Token);
+                var decodedToken = Encoding.UTF8.GetString(decodedBytes);
+
+                var result = await _userRepository.ConfirmEmailAsync(user, decodedToken);
+
+                if (result.Succeeded)
+                {
+                    user.EmailConfirmedAt = DateTime.Now;
+                    await _userRepository.UpdateUserAsync(user);
+                    await _userRepository.UpdateSecurityStampAsync(user);
+                }
+
                 return result;
             }
-
-            return result;
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while confirming email for {Email}", model.Email);
+                throw;
+            }
         }
 
+        /// <summary>
+        /// Gets user from ClaimsPrincipal.
+        /// </summary>
         public async Task<AppUser> GetUserAsync(ClaimsPrincipal user)
         {
-            return await _userManager.GetUserAsync(user);
+            try
+            {
+                return await _userRepository.GetUserAsync(user);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while getting user from ClaimsPrincipal");
+                throw;
+            }
         }
 
-        public async Task<IdentityResult> UpdatePersonalProfileAsync(string email, UpdatePersonalProfileDto model)
+        /// <summary>
+        /// Checks if a user exists by email.
+        /// </summary>
+        public async Task<bool> UserWithEmailExistsAsync(string email)
         {
-            var user = await _userManager.FindByEmailAsync(email);
-
-            if (user == null && model == null)
-                return null;
-
-            user.UserName = model.UserName;
-            user.Email = model.Email;
-
-            return await _userManager.UpdateAsync(user);
+            try
+            {
+                var user = await _userRepository.GetUserByEmailAsync(email);
+                return user != null;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while checking if user exists with email {Email}", email);
+                throw;
+            }
         }
 
-
-        public async Task<IdentityResult> ChangePasswordAsync(string email, ChangePasswordDto model)
+        /// <summary>
+        /// Checks if a user exists by username.
+        /// </summary>
+        public async Task<bool> UserWithUserNameExistsAsync(string userName)
         {
-            var user = await _userManager.FindByEmailAsync(email);
-
-            if (user == null)
-                return null;
-
-            return await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+            try
+            {
+                var user = await _userRepository.GetUserByUserNameAsync(userName);
+                return user != null;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while checking if user exists with username {UserName}", userName);
+                throw;
+            }
         }
-
-        public async Task<bool> SendEmailConfirmationLinkAsync(string email)
+    
+        public async Task<bool> AddCourseToUserAsync(string userId, string courseSlug)
         {
-            //Get user
-            var user = await _userManager.FindByEmailAsync(email);
-
-            if (user is null || (await _userManager.IsEmailConfirmedAsync(user)))
+            try
+            {
+                return await _productRepository.AddCourseToUserAsync(userId, courseSlug);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while adding course {CourseSlug} to user {UserName}", courseSlug, userId);
                 return false;
-
-            //Generate unique token
-            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-
-            //Encoded token
-            var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
-
-            //Constructing reset url link
-            var baseUrl = _configuration["AppSettings:BaseUrl"]?.TrimEnd('/');
-            var emailEscaped = System.Net.WebUtility.UrlEncode(user.Email);
-            var confirmationLink = $"{baseUrl}/Profile/ConfirmEmail/?email={emailEscaped}&token={encodedToken}";
-
-            await _emailService.SendEmailConfirmationAsync(user.Email!, user.UserName, confirmationLink);
-            return true;
+            }
         }
-
-        public async Task UpdateUserClaims(AppUser user)
+    
+        public async Task<bool> IsCourseAlreadyEnrolled(string userId, string courseSlug)
         {
-            await _signInManager.RefreshSignInAsync(user);
+            try
+            {
+                return await _productRepository.IsCourseAlreadyEnrolledAsync(userId, courseSlug);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while adding course {CourseSlug} to user {UserName}", courseSlug, userId);
+                return false;
+            }
         }
     }
 }

@@ -2,8 +2,10 @@ version: '3.8'
 
 services:
   web:
-    image: obi1o/code-spark:latest
-    # build: .
+    # image: obi1o/code-spark:latest
+    build: .
+    ports:
+      - "5000:80"
     environment:
       - ASPNETCORE_URLS=http://+:80
       - REDIS_CONNECTION=redis:6379

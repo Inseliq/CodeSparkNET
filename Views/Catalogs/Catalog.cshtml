@@ -35,6 +35,7 @@
       {
         <article class="card">
           <a asp-controller="Catalogs" asp-action="ProductDetails" asp-route-catalogSlug="@Model.Slug"
+
             asp-route-productSlug="@p.Slug" hover>
 
               @if (p.ProductImages?.Any() == true && !string.IsNullOrEmpty(p.ProductImages.First().Url))

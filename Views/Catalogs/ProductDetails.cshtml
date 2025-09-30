@@ -94,6 +94,10 @@
                         @if (Model.IsAlreadyEnrolled)
                         {
                             <a asp-controller="Course" asp-action="@Model.Slug">Читать</a>
+                        }          
+                        else if (Model.ProductType == "Tutorial")
+                        {
+                            <a asp-controller="Course" asp-action="@Model.Slug">Читать</a>
                         }
                         else
                         {

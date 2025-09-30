@@ -1,18 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace CodeSparkNET.Models
+﻿namespace CodeSparkNET.Models
 {
     public class Lesson
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
-        public Guid ModuleId { get; set; }
-        public Module Module { get; set; } = null!;
+        public string Id { get; set; }
+        public string? ModuleId { get; set; }
+        public CourseModule Module { get; set; }
+        public string Title { get; set; }
+        public string? Slug { get; set; }
+        public string? Body { get; set; }
+        public int Position { get; set; }
+        public bool IsPublished { get; set; }
+        public bool IsFreePreview { get; set; }
 
-        public string Title { get; set; } = null!;
-        public string Content { get; set; } = null!;
-        public int Order { get; set; }
+        public List<LessonResource> Resources { get; set; } = new();
     }
 }

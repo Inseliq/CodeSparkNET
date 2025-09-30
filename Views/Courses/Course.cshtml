@@ -1,0 +1,231 @@
+﻿@model string
+@{
+    var courseSlug = Model ?? "";
+}
+
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Курс</title>
+</head>
+<body>
+    <div>
+        <div>
+            <div>
+                <a href="javascript:history.back()">&larr; назад</a>
+            </div>
+            <div>
+                <button type="button" id="openSidebarBtn">Содержание</button>
+            </div>
+        </div>
+
+        <div>
+            <aside>
+                <div id="sidebar">
+                    <h4 id="course-title">Загрузка курса...</h4>
+                    <p id="course-shortdesc"></p>
+                    <img id="course-hero" src="" alt="Картинка курса" style="display:none;" />
+                    <div id="modules-list">
+                        <div id="modules-loading">Загрузка содержания...</div>
+                    </div>
+                </div>
+
+                <!-- Mobile sidebar -->
+                <div id="sidebarOffcanvas" style="display:none;">
+                    <div>
+                        <h5 id="sidebarOffcanvasLabel">Содержание курса</h5>
+                        <button type="button" id="closeSidebarBtn">Закрыть</button>
+                    </div>
+                    <div>
+                        <h6 id="offcanvas-course-title">...</h6>
+                        <div id="modules-list-mobile"></div>
+                    </div>
+                </div>
+            </aside>
+
+            <main>
+                <h3 id="lesson-title">Выберите урок слева</h3>
+                <div id="lesson-body">Содержимое урока появится здесь.</div>
+                <div id="lesson-resources"></div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+          const courseSlug = decodeURIComponent(window.location.pathname.split("/").filter(Boolean).pop());
+
+          const modulesListEl = document.getElementById('modules-list');
+          const modulesListMobileEl = document.getElementById('modules-list-mobile');
+          const courseTitleEl = document.getElementById('course-title');
+          const offcanvasCourseTitleEl = document.getElementById('offcanvas-course-title');
+          const courseShortEl = document.getElementById('course-shortdesc');
+          const courseHeroEl = document.getElementById('course-hero');
+          const lessonTitleEl = document.getElementById('lesson-title');
+          const lessonBodyEl = document.getElementById('lesson-body');
+          const lessonResourcesEl = document.getElementById('lesson-resources');
+          const sidebarEl = document.getElementById('sidebarOffcanvas');
+          const openSidebarBtn = document.getElementById('openSidebarBtn');
+          const closeSidebarBtn = document.getElementById('closeSidebarBtn');
+
+          let currentLessonSlug = null;
+
+          // toggle mobile sidebar
+          openSidebarBtn.addEventListener('click', () => sidebarEl.style.display = 'block');
+          closeSidebarBtn.addEventListener('click', () => sidebarEl.style.display = 'none');
+
+          async function loadCourse() {
+            try {
+              const res = await fetch(`/Courses/GetCourseBySlug/${encodeURIComponent(courseSlug)}`);
+              if (!res.ok) throw new Error('Course not found');
+              const course = await res.json();
+              renderCourse(course);
+            } catch (err) {
+              courseTitleEl.textContent = 'Курс не найден';
+              courseShortEl.textContent = '';
+              modulesListEl.innerHTML = '<div>Ошибка загрузки курса</div>';
+              console.error(err);
+            }
+          }
+
+          function renderCourse(course) {
+            courseTitleEl.textContent = course.name;
+            offcanvasCourseTitleEl.textContent = course.name;
+            courseShortEl.textContent = course.shortDescription || '';
+
+            if (course.images && course.images.length) {
+              const hero = course.images.find(i => i.isMain) || course.images[0];
+              if (hero && hero.url) {
+                courseHeroEl.src = hero.url;
+                courseHeroEl.style.display = 'block';
+              }
+            }
+
+            modulesListEl.innerHTML = '';
+            modulesListMobileEl.innerHTML = '';
+            if (!course.modules || course.modules.length === 0) {
+              modulesListEl.innerHTML = '<div>Нет модулей.</div>';
+              modulesListMobileEl.innerHTML = modulesListEl.innerHTML;
+              return;
+            }
+
+            course.modules.forEach((module) => {
+              const moduleHeader = document.createElement('div');
+              moduleHeader.innerHTML = `
+                <div><strong>${escapeHtml(module.title)}</strong></div>
+                <div>${escapeHtml(module.description || '')}</div>
+                <div>${module.lessons.length} уроков</div>
+              `;
+              modulesListEl.appendChild(moduleHeader);
+
+              const ul = document.createElement('ul');
+              module.lessons.forEach(lesson => {
+                const li = document.createElement('li');
+                li.dataset.lessonSlug = lesson.slug;
+                li.innerHTML = `<span>${escapeHtml(lesson.title)}</span> ${lesson.durationMinutes ? lesson.durationMinutes + ' мин' : ''}`;
+                li.addEventListener('click', onLessonClick);
+                ul.appendChild(li);
+              });
+              modulesListEl.appendChild(ul);
+
+              const mobileGroup = document.createElement('div');
+              mobileGroup.innerHTML = `<div>${escapeHtml(module.title)} (${module.lessons.length})</div>`;
+              module.lessons.forEach(lesson => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.dataset.lessonSlug = lesson.slug;
+                btn.textContent = `${lesson.title} ${lesson.durationMinutes ? ' — ' + lesson.durationMinutes + ' мин' : ''}`;
+                btn.addEventListener('click', function(){
+                  sidebarEl.style.display = 'none';
+                  onLessonClick({ currentTarget: this });
+                });
+                mobileGroup.appendChild(btn);
+              });
+              modulesListMobileEl.appendChild(mobileGroup);
+            });
+
+            const firstItem = document.querySelector('[data-lesson-slug]');
+            if (firstItem) simulateClick(firstItem);
+          }
+
+          function simulateClick(el) {
+            el.classList.add('active');
+            onLessonClick({ currentTarget: el });
+          }
+
+          async function onLessonClick(e) {
+            const el = e.currentTarget;
+            const lessonSlug = el.dataset.lessonSlug;
+            if (!lessonSlug) return;
+
+            document.querySelectorAll('[data-lesson-slug]').forEach(x => x.classList.remove('active'));
+            el.classList.add('active');
+            currentLessonSlug = lessonSlug;
+
+            await loadLessonBySlug(lessonSlug);
+
+            try {
+              const url = new URL(location.href);
+              url.searchParams.set('lesson', lessonSlug);
+              history.replaceState(null, '', url);
+            } catch {}
+          }
+
+          async function loadLessonBySlug(lessonSlug) {
+            try {
+              lessonTitleEl.textContent = 'Загрузка...';
+              lessonBodyEl.innerHTML = '';
+              lessonResourcesEl.innerHTML = '';
+
+              const res = await fetch(`/Courses/GetLessonContent/${encodeURIComponent(courseSlug)}/lessons/${encodeURIComponent(lessonSlug)}`);
+              if (!res.ok) throw new Error('Урок не найден');
+              const lesson = await res.json();
+
+              lessonTitleEl.textContent = lesson.title;
+              lessonBodyEl.innerHTML = lesson.body || '<p>Нет содержимого.</p>';
+
+              if (lesson.resources && lesson.resources.length) {
+                const head = document.createElement('h6'); head.textContent = 'Ресурсы'; lessonResourcesEl.appendChild(head);
+                const ul = document.createElement('div');
+                lesson.resources.forEach(r => {
+                  const a = document.createElement('a');
+                  a.href = r.url;
+                  a.target = '_blank';
+                  a.rel = 'noopener noreferrer';
+                  a.textContent = (r.title || r.url) + ` (${r.resourceType})`;
+                  ul.appendChild(a);
+                });
+                lessonResourcesEl.appendChild(ul);
+              }
+            } catch (err) {
+              lessonTitleEl.textContent = 'Ошибка загрузки урока';
+              lessonResourcesEl.innerHTML = '<div>Не удалось загрузить содержимое.</div>';
+              console.error(err);
+            }
+          }
+
+          function escapeHtml(unsafe) {
+            if (!unsafe) return '';
+            return unsafe.replace(/[&<"'>]/g, m =>
+              ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])
+            );
+          }
+
+          loadCourse();
+
+          const urlParams = new URLSearchParams(location.search);
+          const presetLesson = urlParams.get('lesson');
+          if (presetLesson) {
+            const tryOpen = () => {
+              const el = document.querySelector(`[data-lesson-slug="${presetLesson}"]`);
+              if (el) simulateClick(el);
+              else setTimeout(tryOpen, 300);
+            };
+            setTimeout(tryOpen, 400);
+          }
+        })();
+    </script>
+</body>
+</html>

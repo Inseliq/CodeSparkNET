@@ -1,7 +1,6 @@
 using CodeSparkNET.Dtos.Account;
 using CodeSparkNET.Dtos.Profile;
 using CodeSparkNET.Interfaces.Services;
-using CodeSparkNET.Models;
 using CodeSparkNET.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

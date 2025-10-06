@@ -60,7 +60,7 @@ main[data-layout="main"][role="main"] {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
+  margin-block: 30px;
   padding: 15px 25px;
   width: 100%;
   background: rgba(31, 31, 31, 0.6);

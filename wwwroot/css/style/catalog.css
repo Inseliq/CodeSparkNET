@@ -154,14 +154,15 @@ html[cross-browser][data-device="mobile"] {
         width: 100%;
         gap: 7.5px;
         justify-content: center;
-        align-items: center;
+        align-items: stretch;
         flex-wrap: wrap;
 
         .card {
+          height: auto;
           max-width: calc(50% - 7.5px);
           min-width: calc(50% - 7.5px);
           width: calc(50% - 7.5px);
-          height: auto;
+          align-items: stretch;
           max-height: none;
           min-height: auto;
 

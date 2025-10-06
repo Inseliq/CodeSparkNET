@@ -23,13 +23,13 @@
 
 <section class="product-details __container" aria-labelledby="product-title">
     <nav class="breadcrumb" aria-label="breadcrumb">
-        <a class="breadcrumb__link" asp-controller="Home" asp-action="Index">Главная</a>
+        <a class="breadcrumb__link" asp-controller="Home" asp-action="Index" hover>Главная</a>
         <span class="breadcrumb__sep">›</span>
 
         @if (!string.IsNullOrEmpty(parentCatalogSlug))
         {
             <a class="breadcrumb__link" asp-controller="Catalogs" asp-action="Catalog"
-                asp-route-catalogSlug="@parentCatalogSlug">Каталог</a>
+                asp-route-catalogSlug="@parentCatalogSlug" hover>Каталог</a>
             <span class="breadcrumb__sep">›</span>
         }
 
@@ -50,7 +50,7 @@
                     foreach (var img in Model.Images)
                     {
                         var src = !string.IsNullOrEmpty(img?.Url);
-                        <button type="button" class="thumb-btn" data-src="@src" aria-label="Показать изображение @img?.Name">
+                        <button type="button" class="thumb-btn" data-src="@src" aria-label="Показать изображение @img?.Name" hover>
                             <img class="thumb-btn__img" alt="@img?.Name" />
                         </button>
                     }
@@ -93,26 +93,26 @@
                     {
                         @if (Model.IsAlreadyEnrolled)
                         {
-                            <a asp-controller="Course" asp-action="@Model.Slug">Читать</a>
-                        }          
+                            <a asp-controller="Course" asp-action="@Model.Slug" hover>Читать</a>
+                        }
                         else if (Model.ProductType == "Tutorial")
                         {
-                            <a asp-controller="Course" asp-action="@Model.Slug">Читать</a>
+                            <a asp-controller="Course" asp-action="@Model.Slug" hover>Читать</a>
                         }
                         else
                         {
                             <a asp-controller="Catalogs" asp-action="AddCourseToUser"
-                                asp-route-productSlug="@Model.Slug">Добавить</a>
+                                asp-route-productSlug="@Model.Slug" hover>Добавить</a>
                         }
                     }
                     else
                     {
-                        <a href="#">Связаться с нами</a>
+                        <a href="#" hover>Связаться с нами</a>
                     }
                 }
                 else
                 {
-                    <a asp-controller="Account" asp-action="Login">Войти</a>
+                    <a asp-controller="Account" asp-action="Login" hover>Войти</a>
                 }
             </div>
 

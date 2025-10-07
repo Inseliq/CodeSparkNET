@@ -8,11 +8,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const isActive = btnProfile.classList.contains("active");
 
     if (isActive || forceClose) {
-      document.body.style.overflow = ""
+      document.body.style.paddingRight = "";
+      document.body.style.overflow = "";
       btnProfile.classList.remove("active");
       modalProfile.classList.remove("visible");
       modalProfile.classList.add("hidden");
     } else {
+      document.body.style.paddingRight = "calc(clamp(0.375rem, 0.2079rem + 0.495vw, 1rem) + 4.5px)";
       document.body.style.overflow = "hidden"
       btnProfile.classList.add("active");
       modalProfile.classList.remove("hidden");

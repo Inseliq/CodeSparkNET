@@ -1226,6 +1226,17 @@ html[cross-browser] {
   }
 }
 
+@media screen and (min-width: 1920px) {
+  html[cross-browser] {
+    .js-window[js-window-profile] {
+      .description {
+        right: 3vw;
+        max-height: 350px;
+      }
+    }
+  }
+}
+
 /* send-email */
 html[cross-browser] {
   .js-window[js-window-send-confirmation-email] {

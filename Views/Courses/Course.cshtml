@@ -6,8 +6,17 @@
 }
 
 @section Styles {
+  <link rel="stylesheet" href="~/css/style/WebApp.CodeSpark/_layout.header.css" asp-append-version="true">
+  <link rel="stylesheet" href="~/css/style/WebApp.CodeSpark/_layout.footer.css" asp-append-version="true">
   <link rel="stylesheet" href="~/css/style/course.css">
 }
+
+@section Meta {
+  <meta name="CodeSpark" content="_Navbar.header">
+  <meta name="CodeSpark" content="_Navbar.footer">
+}
+
+<partial name="_WebApp_Navbar_header" />
 
 <div class="__container">
   <div class="header">
@@ -37,7 +46,6 @@
       <div>
         <h3 id="lesson-title">Выберите урок слева</h3>
         <div id="lesson-body">Содержимое урока появится здесь.</div>
-        <div id="lesson-resources"></div>
       </div>
     </div>
   </div>
@@ -56,7 +64,7 @@
   <div class="mobile-overlay" id="mobileOverlay"></div>
 </div>
 
-<script>
+<script defer>
   (function () {
     const courseSlug = decodeURIComponent(window.location.pathname.split("/").filter(Boolean).pop());
 
@@ -68,7 +76,6 @@
     const courseHeroEl = document.getElementById('course-hero');
     const lessonTitleEl = document.getElementById('lesson-title');
     const lessonBodyEl = document.getElementById('lesson-body');
-    const lessonResourcesEl = document.getElementById('lesson-resources');
     const sidebarEl = document.getElementById('sidebarOffcanvas');
     const menuBtn = document.getElementById('menuBtn');
     const closeSidebarBtn = document.getElementById('closeSidebarBtn');
@@ -76,7 +83,155 @@
 
     let currentLessonSlug = null;
 
-    // toggle mobile sidebar
+    // ========== UTILITY FUNCTIONS ==========
+    function escapeHtml(unsafe) {
+      if (!unsafe) return '';
+      return unsafe.replace(/[&<"'>]/g, m =>
+        ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m])
+      );
+    }
+
+    function escapeHtmlSimple(s) {
+      return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    // ========== CODE HIGHLIGHTING ==========
+    function highlight(code, lang) {
+      if (!code) return '';
+
+      if (lang === 'json') {
+        return escapeHtmlSimple(code)
+          .replace(/(\".*?\")/g, '<span class="token-string">$1</span>')
+          .replace(/(:\s*)(-?\d+\.?\d*)/g, '$1<span class="token-number">$2</span>');
+      }
+
+      if (lang === 'html') {
+        return escapeHtmlSimple(code)
+          .replace(/(&lt;!--[\s\S]*?--&gt;)/g, '<span class="token-comment">$1</span>')
+          .replace(/(&lt;\/?[a-zA-Z0-9-]+)/g, '<span class="token-keyword">$1</span>')
+          .replace(/([a-zA-Z-:]+)=/g, '<span class="token-attr">$1</span>=');
+      }
+
+      if (lang === 'js' || lang === 'javascript') {
+        const kw = ['function', 'return', 'const', 'let', 'var', 'if', 'else', 'for', 'while', 'new', 'class', 'extends', 'try', 'catch', 'throw', 'console', 'async', 'await', 'import', 'export', 'default'];
+        let out = escapeHtmlSimple(code);
+        out = out.replace(/(\".*?\"|'.*?'|`[\s\S]*?`)/g, '<span class="token-string">$1</span>');
+        out = out.replace(/(\/\/.*?$)/gm, '<span class="token-comment">$1</span>');
+        out = out.replace(new RegExp('\\b(' + kw.join('|') + ')\\b', 'g'), '<span class="token-keyword">$1</span>');
+        out = out.replace(/(\d+\.?\d*)/g, '<span class="token-number">$1</span>');
+        return out;
+      }
+
+      if (lang === 'css') {
+        let out = escapeHtmlSimple(code);
+        out = out.replace(/\/\*[\s\S]*?\*\//g, '<span class="token-comment">$&</span>');
+        out = out.replace(/([a-z-]+)(\s*:\s*)/gi, '<span class="token-keyword">$1</span>$2');
+        return out;
+      }
+
+      if (lang === 'c-sharp' || lang === 'csharp' || lang === 'cs') {
+        let out = escapeHtmlSimple(code);
+        out = out.replace(/(\/\/.*?$)/gm, '<span class="token-comment">$1</span>');
+        out = out.replace(/(".*?")/g, '<span class="token-string">$1</span>');
+        out = out.replace(/\b(int|string|bool|void|class|public|private|protected|using|namespace|return|new|var|async|await)\b/g, '<span class="token-keyword">$1</span>');
+        return out;
+      }
+
+      if (lang === 'python') {
+        let out = escapeHtmlSimple(code);
+        out = out.replace(/(#.*?$)/gm, '<span class="token-comment">$1</span>');
+        out = out.replace(/("""[\s\S]*?"""|'''[\s\S]*?''')/g, '<span class="token-string">$1</span>');
+        out = out.replace(/\b(def|class|return|import|from|as|if|elif|else|for|while|try|except|with|lambda|True|False|None)\b/g, '<span class="token-keyword">$1</span>');
+        return out;
+      }
+
+      return escapeHtmlSimple(code);
+    }
+
+    // ========== CREATE CONSOLE ==========
+    function createConsole(pre, kind) {
+      const wrapper = document.createElement('div');
+      wrapper.className = `console ${kind}`;
+
+      const top = document.createElement('div');
+      top.className = 'mac-top';
+      top.innerHTML = '<span class="mac-dot"></span><span class="mac-dot"></span><span class="mac-dot"></span>';
+
+      const content = document.createElement('pre');
+      content.textContent = pre.textContent;
+
+      wrapper.appendChild(top);
+      wrapper.appendChild(content);
+
+      pre.replaceWith(wrapper);
+    }
+
+    // ========== CREATE EDITOR ==========
+    function createEditor(pre, lang) {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'editor code';
+      wrapper.setAttribute('data-lang', lang);
+
+      const bar = document.createElement('div');
+      bar.className = 'editor-bar';
+
+      const left = document.createElement('div');
+      left.className = 'left';
+      const badge = document.createElement('div');
+      badge.className = 'lang-badge';
+      badge.innerHTML = `<span style="width:10px;height:10px;border-radius:3px;background:var(--accent);display:inline-block;margin-right:6px"></span><span class="lang-label">${lang}</span>`;
+      left.appendChild(badge);
+
+      const controls = document.createElement('div');
+      controls.className = 'controls';
+      const copyBtn = document.createElement('button');
+      copyBtn.className = 'copy-btn';
+      copyBtn.type = 'button';
+      copyBtn.textContent = 'Copy';
+      controls.appendChild(copyBtn);
+
+      bar.appendChild(left);
+      bar.appendChild(controls);
+
+      const preEl = document.createElement('pre');
+      const code = pre.textContent;
+      preEl.innerHTML = highlight(code, lang);
+
+      wrapper.appendChild(bar);
+      wrapper.appendChild(preEl);
+
+      // Copy behaviour
+      copyBtn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(code);
+          copyBtn.textContent = 'Copied';
+          setTimeout(() => copyBtn.textContent = 'Copy', 1500);
+        } catch (e) {
+          console.warn('copy failed', e);
+          copyBtn.textContent = 'Error';
+          setTimeout(() => copyBtn.textContent = 'Copy', 1500);
+        }
+      });
+
+      pre.replaceWith(wrapper);
+    }
+
+    // ========== PROCESS CODE BLOCKS ==========
+    function processCodeBlocks() {
+      document.querySelectorAll('pre[data-editor]').forEach(pre => {
+        const mode = pre.getAttribute('data-editor');
+        if (mode === 'output') {
+          createConsole(pre, 'output');
+        } else if (mode === 'console') {
+          createConsole(pre, 'input');
+        } else if (mode === 'code') {
+          const ln = (pre.getAttribute('data-ln') || 'text').toLowerCase();
+          createEditor(pre, ln);
+        }
+      });
+    }
+
+    // ========== MOBILE SIDEBAR ==========
     menuBtn.addEventListener('click', () => {
       if (sidebarEl.classList.contains('show')) {
         menuBtn.classList.remove('active');
@@ -113,6 +268,7 @@
       }, 400);
     });
 
+    // ========== LOAD COURSE ==========
     async function loadCourse() {
       try {
         const res = await fetch(`/Courses/GetCourseBySlug/${encodeURIComponent(courseSlug)}`);
@@ -151,10 +307,10 @@
       course.modules.forEach((module) => {
         const moduleHeader = document.createElement('div');
         moduleHeader.innerHTML = `
-                <div><strong>${escapeHtml(module.title)}</strong></div>
-                <div>${escapeHtml(module.description || '')}</div>
-                <div>${module.lessons.length} уроков</div>
-              `;
+          <div><strong>${escapeHtml(module.title)}</strong></div>
+          <div>${escapeHtml(module.description || '')}</div>
+          <div>${module.lessons.length} уроков</div>
+        `;
         modulesListEl.appendChild(moduleHeader);
 
         const ul = document.createElement('ul');
@@ -220,7 +376,6 @@
       try {
         lessonTitleEl.textContent = 'Загрузка...';
         lessonBodyEl.innerHTML = '';
-        lessonResourcesEl.innerHTML = '';
 
         const res = await fetch(`/Courses/GetLessonContent/${encodeURIComponent(courseSlug)}/lessons/${encodeURIComponent(lessonSlug)}`);
         if (!res.ok) throw new Error('Урок не найден');
@@ -229,33 +384,17 @@
         lessonTitleEl.textContent = lesson.title;
         lessonBodyEl.innerHTML = lesson.body || '<p>Нет содержимого.</p>';
 
-        if (lesson.resources && lesson.resources.length) {
-          const head = document.createElement('h6'); head.textContent = 'Ресурсы'; lessonResourcesEl.appendChild(head);
-          const ul = document.createElement('div');
-          lesson.resources.forEach(r => {
-            const a = document.createElement('a');
-            a.href = r.url;
-            a.target = '_blank';
-            a.rel = 'noopener noreferrer';
-            a.textContent = (r.title || r.url) + ` (${r.resourceType})`;
-            ul.appendChild(a);
-          });
-          lessonResourcesEl.appendChild(ul);
-        }
+        // ВАЖНО: обрабатываем code blocks ПОСЛЕ загрузки содержимого
+        setTimeout(() => processCodeBlocks(), 100);
+
       } catch (err) {
         lessonTitleEl.textContent = 'Ошибка загрузки урока';
-        lessonResourcesEl.innerHTML = '<div>Не удалось загрузить содержимое.</div>';
+        lessonBodyEl.innerHTML = '<div>Не удалось загрузить содержимое.</div>';
         console.error(err);
       }
     }
 
-    function escapeHtml(unsafe) {
-      if (!unsafe) return '';
-      return unsafe.replace(/[&<"'>]/g, m =>
-        ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m])
-      );
-    }
-
+    // ========== INITIAL LOAD ==========
     loadCourse();
 
     const urlParams = new URLSearchParams(location.search);
@@ -271,7 +410,7 @@
   })();
 </script>
 
-<script>
+<script defer>
   // Дополнительные анимации и интерактивность
   (function () {
     // Parallax эффект для фона
@@ -333,17 +472,17 @@
 
     const style = document.createElement('style');
     style.textContent = `
-        @@keyframes ripple {
-          from {
-            transform: scale(0);
-            opacity: 1;
-          }
-          to {
-            transform: scale(2);
-            opacity: 0;
-          }
+      @@keyframes ripple {
+        from {
+          transform: scale(0);
+          opacity: 1;
         }
-      `;
+        to {
+          transform: scale(2);
+          opacity: 0;
+        }
+      }
+    `;
     document.head.appendChild(style);
 
     document.querySelectorAll('button, .back-btn').forEach(btn => {
@@ -358,6 +497,8 @@
       if (lessonTitle && lessonTitle.textContent !== 'Выберите урок слева') {
         lessonTitle.style.filter = `hue-rotate(${hue * 0.1}deg)`;
       }
-    }, 50);
+    }, 25);
   })();
 </script>
+
+<partial name="_WebApp_Navbar_footer" />

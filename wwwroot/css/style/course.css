@@ -60,7 +60,8 @@ main[data-layout="main"][role="main"] {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-block: 30px;
+  margin-bottom: 30px;
+  margin-top: calc(68px + 30px);
   padding: 15px 25px;
   width: 100%;
   background: rgba(31, 31, 31, 0.6);
@@ -230,6 +231,7 @@ main[data-layout="main"][role="main"] {
   gap: 25px;
   width: 100%;
   animation: fadeIn 0.8s ease-out;
+  margin-bottom: 30px;
 }
 
 @keyframes fadeIn {
@@ -415,7 +417,7 @@ aside {
   font-size: 32px;
   font-weight: 700;
   margin-bottom: 25px;
-  background: linear-gradient(135deg, var(--palette-text-inv), var(--palette-custom));
+  background: linear-gradient(0deg, var(--palette-acient), var(--palette-custom));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -449,7 +451,217 @@ aside {
   line-height: 1.8;
   color: var(--palette-text-shadow);
   font-size: 16px;
-  margin-bottom: 30px;
+  /* margin-bottom: 30px; */
+
+  --vsc-bg: #1e1e1e;
+  --vsc-panel: #252526;
+  --vsc-foreground: #d4d4d4;
+  --accent-js: #f7df1e;
+  --accent-html: #e44d26;
+  --accent-css: #2965f1;
+  --accent-json: #56b6c2;
+  --accent-csharp: #178600;
+  --accent-python: #3572A5;
+
+  .editor.code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;
+    background: var(--vsc-panel);
+    color: var(--vsc-foreground);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    margin: 1em 0;
+  }
+
+  /* Верхняя панель (как в VS Code): язык + кнопка копировать */
+  .editor.code .editor-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 8px 10px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  }
+
+  .editor.code .lang-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .editor.code .controls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  /* Кнопка копировать похожая на VSC */
+  .copy-btn {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    color: var(--vsc-foreground);
+    padding: 6px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  .copy-btn:hover {
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  .copy-btn:active {
+    transform: translateY(1px);
+  }
+
+  /* Сам pre */
+  .editor.code pre {
+    margin: 0;
+    padding: 16px;
+    overflow: auto;
+    white-space: pre;
+    line-height: 1.45;
+    font-size: 13px;
+    tab-size: 2;
+  }
+
+  /* Цвета по языку (акцент слева) */
+  .editor.code[data-lang="js"] {
+    --accent: var(--accent-js);
+  }
+
+  .editor.code[data-lang="html"] {
+    --accent: var(--accent-html);
+  }
+
+  .editor.code[data-lang="css"] {
+    --accent: var(--accent-css);
+  }
+
+  .editor.code[data-lang="json"] {
+    --accent: var(--accent-json);
+  }
+
+  .editor.code[data-lang="c-sharp"] {
+    --accent: var(--accent-csharp);
+  }
+
+  .editor.code[data-lang="python"] {
+    --accent: var(--accent-python);
+  }
+
+  .editor.code::before {
+    content: "";
+    display: block;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent) 0%, rgba(255, 255, 255, 0.03) 100%);
+  }
+
+  /* Лёгкое подсвечивание токенов (простая рег-логика, а не полноценный парсер) */
+  .token-keyword {
+    color: #c586c0;
+    font-weight: 600;
+  }
+
+  .token-string {
+    color: #ce9178;
+  }
+
+  .token-number {
+    color: #b5cea8;
+  }
+
+  .token-comment {
+    color: #6a9955;
+    font-style: italic;
+  }
+
+  .token-attr {
+    color: #9cdcfe;
+  }
+
+  /* Стили для консоли (macOS-like) */
+  .console {
+    font-family: ui-monospace, Menlo, Monaco, monospace;
+    border-radius: 10px;
+    padding: 12px;
+    margin: 1em 0;
+    box-shadow: 0 6px 18px rgba(77, 77, 77, 0.22);
+    background: linear-gradient(180deg, var(--palette-nav-site), var(--palette-nav-site));
+    color: #e6e6e6;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+  }
+
+  .console .mac-top {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .console .mac-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.12);
+  }
+
+  .console .mac-dot:nth-child(1) {
+    background: var(--palette-second);
+  }
+
+  .console .mac-dot:nth-child(2) {
+    background: var(--palette-acient);
+  }
+
+  .console .mac-dot:nth-child(3) {
+    background: var(--palette-text-shadow);
+  }
+
+  .console pre {
+    margin: 0;
+    padding: 6px 8px;
+    background: transparent;
+    white-space: pre-wrap;
+    font-size: 13px;
+    line-height: 1.5
+  }
+
+  /* Небольшие помощники */
+  .lang-label {
+    font-size: 11px;
+    opacity: 0.9
+  }
+
+  [data-style="link-new"] {
+    margin-right: 22.5px;
+  }
+
+  [data-style="link-new"].hover {
+    margin-right: 25px;
+  }
+}
+
+@media (max-width:640px) {
+  .editor.code pre {
+    font-size: 12px;
+  }
+}
+
+#lesson-body ul {
+  margin-left: 24px;
+  margin-bottom: 10px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 
 #lesson-body p {
@@ -459,41 +671,27 @@ aside {
 #lesson-body h1,
 #lesson-body h2,
 #lesson-body h3 {
-  color: var(--palette-text-inv);
+  color: var(--palette-custom);
+  font-weight: 700;
   margin-top: 25px;
   margin-bottom: 15px;
 }
 
-#lesson-resources {
-  margin-top: 30px;
-  padding: 20px;
-  background: rgba(151, 128, 229, 0.1);
-  border-radius: 15px;
-  border: 1px solid rgba(151, 128, 229, 0.2);
-}
-
-#lesson-resources h6 {
-  font-size: 18px;
+#lesson-body h4 {
+  color: var(--palette-acient);
   margin-bottom: 15px;
-  color: var(--palette-custom);
 }
 
-#lesson-resources a {
-  display: inline-block;
-  margin: 8px 8px 8px 0;
-  padding: 10px 18px;
-  background: linear-gradient(135deg, var(--palette-acient), var(--palette-second));
+#lesson-body strong {
+  font-weight: 600;
   color: var(--palette-text-inv);
-  text-decoration: none;
-  border-radius: 10px;
-  font-size: 14px;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(151, 128, 229, 0.3);
+  opacity: 0.9;
+  margin-bottom: 15px;
 }
 
-#lesson-resources a:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(151, 128, 229, 0.5);
+#lesson-body b {
+  font-weight: 600;
+  color: var(--palette-text-shadow);
 }
 
 /* Mobile sidebar offcanvas */

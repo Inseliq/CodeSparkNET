@@ -13,12 +13,13 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
 
     document.body.appendChild(modal);
-
+    document.body.style.paddingRight = "calc(clamp(0.375rem, 0.2079rem + 0.495vw, 1rem) + 4.5px)";
     document.body.style.overflow = "hidden";
 
     setTimeout(() => modal.classList.add("visible"), 100);
 
     function closeModal() {
+      document.body.style.paddingRight = "";
       modal.classList.remove("visible");
       modal.classList.add("hidden");
 

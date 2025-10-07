@@ -52,12 +52,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const step3 = modal.querySelector('.main-content.step3');
 
     function openModal() {
+      document.body.style.paddingRight = "calc(clamp(0.375rem, 0.2079rem + 0.495vw, 1rem) + 4.5px)";
+      document.body.style.overflow = "hidden";
       modal.classList.remove('hidden');
       modal.classList.add('visible');
       description.setAttribute('step', '1');
     }
 
     function closeModal() {
+      document.body.style.paddingRight = "";
+      document.body.style.overflow = "";
       modal.classList.replace('visible', 'hidden');
     }
 

@@ -630,6 +630,18 @@ html[cross-browser] {
   }
 }
 
+@media screen and (min-width: 1720px) {
+  html[cross-browser] {
+    & main[data-layout="main"][role="main"] {
+      & [logo-banner] {
+        img {
+          left: 27.5%;
+        }
+      }
+    }
+  }
+}
+
 /* UserName-form */
 html[cross-browser] {
   .js-window[js-window-update-profile-name] {

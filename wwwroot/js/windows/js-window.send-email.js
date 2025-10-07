@@ -35,6 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function showSendEmailResultModal() {
     if (modal) {
+      document.body.style.paddingRight = "calc(clamp(0.375rem, 0.2079rem + 0.495vw, 1rem) + 4.5px)";
       document.body.style.overflow = "hidden"
       modal.classList.replace("hidden", "visible");
     }
@@ -42,6 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function hideSendEmailResultModal() {
     if (modal) {
+      document.body.style.paddingRight = "";
       document.body.style.overflow = ""
       modal.classList.replace("visible", "hidden");
     }

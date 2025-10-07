@@ -136,24 +136,24 @@ namespace CodeSparkNET.Services
                     Slug = catalog.Slug,
                     IsVisible = catalog.IsVisible,
                     IsLinkOnly = catalog.IsLinkOnly,
-                    Products = catalog.Products
-                        .Select(p => new CatalogProductsDto
+                    Products = catalog.Products.Select(p => new CatalogProductsDto
+                    {
+                        Name = p.Name,
+                        Slug = p.Slug,
+                        ShortDescription = p.ShortDescription,
+                        FullDescription = p.FullDescription,
+                        Price = p.Price,
+                        Currency = p.Currency,
+                        InStock = p.InStock,
+                        ProductType = p.ProductType,
+                        HasPrice = p.Price != 0m,
+                        ProductImages = p.ProductImages?.Select(img => new CatalogProductImageDto
                         {
-                            Name = p.Name,
-                            Slug = p.Slug,
-                            ShortDescription = p.ShortDescription,
-                            Price = p.Price,
-                            Currency = p.Currency,
-                            InStock = p.InStock,
-                            ProductType = p.ProductType,
-                            ProductImages = p.ProductImages?.Select(img => new CatalogProductImageDto
-                            {
-                                Name = img.Name,
-                                Url = img.Url,
-                                IsMain = img.IsMain
-                            }).ToList()
-                        })
-                        .ToList()
+                            Name = img.Name,
+                            Url = img.Url,
+                            IsMain = img.IsMain
+                        }).ToList()
+                    }).ToList()
                 };
 
                 var options = new DistributedCacheEntryOptions
@@ -199,6 +199,7 @@ namespace CodeSparkNET.Services
                                 Name = p.Name,
                                 Slug = p.Slug,
                                 ShortDescription = p.ShortDescription,
+                                FullDescription = p.FullDescription,
                                 Price = p.Price,
                                 Currency = p.Currency,
                                 InStock = p.InStock,

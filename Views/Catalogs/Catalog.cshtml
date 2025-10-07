@@ -50,7 +50,10 @@
             <div class="overview-bg">
               <h3 class="name">@p.Name</h3>
               <p>@p.ShortDescription</p>
-              <h3 class="cent">@p.Price @p.Currency</h3>
+              @if (p.HasPrice)
+              {
+                <h3 class="cent">@p.Price @p.Currency</h3>
+              }
             </div>
           </a>
         </article>

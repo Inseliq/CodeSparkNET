@@ -238,7 +238,8 @@ main[data-layout="main"][role="main"] {
     /* price */
     .price {
       display: flex;
-      align-items: baseline;
+      align-items: center;
+      justify-content: space-between;
       gap: 8px;
       padding: 15px 25px;
       background: linear-gradient(135deg, rgba(151, 128, 229, 0.2), rgba(218, 106, 208, 0.2));
@@ -485,7 +486,7 @@ main[data-layout="main"][role="main"] {
     .__container.product-details {
       .product-grid {
         display: flex !important;
-        flex-direction: column;
+        flex-direction: column-reverse;
         gap: 16px;
         padding: 12px;
         width: 100%;
@@ -503,6 +504,7 @@ main[data-layout="main"][role="main"] {
       }
 
       .gallery {
+        margin-top: calc(16px + 25px + 16px);
         order: 2;
         width: 100%;
         padding: 0 6px;
@@ -567,6 +569,8 @@ main[data-layout="main"][role="main"] {
       }
 
       .product-title {
+        top: 23px;
+        position: absolute;
         font-size: 24px;
         line-height: 1.15;
         padding: 0 6px;

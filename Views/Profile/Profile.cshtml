@@ -184,6 +184,7 @@ else
                         <label asp-for="UpdatePersonalProfileDto.UserName">Имя пользователя</label>
                         <input asp-for="UpdatePersonalProfileDto.UserName" id="names" type="text" required hover
                                placeholder="@Model.PersonalProfileDto.UserName">
+                               @* TODO: Удалить поле с почтой и поменять контроллер *@
                         <input asp-for="UpdatePersonalProfileDto.Email" id="email" type="email" value="@Model.PersonalProfileDto.Email"
                             required hover hidden="!">
                     </div>

@@ -17,9 +17,14 @@
       <div js-list-catalog class="list hidden">
         @foreach (var catalog in catalogs)
         {
-          <a asp-controller="Catalogs" asp-action="Catalog" asp-route-catalogSlug="@catalog.Slug" hover>
-            @catalog.Name
-          </a>
+            if (catalog.IsLinkOnly)
+            {
+                <a asp-controller="@catalog.PageController" asp-action="@catalog.PageName" hover>@catalog.Name</a>
+            }
+            else
+            {
+                <a asp-controller="Catalogs" asp-action="Catalog" asp-route-catalogSlug="@catalog.Slug" hover>@catalog.Name</a>
+            }
         }
       </div>
       <button js-list-documents-btn hover>Документация</button>

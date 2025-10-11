@@ -1,0 +1,108 @@
+﻿@model CodeSparkNET.Dtos.Course.CreateCourseDto
+@{
+    ViewData["Title"] = "Create Course";
+}
+
+<h2>Create Course</h2>
+
+<form asp-controller="AdminCourse" asp-action="CreateCourse" method="post" enctype="application/x-www-form-urlencoded" novalidate>
+    @Html.AntiForgeryToken()
+
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Slug"></label>
+        <input asp-for="Slug" class="form-control" placeholder="optional" />
+        <span asp-validation-for="Slug" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="CatalogId"></label>
+        <input asp-for="CatalogId" class="form-control" />
+        <span asp-validation-for="CatalogId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Price"></label>
+        <input asp-for="Price" class="form-control" type="number" step="0.01" />
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="MainImageUrl"></label>
+        <input asp-for="MainImageUrl" id="MainImageUrl" class="form-control" />
+        <span asp-validation-for="MainImageUrl" class="text-danger"></span>
+
+        <div id="imagePreview" style="margin-top:10px; display:none;">
+            <p>Image preview:</p>
+            <img id="imgPreview" src="" alt="Preview" style="max-width:300px; max-height:200px; display:block;" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ShortDescription"></label>
+        <textarea asp-for="ShortDescription" class="form-control" rows="3"></textarea>
+        <span asp-validation-for="ShortDescription" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="FullDescription">Full description (plain text)</label>
+        <textarea asp-for="FullDescription" class="form-control" rows="6" placeholder="Long plain text description"></textarea>
+        <span asp-validation-for="FullDescription" class="text-danger"></span>
+    </div>
+
+    <div class="form-check">
+        <input asp-for="IsPublished" class="form-check-input" />
+        <label asp-for="IsPublished" class="form-check-label"></label>
+    </div>
+
+    <div style="margin-top:10px;">
+        <button type="submit" class="btn btn-primary">Create</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        // image preview logic (same as earlier)
+        const mainImageInput = document.getElementById('MainImageUrl');
+        const imagePreviewWrap = document.getElementById('imagePreview');
+        const imgPreview = document.getElementById('imgPreview');
+
+        function showPreview(url) {
+            if (!url) {
+                imagePreviewWrap.style.display = 'none';
+                imgPreview.src = '';
+                return;
+            }
+            imgPreview.src = url;
+            imagePreviewWrap.style.display = 'block';
+        }
+
+        if (mainImageInput) {
+            mainImageInput.addEventListener('input', function () {
+                const val = mainImageInput.value.trim();
+                try {
+                    const u = new URL(val);
+                    if (u.protocol === 'http:' || u.protocol === 'https:') {
+                        showPreview(val);
+                        return;
+                    }
+                } catch (e) { /* invalid url */ }
+                showPreview('');
+            });
+
+            document.addEventListener('DOMContentLoaded', function () {
+                if (mainImageInput.value) showPreview(mainImageInput.value);
+            });
+        }
+    </script>
+
+    <partial name="_ValidationScriptsPartial" />
+}

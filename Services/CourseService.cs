@@ -196,8 +196,12 @@ namespace CodeSparkNET.Services
             return new LessonContentDto
             {
                 Id = lesson.Id,
+                Slug = lesson.Slug,
                 Title = lesson.Title,
                 Body = lesson.Body,
+                Position = lesson.Position,
+                IsPublished = lesson.IsPublished,
+                IsFreePreview = lesson.IsFreePreview,
                 Resources = lesson.Resources?
                              .OrderBy(r => r.Position)
                              .Select(r => new LessonResourceDto

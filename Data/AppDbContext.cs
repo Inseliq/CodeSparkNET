@@ -373,6 +373,7 @@ namespace CodeSparkNET.Data
                 new
                 {
                     Id = "keras-for-beginners-main",
+                    Slug = "keras-for-beginners-main",
                     CourseId = seededCourseId,
                     Title = "Keras для начинающих",
                     Position = 1,

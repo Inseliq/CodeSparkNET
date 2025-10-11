@@ -1,0 +1,89 @@
+﻿@model CodeSparkNET.Dtos.Course.UpdateCourseDto
+@{
+    ViewData["Title"] = "Edit Course - " + Model?.Name;
+}
+
+<h2>Edit course</h2>
+
+<form asp-action="UpdateCourse" method="post" novalidate>
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Slug" class="form-label"></label>
+        <input asp-for="Slug" class="form-control" />
+        <span asp-validation-for="Slug" class="text-danger"></span>
+        <div class="form-text">Optional. If empty, will be generated from the name.</div>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="ShortDescription" class="form-label"></label>
+        <textarea asp-for="ShortDescription" class="form-control" rows="3"></textarea>
+        <span asp-validation-for="ShortDescription" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="FullDescription" class="form-label"></label>
+        <textarea asp-for="FullDescription" class="form-control" rows="6"></textarea>
+        <span asp-validation-for="FullDescription" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="MainImageUrl" class="form-label"></label>
+        <input asp-for="MainImageUrl" class="form-control" id="MainImageUrl" />
+        <span asp-validation-for="MainImageUrl" class="text-danger"></span>
+
+        <div id="imagePreview" style="margin-top:8px; display:none;">
+            <img id="imgPreview" src="" alt="Preview" style="max-width:240px; max-height:160px; border:1px solid #ddd; padding:4px;" />
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a asp-action="EditCourse" asp-route-slug="@Model.Slug" class="btn btn-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    <script>
+        // image preview for url
+        const mainImageInput = document.getElementById('MainImageUrl');
+        const imagePreview = document.getElementById('imagePreview');
+        const imgPreview = document.getElementById('imgPreview');
+
+        function showPreview(url) {
+            if (!url) {
+                imagePreview.style.display = 'none';
+                imgPreview.src = '';
+                return;
+            }
+            imgPreview.src = url;
+            imagePreview.style.display = 'block';
+        }
+
+        if (mainImageInput) {
+            mainImageInput.addEventListener('input', () => {
+                const val = mainImageInput.value.trim();
+                try {
+                    const u = new URL(val);
+                    if (u.protocol === 'http:' || u.protocol === 'https:') {
+                        showPreview(val);
+                        return;
+                    }
+                } catch (e) { }
+                showPreview('');
+            });
+
+            // show initial
+            if (mainImageInput.value) showPreview(mainImageInput.value);
+        }
+    </script>
+
+    <partial name="_ValidationScriptsPartial" />
+}

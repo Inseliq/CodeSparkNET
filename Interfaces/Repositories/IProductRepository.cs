@@ -22,7 +22,7 @@ namespace CodeSparkNET.Interfaces.Repositories
         Task<bool> DeleteModuleAsync(string moduleSlug);
 
         Task<Lesson> AddLessonAsync(AddLessonDto model);
-        Task<bool> UpdateLessonAsync(string moduleId, string lessonId, string title, string slug, string body, int position, bool isPublished, bool isFreePreview);
+        Task<bool> UpdateLessonAsync(UpdateLessonDto model);
         Task<bool> DeleteLessonAsync(string lessonId);
     }
 }

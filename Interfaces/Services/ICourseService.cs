@@ -15,6 +15,10 @@ namespace CodeSparkNET.Interfaces.Services
         Task<bool> UpdateModuleAsync(UpdateModuleDto model);
         Task<bool> DeleteModuleAsync(string moduleSlug);
 
+        Task<LessonContentDto> GetLessonByIdAsync(string lessonId);
+
         Task<LessonContentDto> AddLessonAsync(AddLessonDto model);
+        Task<bool> UpdateLessonAsync(UpdateLessonDto model);
+        Task<bool> DeleteLessonAsync(string lessonId);
     }
 }

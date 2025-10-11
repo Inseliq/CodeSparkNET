@@ -40,6 +40,7 @@ namespace CodeSparkNET.Services
                     .Select(m => new ModuleDto
                     {
                         Id = m.Id,
+                        Slug = m.Slug,
                         Title = m.Title,
                         Position = m.Position,
                         Lessons = m.Lessons
@@ -183,6 +184,33 @@ namespace CodeSparkNET.Services
             return true;
         }
 
+        public async Task<LessonContentDto> GetLessonByIdAsync(string lessonId)
+        {
+            if (string.IsNullOrWhiteSpace(lessonId))
+                return null;
+
+            var lesson = await _productRepository.GetLessonByIdAsync(lessonId);
+            if (lesson == null)
+                return null;
+
+            return new LessonContentDto
+            {
+                Id = lesson.Id,
+                Title = lesson.Title,
+                Body = lesson.Body,
+                Resources = lesson.Resources?
+                             .OrderBy(r => r.Position)
+                             .Select(r => new LessonResourceDto
+                             {
+                                 Id = r.Id,
+                                 Url = r.Url,
+                                 ResourceType = r.ResourceType,
+                                 Title = r.Title
+                             }).ToList() ?? new List<LessonResourceDto>()
+            };
+        }
+
+
         public async Task<LessonContentDto> AddLessonAsync(AddLessonDto model)
         {
             if (model == null)
@@ -201,6 +229,26 @@ namespace CodeSparkNET.Services
             };
 
             return result;
+        }
+
+        public async Task<bool> UpdateLessonAsync(UpdateLessonDto model)
+        {
+            if (model == null)
+                return false;
+            var result = await _productRepository.UpdateLessonAsync(model);
+            if (!result)
+                return false;
+            return true;
+        }
+
+        public async Task<bool> DeleteLessonAsync(string lessonSlug)
+        {
+            if (string.IsNullOrEmpty(lessonSlug))
+                return false;
+            var resut = await _productRepository.DeleteLessonAsync(lessonSlug);
+            if (!resut)
+                return false;
+            return true;
         }
 
         // -------------------------

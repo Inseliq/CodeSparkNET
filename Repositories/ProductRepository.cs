@@ -274,7 +274,7 @@ namespace CodeSparkNET.Repositories
         {
             var course = await _context.Courses
                 .Include(c => c.Modules)
-                .FirstOrDefaultAsync(c => c.Slug == model.Slug);
+                .FirstOrDefaultAsync(c => c.Slug == model.CourseSlug);
 
             if (course == null) throw new InvalidOperationException("Course not found");
 
@@ -353,14 +353,14 @@ namespace CodeSparkNET.Repositories
             return lesson;
         }
 
-        public async Task<bool> UpdateLessonAsync(string moduleId, string lessonId, string title, string slug, string body, int position, bool isPublished, bool isFreePreview)
+        public async Task<bool> UpdateLessonAsync(UpdateLessonDto model)
         {
-            if (string.IsNullOrWhiteSpace(moduleId) || string.IsNullOrWhiteSpace(lessonId))
+            if (string.IsNullOrWhiteSpace(model.ModuleId) || string.IsNullOrWhiteSpace(model.Id))
                 return false;
 
             var lesson = await _context.Lessons
                 .Include(l => l.Module)
-                .FirstOrDefaultAsync(l => l.Id == lessonId && l.ModuleId == moduleId);
+                .FirstOrDefaultAsync(l => l.Id == model.Id && l.ModuleId == model.ModuleId);
 
             if (lesson == null) return false;
 
@@ -368,7 +368,7 @@ namespace CodeSparkNET.Repositories
             if (!string.IsNullOrWhiteSpace(courseId))
             {
                 var slugExists = await _context.Lessons
-                    .AnyAsync(l => l.Slug == slug && l.Id != lessonId && l.Module.CourseId == courseId);
+                    .AnyAsync(l => l.Slug == model.Slug && l.Id != model.Id && l.Module.CourseId == courseId);
 
                 if (slugExists)
                 {
@@ -376,12 +376,12 @@ namespace CodeSparkNET.Repositories
                 }
             }
 
-            lesson.Title = title;
-            lesson.Slug = slug;
-            lesson.Body = body ?? string.Empty;
-            lesson.Position = position;
-            lesson.IsPublished = isPublished;
-            lesson.IsFreePreview = isFreePreview;
+            lesson.Title = model.Title;
+            lesson.Slug = model.Slug;
+            lesson.Body = model.Body ?? string.Empty;
+            lesson.Position = model.Position;
+            lesson.IsPublished = model.IsPublished;
+            lesson.IsFreePreview = model.IsFreePreview;
 
             try
             {

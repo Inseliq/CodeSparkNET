@@ -2,88 +2,562 @@
 @{
     ViewData["Title"] = "Edit Course - " + Model?.Name;
 }
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
 
-<h2>Edit course</h2>
+<style>
+    /* Modal content text black, light theme */
+    .modal-content {
+        color: #000;
+        background: #fff;
+    }
 
-<form asp-action="UpdateCourse" method="post" novalidate>
-    @Html.AntiForgeryToken()
-    <input type="hidden" asp-for="Id" />
+    /* Editor area: keep default (light) look */
+    .ck-editor__editable_inline {
+        min-height: 360px;
+        background: #fff;
+        color: #000;
+    }
 
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    /* Styling for pre blocks inside preview */
+    #lessonPreview pre[data-editor="code"] {
+        background: #0d0f12; /* code blocks dark */
+        color: #ffffff;
+        border-left: 4px solid #6c757d;
+        padding: 10px;
+        overflow: auto;
+        white-space: pre-wrap;
+    }
 
-    <div class="mb-3">
-        <label asp-for="Name" class="form-label"></label>
-        <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
-    </div>
+    #lessonPreview pre[data-editor="output"] {
+        background: #f8f9fa; /* light output */
+        color: #000;
+        border-left: 4px solid #d39e00;
+        padding: 10px;
+        white-space: pre-wrap;
+    }
 
-    <div class="mb-3">
-        <label asp-for="Slug" class="form-label"></label>
-        <input asp-for="Slug" class="form-control" />
-        <span asp-validation-for="Slug" class="text-danger"></span>
-        <div class="form-text">Optional. If empty, will be generated from the name.</div>
-    </div>
+    #lessonPreview pre[data-editor="console"] {
+        background: #f1f1f1;
+        color: #000;
+        border-left: 4px solid #222;
+        padding: 10px;
+        font-family: monospace;
+        white-space: pre-wrap;
+    }
 
-    <div class="mb-3">
-        <label asp-for="ShortDescription" class="form-label"></label>
-        <textarea asp-for="ShortDescription" class="form-control" rows="3"></textarea>
-        <span asp-validation-for="ShortDescription" class="text-danger"></span>
-    </div>
+    /* make preview container text black (except code blocks which we style above) */
+    #lessonPreview {
+        background: #fff;
+        color: #000;
+    }
 
-    <div class="mb-3">
-        <label asp-for="FullDescription" class="form-label"></label>
-        <textarea asp-for="FullDescription" class="form-control" rows="6"></textarea>
-        <span asp-validation-for="FullDescription" class="text-danger"></span>
-    </div>
+    /* small helpers */
+    .module-title {
+        cursor: pointer;
+    }
+</style>
 
-    <div class="mb-3">
-        <label asp-for="MainImageUrl" class="form-label"></label>
-        <input asp-for="MainImageUrl" class="form-control" id="MainImageUrl" />
-        <span asp-validation-for="MainImageUrl" class="text-danger"></span>
+<div class="container my-4">
+    <h2>Edit course: @Model?.Name</h2>
 
-        <div id="imagePreview" style="margin-top:8px; display:none;">
-            <img id="imgPreview" src="" alt="Preview" style="max-width:240px; max-height:160px; border:1px solid #ddd; padding:4px;" />
+    <form id="courseBasicsForm" method="post" novalidate>
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" id="CourseSlug" value="@Model.Slug" />
+
+        <div class="row g-3 mb-3">
+            <div class="col-md-6">
+                <label asp-for="Name" class="form-label"></label>
+                <input asp-for="Name" class="form-control" id="CourseName" />
+            </div>
+            <div class="col-md-6">
+                <label asp-for="Slug" class="form-label"></label>
+                <input asp-for="Slug" class="form-control" id="CourseSlugInput" />
+                <div class="form-text">Optional. If empty, will be generated from the name.</div>
+            </div>
+
+            <div class="col-12">
+                <label asp-for="ShortDescription" class="form-label"></label>
+                <textarea asp-for="ShortDescription" class="form-control" rows="2" id="ShortDescription"></textarea>
+            </div>
+
+            <div class="col-12">
+                <label asp-for="FullDescription" class="form-label"></label>
+                <textarea asp-for="FullDescription" class="form-control" rows="4" id="FullDescription"></textarea>
+            </div>
+
+            <div class="col-md-8">
+                <label asp-for="MainImageUrl" class="form-label"></label>
+                <input asp-for="MainImageUrl" class="form-control" id="MainImageUrl" />
+            </div>
+            <div class="col-md-4 d-flex align-items-end">
+                <div id="imagePreviewWrap" style="display:@(string.IsNullOrWhiteSpace(Model?.MainImageUrl) ? "none" : "block")">
+                    <img id="imgPreview" src="@(Model?.MainImageUrl ?? "")" style="max-width:160px; max-height:120px; border:1px solid #ddd; padding:4px;" />
+                </div>
+            </div>
+
+            <div class="col-12">
+                <button id="btnSaveBasics" class="btn btn-primary" type="submit">Save basics</button>
+                <button id="btnAddModule" type="button" class="btn btn-success ms-2">+ Add Module</button>
+            </div>
         </div>
+    </form>
+
+    <hr />
+
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <h4 class="mb-0">Modules & Lessons</h4>
+        <small class="text-muted">Click module title to open module editor. Click lesson title to edit lesson body.</small>
     </div>
 
-    <button type="submit" class="btn btn-primary">Save</button>
-    <a asp-action="EditCourse" asp-route-slug="@Model.Slug" class="btn btn-secondary">Cancel</a>
-</form>
+    <div id="modulesContainer" class="mb-5">
+        <div id="modulesLoading" class="text-muted">Loading modules...</div>
+    </div>
+</div>
 
-@section Scripts {
-    <script>
-        // image preview for url
-        const mainImageInput = document.getElementById('MainImageUrl');
-        const imagePreview = document.getElementById('imagePreview');
-        const imgPreview = document.getElementById('imgPreview');
+<!-- Module modal -->
+<div class="modal fade" id="moduleModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <form id="moduleForm" class="modal-content" onsubmit="return false;">
+            @Html.AntiForgeryToken()
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Module</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="modalModuleSlug" name="Slug" />
+                <div class="mb-3">
+                    <label class="form-label">Title</label>
+                    <input id="modalModuleTitle" name="Title" class="form-control" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Position</label>
+                    <input id="modalModulePosition" name="Position" type="number" class="form-control" value="0" />
+                </div>
+                <div class="mb-3 text-muted">
+                    <small>Module slug is used as identifier. It is generated when creating the module.</small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnSaveModule" class="btn btn-primary">Save</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
 
-        function showPreview(url) {
-            if (!url) {
-                imagePreview.style.display = 'none';
-                imgPreview.src = '';
-                return;
-            }
-            imgPreview.src = url;
-            imagePreview.style.display = 'block';
+<!-- Lesson modal (CKEditor5 + live preview + insert pre blocks) -->
+<div class="modal fade" id="lessonModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <form id="lessonForm" class="modal-content" onsubmit="return false;">
+            @Html.AntiForgeryToken()
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Lesson</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <input type="hidden" id="modalLessonId" name="LessonId" />
+                <input type="hidden" id="modalLessonModuleId" name="ModuleId" />
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Title</label>
+                        <input id="modalLessonTitle" name="Title" class="form-control" />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Slug</label>
+                        <input id="modalLessonSlug" name="Slug" class="form-control" />
+                    </div>
+                    <div class="col-md-1">
+                        <label class="form-label">Pos</label>
+                        <input id="modalLessonPosition" name="Position" type="number" class="form-control" />
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <div class="form-check me-3">
+                            <input id="modalLessonPublished" name="IsPublished" class="form-check-input" type="checkbox" />
+                            <label class="form-check-label">Published</label>
+                        </div>
+                        <div class="form-check">
+                            <input id="modalLessonFree" name="IsFreePreview" class="form-check-input" type="checkbox" />
+                            <label class="form-check-label">Free preview</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- toolbar for inserting special <pre> blocks -->
+                <div class="mb-2">
+                    <div class="btn-group" role="group" aria-label="Insert blocks">
+                        <button id="btnInsertCode" type="button" class="btn btn-sm btn-outline-primary">Insert &lt;pre data-editor="code"&gt;</button>
+                        <button id="btnInsertOutput" type="button" class="btn btn-sm btn-outline-secondary">Insert &lt;pre data-editor="output"&gt;</button>
+                        <button id="btnInsertConsole" type="button" class="btn btn-sm btn-outline-dark">Insert &lt;pre data-editor="console"&gt;</button>
+                        <button id="btnPreviewToggle" type="button" class="btn btn-sm btn-outline-info ms-2">Toggle Live Preview</button>
+                    </div>
+                </div>
+
+                <!-- editor + preview two-column -->
+                <div class="row">
+                    <div class="col-lg-6 mb-3">
+                        <label class="form-label">Body (HTML) — editor</label>
+                        <textarea id="modalLessonBody" name="Body" rows="18" class="form-control"></textarea>
+                    </div>
+
+                    <div class="col-lg-6 mb-3">
+                        <label class="form-label">Live preview</label>
+                        <div id="lessonPreview" style="min-height:300px; border:1px solid #dee2e6; padding:12px; overflow:auto;"></div>
+                    </div>
+                </div>
+
+                <div class="mt-2 text-muted">
+                    <small>
+                        Для вставки кода используйте кнопку <b>Insert &lt;pre data-editor="code"&gt;</b>.
+                        При выборе типа <code>code</code> появится окно для ввода названия языка — добавится <code>data-ln="language"</code>.
+                    </small>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button id="btnSaveLesson" class="btn btn-primary">Save lesson</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- CKEditor 5 Classic -->
+<script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+<!-- highlight.js (light theme) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+
+<script>
+    // Utilities
+    function debounce(fn, ms){ let t; return (...args)=>{ clearTimeout(t); t = setTimeout(()=>fn(...args), ms); }; }
+    function getAntiForgeryToken(){ const el = document.querySelector('input[name="__RequestVerificationToken"]'); return el ? el.value : ''; }
+    async function postUrlEncoded(url, obj){
+      const token = getAntiForgeryToken();
+      const params = new URLSearchParams();
+      for (const k in obj) if (obj[k] !== undefined && obj[k] !== null) params.append(k, obj[k]);
+      const resp = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'RequestVerificationToken': token }, body: params.toString() });
+      try { return await resp.json(); } catch { return { success:false, message:'Invalid server response' }; }
+    }
+    async function getJson(url){
+      try {
+        const r = await fetch(url);
+        return await r.json();
+      } catch (err) {
+        console.error('getJson failed for', url, err);
+        return { success:false, message:'Invalid server response' };
+      }
+    }
+    
+    // decode HTML entities if server returns escaped HTML (&lt; etc.)
+    function decodeHtmlEntitiesIfNeeded(str){
+      if (!str) return '';
+      if (str.indexOf('&lt;') === -1 && str.indexOf('&gt;') === -1 && str.indexOf('&amp;') === -1) return str;
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(str, 'text/html');
+      return doc.documentElement.textContent || '';
+    }
+
+    // Preview update: decode and set innerHTML, then prepare <pre> blocks for highlight.js
+    function updatePreview(html) {
+      const preview = document.getElementById('lessonPreview');
+      if (!preview) return;
+      const decoded = decodeHtmlEntitiesIfNeeded(html);
+      preview.innerHTML = decoded || '';
+
+      // prepare code blocks
+      const blocks = preview.querySelectorAll('pre[data-editor="code"]');
+      blocks.forEach(block => {
+        const lang = block.getAttribute('data-ln') || '';
+        let codeEl = block.querySelector('code');
+        if (!codeEl) {
+          codeEl = document.createElement('code');
+          // use textContent to avoid executing any embedded HTML inside code
+          codeEl.textContent = block.innerHTML;
+          block.innerHTML = '';
+          block.appendChild(codeEl);
+        }
+        if (lang) {
+          if (!codeEl.classList.contains('language-' + lang.toLowerCase())) {
+            codeEl.classList.add('language-' + lang.toLowerCase());
+          }
+        }
+      });
+
+      // highlight
+      try { preview.querySelectorAll('pre code').forEach(el => hljs.highlightElement(el)); } catch(e){ console.warn('highlight failed', e); }
+    }
+
+    // CKEditor5 instance
+    let ckEditor5Instance = null;
+    function ensureLessonEditor(initialHtml){
+      if (ckEditor5Instance) {
+        ckEditor5Instance.setData(initialHtml || '');
+        return Promise.resolve(ckEditor5Instance);
+      }
+      return ClassicEditor.create(document.querySelector('#modalLessonBody'), {
+        toolbar: ['undo','redo','heading','bold','italic','link','bulletedList','numberedList','blockQuote','insertTable','mediaEmbed','imageUpload','codeBlock','alignment'],
+        codeBlock: {
+          languages: [
+            { language: 'csharp', label: 'C#' },
+            { language: 'javascript', label: 'JavaScript' },
+            { language: 'python', label: 'Python' },
+            { language: 'html', label: 'HTML' },
+            { language: 'plaintext', label: 'Plain text' }
+          ]
+        }
+      }).then(editor => {
+        ckEditor5Instance = editor;
+        editor.model.document.on('change:data', debounce(function(){
+          updatePreview(editor.getData());
+        }, 250));
+        // ensure preview initial
+        editor.setData(initialHtml || '');
+        updatePreview(initialHtml || '');
+        return editor;
+      }).catch(err => { console.error('CKEditor init error', err); });
+    }
+
+    // insert HTML at cursor
+    function insertHtmlAtCursor(editor, html){
+      const viewFragment = editor.data.processor.toView(html);
+      const modelFragment = editor.data.toModel(viewFragment);
+      editor.model.change(writer => { editor.model.insertContent(modelFragment, editor.model.document.selection); });
+    }
+
+    function insertPreBlock(type, language){
+      let tpl = '';
+      if (type === 'code') {
+        const lnAttr = language ? ` data-ln="${language}"` : '';
+        const codeClass = language ? ` class="language-${language.toLowerCase()}"` : '';
+        tpl = `<pre data-editor="code"${lnAttr}><code${codeClass}>// paste your code here\n</code></pre><p></p>`;
+      } else if (type === 'output') {
+        tpl = `<pre data-editor="output">output goes here</pre><p></p>`;
+      } else if (type === 'console') {
+        tpl = `<pre data-editor="console">console output goes here</pre><p></p>`;
+      }
+
+      if (ckEditor5Instance) {
+        insertHtmlAtCursor(ckEditor5Instance, tpl);
+        setTimeout(()=> updatePreview(ckEditor5Instance.getData()), 200);
+      } else {
+        const ta = document.getElementById('modalLessonBody');
+        ta.value = (ta.value || '') + '\n' + tpl;
+        updatePreview(ta.value);
+      }
+    }
+
+    // Render modules
+    function renderModules(modules){
+      const container = document.getElementById('modulesContainer');
+      container.innerHTML = '';
+      if (!modules || modules.length === 0) { container.innerHTML = '<div class="alert alert-info">No modules yet</div>'; return; }
+      modules.sort((a,b) => (a.position || 0) - (b.position || 0));
+      modules.forEach(m => {
+        const card = document.createElement('div');
+        card.className = 'card mb-3';
+        let lessonsHtml = '';
+        if (m.lessons && m.lessons.length > 0) {
+          const sorted = [...m.lessons].sort((x,y) => (x.position || 0) - (y.position || 0));
+          lessonsHtml = '<ul class="list-group list-group-flush">';
+          for (const l of sorted) {
+            lessonsHtml += `<li class="list-group-item d-flex justify-content-between align-items-center">
+                              <div>
+                                <a href="javascript:void(0)" class="lesson-title" data-lesson-id="${l.id}" data-module-id="${m.id}">${l.title}</a>
+                                <div><small class="text-muted">${l.slug}</small></div>
+                              </div>
+                              <div class="btn-group">
+                                <button class="btn btn-sm btn-outline-secondary btn-edit-lesson" data-lesson-id="${l.id}" data-module-id="${m.id}">Edit</button>
+                                <button class="btn btn-sm btn-outline-danger btn-delete-lesson" data-lesson-id="${l.id}">Delete</button>
+                              </div>
+                            </li>`;
+          }
+          lessonsHtml += '</ul>';
+        } else {
+          lessonsHtml = '<div class="p-3 text-muted">No lessons yet</div>';
         }
 
-        if (mainImageInput) {
-            mainImageInput.addEventListener('input', () => {
-                const val = mainImageInput.value.trim();
-                try {
-                    const u = new URL(val);
-                    if (u.protocol === 'http:' || u.protocol === 'https:') {
-                        showPreview(val);
-                        return;
-                    }
-                } catch (e) { }
-                showPreview('');
-            });
+        card.innerHTML = `<div class="card-body d-flex justify-content-between align-items-start">
+                            <div>
+                              <h5 class="mb-1 module-title" data-module-slug="${m.slug}">${m.title}</h5>
+                              <div><small class="text-muted">Position: ${m.position || 0}</small></div>
+                            </div>
+                            <div class="btn-group">
+                              <button class="btn btn-sm btn-outline-secondary btn-edit-module" data-module-slug="${m.slug}" data-module-title="${m.title}" data-module-position="${m.position || 0}">Edit</button>
+                              <button class="btn btn-sm btn-outline-danger btn-delete-module" data-module-slug="${m.slug}">Delete</button>
+                              <button class="btn btn-sm btn-success btn-add-lesson" data-module-id="${m.id}" data-module-slug="${m.slug}">+ Lesson</button>
+                            </div>
+                          </div>
+                          ${lessonsHtml}`;
+        container.appendChild(card);
+      });
+    }
 
-            // show initial
-            if (mainImageInput.value) showPreview(mainImageInput.value);
-        }
-    </script>
+    // Load modules
+    async function loadModules(){
+      const slug = document.getElementById('CourseSlug') ? document.getElementById('CourseSlug').value : '';
+      if (!slug) { document.getElementById('modulesContainer').innerHTML = '<div class="text-danger">Course slug missing</div>'; return; }
+      const loader = document.getElementById('modulesLoading'); if (loader) loader.style.display = 'block';
+      const json = await getJson(`/AdminCourse/GetCourseModules?slug=${encodeURIComponent(slug)}`);
+      if (json && json.success) renderModules(json.data); else document.getElementById('modulesContainer').innerHTML = `<div class="text-danger">Unable to load modules: ${json?.message || 'unknown'}</div>`;
+      if (loader) loader.style.display = 'none';
+    }
 
-    <partial name="_ValidationScriptsPartial" />
-}
+    // Open lesson modal with data (ensures editor + preview)
+    async function openLessonModalWithData(lesson){
+      document.getElementById('modalLessonId').value = lesson.id || '';
+      document.getElementById('modalLessonModuleId').value = lesson.moduleId || '';
+      document.getElementById('modalLessonTitle').value = lesson.title || '';
+      document.getElementById('modalLessonSlug').value = lesson.slug || '';
+      document.getElementById('modalLessonPosition').value = lesson.position || 0;
+      document.getElementById('modalLessonPublished').checked = !!lesson.isPublished;
+      document.getElementById('modalLessonFree').checked = !!lesson.isFreePreview;
+
+      const body = lesson.body || '';
+      await ensureLessonEditor(decodeHtmlEntitiesIfNeeded(body));
+      if (ckEditor5Instance) ckEditor5Instance.setData(decodeHtmlEntitiesIfNeeded(body));
+      updatePreview(body);
+
+      new bootstrap.Modal(document.getElementById('lessonModal')).show();
+    }
+
+    // Delegated click handlers
+    document.addEventListener('click', async function(e){
+      // Edit module
+      const editModBtn = e.target.closest('.btn-edit-module') || (e.target.classList && e.target.classList.contains('module-title') && e.target);
+      if (editModBtn){
+        const btn = editModBtn;
+        document.getElementById('modalModuleSlug').value = btn.getAttribute('data-module-slug') || '';
+        document.getElementById('modalModuleTitle').value = btn.getAttribute('data-module-title') || btn.textContent.trim();
+        document.getElementById('modalModulePosition').value = btn.getAttribute('data-module-position') || 0;
+        new bootstrap.Modal(document.getElementById('moduleModal')).show();
+        return;
+      }
+
+      // Delete module
+      const delModBtn = e.target.closest('.btn-delete-module');
+      if (delModBtn){
+        const slug = delModBtn.getAttribute('data-module-slug');
+        if (!slug) { alert('Module identifier missing'); return; }
+        if (!confirm('Delete module and its lessons?')) return;
+        const res = await postUrlEncoded('/AdminCourse/DeleteModule', { moduleSlug: slug });
+        if (res && res.success) await loadModules(); else alert(res && res.message ? res.message : 'Error deleting module');
+        return;
+      }
+
+      // Add lesson
+      const addLessonBtn = e.target.closest('.btn-add-lesson');
+      if (addLessonBtn){
+        const moduleId = addLessonBtn.getAttribute('data-module-id');
+        if (!moduleId) { alert('Module id missing'); return; }
+        const title = prompt('Lesson title:');
+        if (!title) return;
+        const lessonSlug = prompt('Lesson slug')
+        const res = await postUrlEncoded('/AdminCourse/AddLesson', { ModuleId: moduleId, Title: title, Slug: lessonSlug });
+        if (res && res.success) await loadModules(); else alert(res && res.message ? res.message : 'Error adding lesson');
+        return;
+      }
+
+      // Edit lesson
+      const editLessonBtn = e.target.closest('.btn-edit-lesson') || (e.target.classList && e.target.classList.contains('lesson-title') && e.target);
+      if (editLessonBtn){
+        const lessonId = editLessonBtn.getAttribute('data-lesson-id');
+        if (!lessonId) { alert('Lesson id missing'); return; }
+        const json = await getJson(`/AdminCourse/GetLesson?lessonId=${encodeURIComponent(lessonId)}`);
+        if (!json || !json.success) { alert('Unable to load lesson for editing'); return; }
+        await openLessonModalWithData(json.data);
+        return;
+      }
+
+      // Delete lesson
+      const delLessonBtn = e.target.closest('.btn-delete-lesson');
+      if (delLessonBtn){
+        const lessonId = delLessonBtn.getAttribute('data-lesson-id');
+        if (!lessonId) { alert('Lesson id missing'); return; }
+        if (!confirm('Delete lesson?')) return;
+        const res = await postUrlEncoded('/AdminCourse/DeleteLesson', { lessonId });
+        if (res && res.success) await loadModules(); else alert(res && res.message ? res.message : 'Error deleting lesson');
+        return;
+      }
+    });
+
+    // Save module
+    document.getElementById('btnSaveModule').addEventListener('click', async function(){
+      const slug = document.getElementById('modalModuleSlug').value;
+      const title = document.getElementById('modalModuleTitle').value;
+      const position = document.getElementById('modalModulePosition').value || 0;
+      if (!slug) { alert('Module identifier missing'); return; }
+      const res = await postUrlEncoded('/AdminCourse/UpdateModule', { Slug: slug, Title: title, Position: position });
+      if (res && res.success) { bootstrap.Modal.getInstance(document.getElementById('moduleModal'))?.hide(); await loadModules(); } else alert(res && res.message ? res.message : 'Unable to save module');
+    });
+
+    // Add module
+    document.getElementById('btnAddModule').addEventListener('click', async function(){
+      const title = prompt('Module title:');
+      if (!title) return;
+      const courseSlug = document.getElementById('CourseSlug').value || '';
+      if (!courseSlug) { alert('Course slug missing'); return; }
+      const moduleSlug = prompt('ModuleId slug');
+      const res = await postUrlEncoded('/AdminCourse/AddModule', { Slug: moduleSlug, Title: title, CourseSlug: courseSlug });
+      if (res && res.success) await loadModules(); else alert(res && res.message ? res.message : 'Error adding module');
+    });
+
+    // Save basics (AJAX)
+    document.getElementById('courseBasicsForm').addEventListener('submit', async function(e){
+      e.preventDefault();
+      const dto = {
+        Id: document.querySelector('input[name="Id"]').value,
+        Name: document.getElementById('CourseName').value,
+        Slug: document.getElementById('CourseSlugInput').value,
+        ShortDescription: document.getElementById('ShortDescription').value,
+        FullDescription: document.getElementById('FullDescription').value,
+        MainImageUrl: document.getElementById('MainImageUrl').value
+      };
+      const res = await postUrlEncoded('/AdminCourse/UpdateCourse', dto);
+      if (res && res.success) {
+        const targetSlug = dto.Slug && dto.Slug.trim() !== '' ? dto.Slug : dto.Name;
+        window.location.href = `/AdminCourse/EditCourse?slug=${encodeURIComponent(targetSlug)}`;
+      } else {
+        alert(res && res.message ? res.message : 'Error saving course');
+      }
+    });
+
+    // Insert pre-block buttons
+    document.getElementById('btnInsertCode').addEventListener('click', async () => {
+      const lang = prompt('Enter language (e.g. csharp, javascript, python). Leave empty for none:');
+      const normalized = lang ? lang.trim().toLowerCase() : '';
+      if (!ckEditor5Instance) await ensureLessonEditor(document.getElementById('modalLessonBody').value || '');
+      insertPreBlock('code', normalized);
+    });
+    document.getElementById('btnInsertOutput').addEventListener('click', async () => { if (!ckEditor5Instance) await ensureLessonEditor(document.getElementById('modalLessonBody').value || ''); insertPreBlock('output'); });
+    document.getElementById('btnInsertConsole').addEventListener('click', async () => { if (!ckEditor5Instance) await ensureLessonEditor(document.getElementById('modalLessonBody').value || ''); insertPreBlock('console'); });
+    document.getElementById('btnPreviewToggle').addEventListener('click', () => { const preview = document.getElementById('lessonPreview'); if (!preview) return; preview.style.display = (preview.style.display === 'none') ? 'block' : 'none'; });
+
+    // Save lesson
+    document.getElementById('btnSaveLesson').addEventListener('click', async function(){
+      const lessonId = document.getElementById('modalLessonId').value;
+      const moduleId = document.getElementById('modalLessonModuleId').value;
+      const title = document.getElementById('modalLessonTitle').value;
+      const slug = document.getElementById('modalLessonSlug').value;
+      const position = document.getElementById('modalLessonPosition').value || 0;
+      const isPublished = document.getElementById('modalLessonPublished').checked;
+      const isFree = document.getElementById('modalLessonFree').checked;
+      const body = ckEditor5Instance ? ckEditor5Instance.getData() : document.getElementById('modalLessonBody').value;
+      if (!lessonId) { alert('Lesson id missing'); return; }
+      const data = { ModuleId: moduleId, LessonId: lessonId, Title: title, Slug: slug, Body: body, Position: position, IsPublished: isPublished, IsFreePreview: isFree };
+      const res = await postUrlEncoded('/AdminCourse/UpdateLesson', data);
+      if (res && res.success) {
+        bootstrap.Modal.getInstance(document.getElementById('lessonModal'))?.hide();
+        if (typeof loadModules === 'function') await loadModules();
+      } else alert(res && res.message ? res.message : 'Unable to save lesson');
+    });
+
+    // Init
+    (function init(){ loadModules(); })();
+</script>
+
+<partial name="_ValidationScriptsPartial" />

@@ -5,7 +5,6 @@ body {
   overflow-x: hidden;
 }
 
-/* Animated background particles */
 body::before {
   content: '';
   position: fixed;
@@ -21,19 +20,6 @@ body::before {
   z-index: 0;
 }
 
-@keyframes bgPulse {
-
-  0%,
-  100% {
-    opacity: 0.5;
-  }
-
-  50% {
-    opacity: 0.8;
-  }
-}
-
-/* Main layout structure */
 main[data-layout="main"][role="main"] {
   display: flex;
   flex-direction: row;
@@ -46,7 +32,7 @@ main[data-layout="main"][role="main"] {
   z-index: 1;
 }
 
-.__container {
+.__container.scene {
   display: flex;
   flex-direction: column;
   max-width: 1440px;
@@ -55,7 +41,6 @@ main[data-layout="main"][role="main"] {
   align-items: center;
 }
 
-/* Header */
 .header {
   display: flex;
   justify-content: space-between;
@@ -69,18 +54,6 @@ main[data-layout="main"][role="main"] {
   border-radius: 20px;
   border: 1px solid rgba(151, 128, 229, 0.2);
   animation: slideDown 0.6s ease-out;
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-30px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 .back-btn {
@@ -173,58 +146,6 @@ main[data-layout="main"][role="main"] {
   box-shadow: 0 6px 25px rgba(151, 128, 229, 0.5);
 }
 
-@keyframes rotateTopLine {
-  to {
-    transform: translateX(-50%) translateY(calc(-50%)) rotate(45deg);
-  }
-}
-
-@keyframes hiddenMiddleLine {
-  to {
-    opacity: 0;
-    scale: 0;
-  }
-}
-
-@keyframes rotateBottomLine {
-  to {
-    transform: translateX(-50%) translateY(calc(-50%)) rotate(-45deg);
-  }
-}
-
-@keyframes rotateTopLineUn {
-  from {
-    transform: translateX(-50%) translateY(calc(-50%)) rotate(45deg);
-  }
-
-  to {
-    transform: translateX(-50%) translateY(calc(-50% - 10px)) rotate(0deg);
-  }
-}
-
-@keyframes hiddenMiddleLineUn {
-  from {
-    opacity: 0;
-    scale: 0;
-  }
-
-  to {
-    opacity: 1;
-    scale: 1;
-  }
-}
-
-@keyframes rotateBottomLineUn {
-  from {
-    transform: translateX(-50%) translateY(calc(-50%)) rotate(-45deg);
-  }
-
-  to {
-    transform: translateX(-50%) translateY(calc(-50% + 10px)) rotate(0deg);
-  }
-}
-
-/* Content layout */
 .content-layout {
   display: flex;
   flex-direction: row;
@@ -234,17 +155,6 @@ main[data-layout="main"][role="main"] {
   margin-bottom: 30px;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
-}
-
-/* Sidebar - LEFT side */
 aside {
   width: 350px;
   flex-shrink: 0;
@@ -272,18 +182,6 @@ aside {
   background-clip: text;
   margin-bottom: 10px;
   animation: shimmer 3s ease-in-out infinite;
-}
-
-@keyframes shimmer {
-
-  0%,
-  100% {
-    filter: brightness(1);
-  }
-
-  50% {
-    filter: brightness(1.2);
-  }
 }
 
 #course-shortdesc {
@@ -314,18 +212,6 @@ aside {
   border-left: 4px solid var(--palette-acient);
   margin-bottom: 10px;
   animation: slideIn 0.5s ease-out;
-}
-
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateX(-20px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
 }
 
 #modules-list>div strong {
@@ -401,18 +287,6 @@ aside {
   animation: fadeInUp 0.8s ease-out;
 }
 
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 #lesson-title {
   font-size: 32px;
   font-weight: 700;
@@ -435,16 +309,6 @@ aside {
   background: linear-gradient(90deg, var(--palette-acient), var(--palette-second));
   border-radius: 2px;
   animation: expandWidth 0.6s ease-out;
-}
-
-@keyframes expandWidth {
-  from {
-    width: 0;
-  }
-
-  to {
-    width: 80px;
-  }
 }
 
 #lesson-body {
@@ -501,7 +365,6 @@ aside {
     align-items: center;
   }
 
-  /* Кнопка копировать похожая на VSC */
   .copy-btn {
     appearance: none;
     border: 0;
@@ -521,18 +384,18 @@ aside {
     transform: translateY(1px);
   }
 
-  /* Сам pre */
   .editor.code pre {
     margin: 0;
     padding: 16px;
-    overflow: auto;
+    max-height: 40vh;
+    overflow-x: hidden;
+    overflow-y: auto;
     white-space: pre;
     line-height: 1.45;
-    font-size: 13px;
+    font-size: var(--fs-p);
     tab-size: 2;
   }
 
-  /* Цвета по языку (акцент слева) */
   .editor.code[data-lang="js"] {
     --accent: var(--accent-js);
   }
@@ -564,7 +427,6 @@ aside {
     background: linear-gradient(90deg, var(--accent) 0%, rgba(255, 255, 255, 0.03) 100%);
   }
 
-  /* Лёгкое подсвечивание токенов (простая рег-логика, а не полноценный парсер) */
   .token-keyword {
     color: #c586c0;
     font-weight: 600;
@@ -587,7 +449,6 @@ aside {
     color: #9cdcfe;
   }
 
-  /* Стили для консоли (macOS-like) */
   .console {
     font-family: ui-monospace, Menlo, Monaco, monospace;
     border-radius: 10px;
@@ -628,13 +489,15 @@ aside {
   .console pre {
     margin: 0;
     padding: 6px 8px;
+    max-height: 50vh;
+    overflow-x: hidden;
+    overflow-y: auto;
     background: transparent;
     white-space: pre-wrap;
-    font-size: 13px;
+    font-size: var(--fs-p);
     line-height: 1.5
   }
 
-  /* Небольшие помощники */
   .lang-label {
     font-size: 11px;
     opacity: 0.9
@@ -649,15 +512,13 @@ aside {
   }
 }
 
-@media (max-width:640px) {
-  .editor.code pre {
-    font-size: 12px;
-  }
-}
-
 #lesson-body ul {
   margin-left: 24px;
   margin-bottom: 10px;
+
+  li {
+    font-size: var(--fs-p);
+  }
 
   &:last-child {
     margin-bottom: 0;
@@ -715,16 +576,6 @@ aside {
 
 #sidebarOffcanvas.show {
   display: block;
-}
-
-@keyframes slideInLeft {
-  from {
-    transform: translate(-100%, -50%);
-  }
-
-  to {
-    transform: translate(0, -50%);
-  }
 }
 
 #sidebarOffcanvas>div:first-child {
@@ -817,18 +668,6 @@ aside {
   animation: pulse 1.5s ease-in-out infinite;
 }
 
-@keyframes pulse {
-
-  0%,
-  100% {
-    opacity: 0.6;
-  }
-
-  50% {
-    opacity: 1;
-  }
-}
-
 /* Mobile overlay */
 .mobile-overlay {
   display: none;
@@ -853,7 +692,7 @@ aside {
     flex-direction: column;
   }
 
-  aside:not(#sidebarOffcanvas) {
+  aside.asiderbar:not(#sidebarOffcanvas) {
     display: none;
   }
 
@@ -895,6 +734,18 @@ aside {
 }
 
 /* Floating animation */
+@keyframes pulse {
+
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
 @keyframes float {
 
   0%,
@@ -904,5 +755,140 @@ aside {
 
   50% {
     transform: translateY(-10px);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translate(-100%, -50%);
+  }
+
+  to {
+    transform: translate(0, -50%);
+  }
+}
+
+@media (max-width:640px) {
+  .editor.code pre {
+    font-size: 12px;
+  }
+}
+
+@keyframes expandWidth {
+  from {
+    width: 0;
+  }
+
+  to {
+    width: 80px;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes rotateBottomLineUn {
+  from {
+    transform: translateX(-50%) translateY(calc(-50%)) rotate(-45deg);
+  }
+
+  to {
+    transform: translateX(-50%) translateY(calc(-50% + 10px)) rotate(0deg);
+  }
+}
+
+@keyframes rotateTopLine {
+  to {
+    transform: translateX(-50%) translateY(calc(-50%)) rotate(45deg);
+  }
+}
+
+@keyframes hiddenMiddleLine {
+  to {
+    opacity: 0;
+    scale: 0;
+  }
+}
+
+@keyframes rotateBottomLine {
+  to {
+    transform: translateX(-50%) translateY(calc(-50%)) rotate(-45deg);
+  }
+}
+
+@keyframes rotateTopLineUn {
+  from {
+    transform: translateX(-50%) translateY(calc(-50%)) rotate(45deg);
+  }
+
+  to {
+    transform: translateX(-50%) translateY(calc(-50% - 10px)) rotate(0deg);
+  }
+}
+
+@keyframes hiddenMiddleLineUn {
+  from {
+    opacity: 0;
+    scale: 0;
+  }
+
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bgPulse {
+
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+
+  50% {
+    opacity: 0.8;
   }
 }

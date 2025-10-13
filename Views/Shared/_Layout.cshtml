@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="ru" data-theme-color="dark" data-device="desktop" custom-scroll cross-browser>
+<html lang="ru" data-theme-color="dark" data-device="desktop" custom-scroll cross-browser data-animation="all">
 
 <head>
     <meta charset="utf-8" />
@@ -9,8 +9,6 @@
     <title>@ViewData["Title"] – @ViewData["App"]</title>
 
     <script src="~/js/app/js-load.await.js"></script>
-
-    @* Рендер секции Styles из дочерних view (если она есть) *@
     @RenderSection("Meta", required: false)
     <link rel="stylesheet" href="~/css/assemble.site.css" asp-append-version="true">
     @RenderSection("Styles", required: false)
@@ -18,6 +16,7 @@
     @* <script src="~/js/app/get.info_about_device.js" defer asp-append-version="true"></script> *@
     <script src="~/js/app/assemble.app.js" defer asp-append-version="true"></script>
     <script src="~/js/windows/js-window.err-w.js" defer asp-append-version="true"></script>
+    <script src="~/js/windows/js-window.navbar-header.site.js" defer></script>
 </head>
 
 <body>
@@ -31,20 +30,42 @@
                 <button select-btn-service data-style="on-hover" hover>Сервисы
                     <span title="arrow">‹</span>
                 </button>
-                <div js-window-select-app class="js-window hidden" hidden="!">
-                    <div window>
-                        <button>It-Cubic</button>
-                        <button>Code Spark</button>
-                        <button>Монтажка</button>
+                <div js-window-select-app class="js-window hidden">
+                    <div class="top-block">
+                        <button hover js-app-course>Курсы</button>
+                        <button hover js-app-course-work>Курсовые работы</button>
+                        <button hover js-app-library>Библиотека знаний</button>
+                        <button hover js-app-ai>Искусственный интеллект</button>
+                        <button hover js-app-create-site>Создание сайтов</button>
+                    </div>
+                    <div class="bottom-block">
+                        <div class="first-block">
+                            <img js-app-img src="" alt="">
+                        </div>
+                        <div class="second-block">
+                            <h3 class="headline" js-app-headline></h3>
+                            <p class="description" js-app-description></p>
+                        </div>
+                        <div class="third-block" js-link-container-app></div>
                     </div>
                 </div>
-                <div js-window-select-service class="js-window hidden" hidden="!">
-                    <div>
-                        <button>Каталог товаров</button>
-                        <button>Курсовые работы</button>
-                        <button>Главная страница</button>
-                        <button>Центр знаний</button>
-                        <button>Премиум подписка</button>
+                <div js-window-select-service class="js-window hidden">
+                    <div class="top-block">
+                        <button hover js-service-prime-store>Премиум магазин</button>
+                        <button hover js-service-prime>Prime подписка</button>
+                        <button hover js-service-pattern>Шаблоны сайтов</button>
+                        <button hover js-service-library-pack>Библиотеки</button>
+                        <button hover js-service-documets>Документация</button>
+                    </div>
+                    <div class="bottom-block">
+                        <div class="first-block">
+                            <img js-service-img src="" alt="">
+                        </div>
+                        <div class="second-block">
+                            <h3 class="headline" js-service-headline></h3>
+                            <p class="description" js-service-description></p>
+                        </div>
+                        <div class="third-block" js-link-container-service></div>
                     </div>
                 </div>
             </div>
@@ -65,20 +86,26 @@
                     конфиденциальности</a>
                 <a user_guide href="@Url.Action("UserGuide", "Documents")" data-style="on-hover" hover>Руководство
                     пользователя</a>
+                <a documents href="@Url.Action("Documentations", "Documents")" data-style="on-hover"
+                    hover>Документация</a>
             </div>
             <div class="r_block">
                 <a about href="@Url.Action("About", "Documents")" data-style="on-hover" hover>О нас</a>
-                <button js-window-btn-preference></button>
+                <button hover js-window-btn-preference></button>
                 <div class="js-window hidden" js-window-menu-footer-site>
                     <div class="description">
-                        <button lang err-w>русский</button>
-                        <button theme-color hover></button>
-                        <span time-for-prime></span>
-                        <button animations-preference></button>
-                        <div js-window-anim-pref>
-                            <button>Всё отключено</button>
-                            <button>hover-эффекты</button>
-                            <button>Все анимации</button>
+                        <h3>Настройки</h3>
+                        <button hover lang>русский</button>
+                        <button theme-color hover>
+                            Тема сайта
+                            <span class="btn-icon"></span>
+                        </button>
+                        <span hover time-for-prime>Прайм: $time-private</span>
+                        <button hover animations-preference>Графика</button>
+                        <div js-window-anim-pref class="hidden">
+                            <button data-fn-animation="off" hover>Всё отключено</button>
+                            <button data-fn-animation="hover" hover>hover-эффекты</button>
+                            <button data-fn-animation="all" hover>Все анимации</button>
                         </div>
                     </div>
                 </div>

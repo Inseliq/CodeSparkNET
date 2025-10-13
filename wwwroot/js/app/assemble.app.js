@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
   const html = document.documentElement;
 
-  if (html.dataset.device === "desktop") {
+  if (html.dataset.device === "desktop" && html.dataset.animation !== "off") {
     document.addEventListener("mouseover", e => {
       const el = e.target.closest("[hover]");
       if (el) {

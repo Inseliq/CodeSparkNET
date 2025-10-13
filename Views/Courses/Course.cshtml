@@ -18,7 +18,7 @@
 
 <partial name="_WebApp_Navbar_header" />
 
-<div class="__container">
+<div class="__container scene">
   <div class="header">
     <div>
       <a href="javascript:history.back()" class="back-btn">← Назад</a>
@@ -31,7 +31,7 @@
   </div>
 
   <div class="content-layout">
-    <aside>
+    <aside class="asiderbar">
       <div id="sidebar">
         <h4 id="course-title">Загрузка курса...</h4>
         <p id="course-shortdesc"></p>
@@ -485,7 +485,7 @@
     `;
     document.head.appendChild(style);
 
-    document.querySelectorAll('button, .back-btn').forEach(btn => {
+    document.querySelectorAll('.back-btn').forEach(btn => {
       btn.addEventListener('click', createRipple);
     });
 

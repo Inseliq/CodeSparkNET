@@ -1,10 +1,8 @@
-﻿// File: Controllers/AdminCourseController.cs
-using CodeSparkNET.Dtos.Course;
+﻿using CodeSparkNET.Dtos.Course;
 using CodeSparkNET.Interfaces.Services;
-using CodeSparkNET.Services;
-using Microsoft.AspNetCore.Authorization;
+using CodeSparkNET.Mapper.AdminCourse;
+using CodeSparkNET.ViewModels.AdminCourse;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Logging;
 
 namespace CodeSparkNET.Controllers
 {
@@ -26,20 +24,20 @@ namespace CodeSparkNET.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateCourse(CreateCourseDto model)
+        public async Task<IActionResult> CreateCourse(CreateCourseViewModel viewModel)
         {
             if (!ModelState.IsValid)
-                return View(model);
+                return View(viewModel);
+
+            var model = viewModel.ToDto();
 
             try
             {
                 var created = await _courseService.CreateCourseAsync(model);
-                // redirect to edit page so admin can add modules/lessons later
                 return RedirectToAction("EditCourse", new { slug = created.Slug });
             }
             catch (Exception ex)
             {
-                // better log the error
                 ModelState.AddModelError("", ex.Message);
                 return View(model);
             }
@@ -53,7 +51,7 @@ namespace CodeSparkNET.Controllers
             var course = await _courseService.GetCourseBySlugAsync(slug);
             if (course == null) return NotFound();
 
-            var model = new UpdateCourseDto
+            var model = new EditCourseViewModel
             {
                 Id = course.Id,
                 Name = course.Name,
@@ -68,12 +66,14 @@ namespace CodeSparkNET.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateCourse(UpdateCourseDto model)
+        public async Task<IActionResult> UpdateCourse(EditCourseViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
                 return Json(new { success = false, message = "Ошибка обновления курса" });
             }
+
+            var model = viewModel.ToDto();
 
             var ok = await _courseService.UpdateCourseAsync(model);
             if (!ok)
@@ -84,8 +84,10 @@ namespace CodeSparkNET.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddModule([FromForm] AddModuleDto model)
+        public async Task<IActionResult> AddModule(AddModuleViewModel viewModel)
         {
+            var model = viewModel.ToDto();
+
             if (string.IsNullOrWhiteSpace(model.Slug) || string.IsNullOrWhiteSpace(model.Title) || string.IsNullOrWhiteSpace(model.CourseSlug))
                 return Json(new { success = false, message = "Course slug and title are required." });
 
@@ -98,8 +100,10 @@ namespace CodeSparkNET.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateModule([FromForm] UpdateModuleDto model)
+        public async Task<IActionResult> UpdateModule(UpdateModuleViewModel viewModel)
         {
+            var model = viewModel.ToDto();
+
             if (model == null || string.IsNullOrWhiteSpace(model.Slug))
                 return Json(new { success = false, message = "Module slug required." });
 
@@ -140,8 +144,10 @@ namespace CodeSparkNET.Controllers
         // Add lesson
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddLesson([FromForm] AddLessonDto model)
+        public async Task<IActionResult> AddLesson(AddLessonViewModel viewModel)
         {
+            var model = viewModel.ToDto();
+
             if (model == null || string.IsNullOrWhiteSpace(model.Slug) || string.IsNullOrWhiteSpace(model.Title))
                 return Json(new { success = false, message = "ModuleId and Title are required." });
 
@@ -155,12 +161,10 @@ namespace CodeSparkNET.Controllers
             }
             catch (Exception ex)
             {
-                // log if needed
                 return Json(new { success = false, message = ex.Message });
             }
         }
 
-        // Get lesson by id (for editing modal)
         [HttpGet]
         public async Task<IActionResult> GetLesson(string lessonId)
         {
@@ -174,11 +178,12 @@ namespace CodeSparkNET.Controllers
             return Json(new { success = true, data = lesson });
         }
 
-        // Update lesson
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateLesson([FromForm] UpdateLessonDto model)
+        public async Task<IActionResult> UpdateLesson(UpdateLessonViewModel viewModel)
         {
+            var model = viewModel.ToDto();
+
             if (model == null || string.IsNullOrWhiteSpace(model.Id) || string.IsNullOrWhiteSpace(model.Slug))
                 return Json(new { success = false, message = "Invalid lesson data" });
 
@@ -193,10 +198,9 @@ namespace CodeSparkNET.Controllers
             }
         }
 
-        // Delete lesson
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteLesson([FromForm] string lessonId)
+        public async Task<IActionResult> DeleteLesson(string lessonId)
         {
             if (string.IsNullOrWhiteSpace(lessonId))
                 return Json(new { success = false, message = "lessonId required" });
@@ -212,6 +216,5 @@ namespace CodeSparkNET.Controllers
                 return Json(new { success = false, message = ex.Message });
             }
         }
-
     }
 }

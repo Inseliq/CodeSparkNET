@@ -1,6 +1,6 @@
-namespace CodeSparkNET.Dtos.Catalog
+﻿namespace CodeSparkNET.ViewModels.Catalogs
 {
-    public class CatalogProductImageDto
+    public class CatalogProductImageViewModel
     {
         public string? Name { get; set; }
         public string Url { get; set; }

@@ -1,4 +1,4 @@
-﻿@model CodeSparkNET.Dtos.Course.UpdateCourseDto
+﻿@model CodeSparkNET.ViewModels.AdminCourse.EditCourseViewModel
 @{
     ViewData["Title"] = "Edit Course - " + Model?.Name;
 }
@@ -20,7 +20,6 @@
             <div>
                 <label asp-for="Slug"></label><br />
                 <input asp-for="Slug" id="CourseSlugInput" />
-                <div id="slugHint">Optional. If empty, will be generated from the name.</div>
             </div>
 
             <div>

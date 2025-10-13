@@ -1,9 +1,7 @@
-using CodeSparkNET.Dtos.Catalog;
 using CodeSparkNET.Interfaces.Services;
-using CodeSparkNET.Models;
+using CodeSparkNET.Mapper.Catalogs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace CodeSparkNET.Controllers
 {
@@ -48,7 +46,8 @@ namespace CodeSparkNET.Controllers
             try
             {
                 var catalogs = await _catalogService.GetCatalogNamesAsync();
-                return View(catalogs);
+                var catalogsViewModel = catalogs.ToViewModel();
+                return View(catalogsViewModel);
             }
             catch (Exception ex)
             {
@@ -64,7 +63,9 @@ namespace CodeSparkNET.Controllers
             {
                 var catalog = await _catalogService.GetCatalogBySlugAsync(catalogSlug);
 
-                return View(catalog);
+                var catalogViewModel = catalog.ToViewModel();
+
+                return View(catalogViewModel);
             }
             catch (Exception ex)
             {

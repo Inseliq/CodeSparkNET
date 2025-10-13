@@ -86,7 +86,9 @@ namespace CodeSparkNET.Controllers
 
                 product.IsAlreadyEnrolled = await _accountService.IsCourseAlreadyEnrolled(user.Id, productSlug);
 
-                return View(product);
+                var productViewModel = product.ToViewModel();
+
+                return View(productViewModel);
             }
             catch (Exception ex)
             {

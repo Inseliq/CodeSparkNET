@@ -1,5 +1,3 @@
-using System.Globalization;
-using System.Threading.RateLimiting;
 using CodeSparkNET.Data;
 using CodeSparkNET.Interfaces.Repositories;
 using CodeSparkNET.Interfaces.Services;
@@ -7,10 +5,16 @@ using CodeSparkNET.Models;
 using CodeSparkNET.Redis;
 using CodeSparkNET.Repositories;
 using CodeSparkNET.Services;
+using CodeSparkNET.Validators.Account;
+using CodeSparkNET.ViewModels.Account;
+using FluentValidation;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 using StackExchange.Redis;
+using System.Globalization;
+using System.Threading.RateLimiting;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -45,7 +49,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 {
     options.Password.RequireDigit = true;
-    options.Password.RequiredLength = 8;
+    options.Password.RequiredLength = 6;
     options.Password.RequireUppercase = true;
     options.Password.RequireLowercase = true;
     options.Password.RequireNonAlphanumeric = false;
@@ -99,6 +103,15 @@ builder.Services.AddScoped<ICacheService, CacheService>();
 
 //Add Redis singleton
 builder.Services.AddSingleton<ICacheProvider, CacheProvider>();
+
+//Add Validators
+builder.Services.AddFluentValidationAutoValidation(conf =>
+{
+    conf.DisableBuiltInModelValidation = true;
+    conf.ValidationStrategy = SharpGrip.FluentValidation.AutoValidation.Mvc.Enums.ValidationStrategy.Annotations;
+});
+builder.Services.AddScoped<IValidator<LoginViewModel>, LoginViewModelValidator>();
+builder.Services.AddScoped<IValidator<RegisterViewModel>, RegisterViewModelValidator>();
 
 //Add keys
 StackExchange.Redis.ConnectionMultiplexer? redis = null;

@@ -1,7 +1,9 @@
 using CodeSparkNET.Dtos.Account;
 using CodeSparkNET.Dtos.Profile;
 using CodeSparkNET.Interfaces.Services;
+using CodeSparkNET.Mapper.Profile;
 using CodeSparkNET.Utils;
+using CodeSparkNET.ViewModels.Profile;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -45,7 +47,7 @@ namespace CodeSparkNET.Controllers
 
                 var userCourses = await _profileService.GetAllUserCoursesAsync(user);
 
-                var personalProfileModel = new PersonalProfileDto
+                var personalProfileModel = new PersonalProfileViewModel
                 {
                     UserName = user.UserName,
                     Email = user.Email,
@@ -53,12 +55,12 @@ namespace CodeSparkNET.Controllers
                     EmailAddAt = user.EmailAddAt,
                     EmailConfirmedAt = user.EmailConfirmedAt,
                     EmailChangedAt = user.EmailChangedAt,
-                    AllUserCourses = userCourses
+                    AllUserCourses = userCourses.ToViewModel()
                 };
 
-                ProfileDto model = new ProfileDto
+                var model = new ProfileViewModel
                 {
-                    PersonalProfileDto = personalProfileModel
+                    PersonalProfile = personalProfileModel
                 };
 
                 return View(model);
@@ -79,7 +81,7 @@ namespace CodeSparkNET.Controllers
         /// <returns>Returns the updated profile view with the result of the operation.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateProfile([Bind(Prefix = "UpdatePersonalProfileDto")] UpdatePersonalProfileDto model)
+        public async Task<IActionResult> UpdateProfile([Bind(Prefix = "UpdatePersonalProfileDto")] UpdatePersonalProfileViewModel model)
         {
             try
             {
@@ -106,7 +108,7 @@ namespace CodeSparkNET.Controllers
                 if (user.UserName != model.UserName && await _accountService.UserWithUserNameExistsAsync(model.UserName))
                     return Json(new { success = false, message = "Ошибка обновления профиля", desc = "Пользователь с таким именем уже существует." });
 
-                var result = await _profileService.UpdatePersonalProfileAsync(user.Email, model);
+                var result = await _profileService.UpdatePersonalProfileAsync(user.Email, model.ToDto());
 
                 if (result.Succeeded)
                 {
@@ -208,7 +210,7 @@ namespace CodeSparkNET.Controllers
         /// <returns>A JSON response indicating the success or failure of the password change operation.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ChangePassword([Bind(Prefix = "ChangePasswordDto")] ChangePasswordDto model)
+        public async Task<IActionResult> ChangePassword([Bind(Prefix = "ChangePasswordDto")] ChangePasswordViewModel model)
         {
             try
             {
@@ -223,7 +225,7 @@ namespace CodeSparkNET.Controllers
                 }
 
                 var user = await _accountService.GetUserAsync(User);
-                var result = await _profileService.ChangePasswordAsync(user.Email, model);
+                var result = await _profileService.ChangePasswordAsync(user.Email, model.ToDto());
 
                 if (result.Succeeded)
                 {
@@ -235,7 +237,6 @@ namespace CodeSparkNET.Controllers
                     });
                 }
 
-                // Для безопасности не передаем конкретные ошибки Identity
                 return Json(new
                 {
                     success = false,

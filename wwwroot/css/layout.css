@@ -1101,7 +1101,6 @@ html[cross-browser] {
             text-decoration: none;
             word-spacing: nowrap;
             position: relative;
-            text-decoration: underline;
 
             &::after {
               content: "";

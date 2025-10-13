@@ -1,10 +1,13 @@
-using System.Diagnostics;
-using System.Security.Claims;
 using CodeSparkNET.Dtos.Account;
 using CodeSparkNET.Interfaces.Services;
+using CodeSparkNET.Mapper.Account;
 using CodeSparkNET.Models;
+using CodeSparkNET.ViewModels.Account;
+using Humanizer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
+using System.Security.Claims;
 
 namespace CodeSparkNET.Controllers
 {
@@ -48,36 +51,39 @@ namespace CodeSparkNET.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(RegisterDto registerDto)
+        public async Task<IActionResult> Register(RegisterViewModel viewModel)
         {
             try
             {
-                if (!ModelState.IsValid) return View(registerDto);
+                if (!ModelState.IsValid) return View(viewModel);
 
-                if (registerDto.ConfirmToS != true)
+                var model = viewModel.ToDto();
+
+                if (model.ConfirmToS != true)
                 {
                     ModelState.AddModelError(string.Empty, "Вы не согласились с условиями использования.");
-                    return View(registerDto);
+                    return View(viewModel);
                 }
 
                 var loginLink = Url.Action("Login", "Account", null, Request.Scheme);
 
-                var result = await _accountService.RegisterAsync(registerDto, loginLink);
+                var result = await _accountService.RegisterAsync(model, loginLink);
                 if (!result.Succeeded)
                 {
                     foreach (var err in result.Errors)
                         ModelState.AddModelError(string.Empty, err.Description);
-                    return View(registerDto);
+                    return View(viewModel);
                 }
 
-                _logger.LogInformation("Registered: {Email}", registerDto.Email);
+                _logger.LogInformation("Registered: {Email}", model.Email);
 
                 return RedirectToAction("Login", "Account");
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex,"{Email} has error with registering", registerDto.Email);
-                return View(registerDto);
+                var model = viewModel.ToDto();
+                _logger.LogError(ex,"{Email} has error with registering", model.Email);
+                return View(viewModel);
             }
         }
 
@@ -98,39 +104,42 @@ namespace CodeSparkNET.Controllers
         /// <summary>
         /// Login user
         /// </summary>
-        /// <param name="loginDto">The data transfer object containing the user's login credentials.</param>
+        /// <param name="loginViewModel">The data transfer object containing the user's login credentials.</param>
         /// <returns>A view for the login page.</returns>
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginDto loginDto)
+        public async Task<IActionResult> Login(LoginViewModel viewModel)
         {
             try
             {
-                if (!ModelState.IsValid) return View(loginDto);
+                if (!ModelState.IsValid) return View(viewModel);
 
-                var signResult = await _accountService.PasswordSignInAsync(loginDto);
+                var dto = viewModel.ToDto();
+
+                var signResult = await _accountService.PasswordSignInAsync(dto);
                 if (signResult.IsLockedOut)
                 {
                     ModelState.AddModelError(string.Empty, "Ваша учетная запись временно заблокирована. Попробуйте позже.");
-                    _logger.LogInformation("{Email} is locked out", loginDto.Email);
-                    return View(loginDto);
+                    _logger.LogInformation("{Email} is locked out", dto.Email);
+                    return View(viewModel);
                 }
 
                 if (!signResult.Succeeded)
                 {
                     ModelState.AddModelError(string.Empty, "Неверные данные для входа.");
-                    return View(loginDto);
+                    return View(viewModel);
                 }
 
-                _logger.LogInformation("Logged in: {Email}", loginDto.Email);
+                _logger.LogInformation("Logged in: {Email}", dto.Email);
 
                 return RedirectToAction("Index", "Home");
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex,"{Email} has error with logging", loginDto.Email);
-                return View(loginDto);
+                var dto = viewModel.ToDto();
+                _logger.LogError(ex,"{Email} has error with logging", dto.Email);
+                return View(viewModel);
             }
         }
 
@@ -170,6 +179,7 @@ namespace CodeSparkNET.Controllers
         /// </summary>
         /// <returns>A view for the forgot password page.</returns>
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult ForgotPassword()
         {
             return View();
@@ -183,7 +193,7 @@ namespace CodeSparkNET.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ForgotPassword(ForgotPasswordDto model)
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel viewModel)
         {
             try
             {
@@ -196,16 +206,20 @@ namespace CodeSparkNET.Controllers
 
                     return BadRequest(new { success = false, errors = modelErrors });
                 }
-                await _accountService.SendPasswordResetLinkAsync(model.Email);
+                
+                var dto = viewModel.ToDto();
 
-                _logger.LogInformation("{Email} successfully requested shange password letter", model.Email);
+                await _accountService.SendPasswordResetLinkAsync(dto.Email);
+
+                _logger.LogInformation("{Email} successfully requested shange password letter", dto.Email);
 
                 return Json(new { success = true, message = "Проверьте вашу почту." });
 
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "{Email} has error with request change password letter", model.Email);
+                var dto = viewModel.ToDto();
+                _logger.LogError(ex, "{Email} has error with request change password letter", dto.Email);
                 return Json(new {success = false, message = "Ошибка запроса. Попробуйт позже."});
             }
         }
@@ -223,8 +237,14 @@ namespace CodeSparkNET.Controllers
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(token))
                 return BadRequest("Ошибка сброса пароля");
 
-            return View(new ResetPasswordDto { Email = email, Token = token });
+            var vm = new ResetPasswordViewModel
+            {
+                Email = email,
+                Token = token
+            };
+            return View(vm);
         }
+
 
         /// <summary>
         /// Reset user password
@@ -234,7 +254,7 @@ namespace CodeSparkNET.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ResetPassword(ResetPasswordDto model)
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel viewModel)
         {
             try
             {
@@ -247,6 +267,8 @@ namespace CodeSparkNET.Controllers
 
                     return BadRequest(new { success = false, errors = modelErrors });
                 }
+
+                var model = viewModel.ToDto();
 
                 var result = await _accountService.ResetPasswordAsync(model);
                 if (result.Succeeded)
@@ -261,6 +283,7 @@ namespace CodeSparkNET.Controllers
             }
             catch (Exception)
             {
+                var model = viewModel.ToDto();
                 _logger.LogError("{Email} has errorrs with changing password", model.Email);
                 return BadRequest(new { success = false });
             }

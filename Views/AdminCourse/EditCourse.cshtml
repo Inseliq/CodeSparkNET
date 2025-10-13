@@ -1,0 +1,486 @@
+﻿@model CodeSparkNET.ViewModels.AdminCourse.EditCourseViewModel
+@{
+    ViewData["Title"] = "Edit Course - " + Model?.Name;
+}
+
+<div id="container">
+    <h2>Edit course: @Model?.Name</h2>
+
+    <form id="courseBasicsForm" method="post" novalidate>
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" id="CourseSlug" value="@Model.Slug" />
+
+        <div>
+            <div>
+                <label asp-for="Name"></label><br />
+                <input asp-for="Name" id="CourseName" />
+            </div>
+
+            <div>
+                <label asp-for="Slug"></label><br />
+                <input asp-for="Slug" id="CourseSlugInput" />
+            </div>
+
+            <div>
+                <label asp-for="ShortDescription"></label><br />
+                <textarea asp-for="ShortDescription" id="ShortDescription"></textarea>
+            </div>
+
+            <div>
+                <label asp-for="FullDescription"></label><br />
+                <textarea asp-for="FullDescription" id="FullDescription"></textarea>
+            </div>
+
+            <div>
+                <label asp-for="MainImageUrl"></label><br />
+                <input asp-for="MainImageUrl" id="MainImageUrl" />
+            </div>
+
+            <div>
+                <div id="imagePreviewWrap" @(string.IsNullOrWhiteSpace(Model?.MainImageUrl) ? "hidden" : "")>
+                    <img id="imgPreview" src="@(Model?.MainImageUrl ?? "")" alt="Preview" />
+                </div>
+            </div>
+
+            <div>
+                <button id="btnSaveBasics" type="submit">Save basics</button>
+                <button id="btnAddModule" type="button">+ Add Module</button>
+            </div>
+        </div>
+    </form>
+
+    <hr />
+
+    <div>
+        <h4>Modules & Lessons</h4>
+        <div id="modulesContainer">
+            <div id="modulesLoading">Loading modules...</div>
+        </div>
+    </div>
+</div>
+
+<!-- Module modal (no CSS) -->
+<div id="moduleModalOverlay" hidden data-modal-overlay>
+    <div id="moduleDialog">
+        <form id="moduleForm" onsubmit="return false;">
+            @Html.AntiForgeryToken()
+            <div>
+                <strong>Edit Module</strong>
+                <button type="button" data-close="moduleModalOverlay">✕</button>
+            </div>
+
+            <div>
+                <input type="hidden" id="modalModuleSlug" name="Slug" />
+                <div>
+                    <label>Title</label><br />
+                    <input id="modalModuleTitle" name="Title" />
+                </div>
+                <div>
+                    <label>Position</label><br />
+                    <input id="modalModulePosition" name="Position" type="number" value="0" />
+                </div>
+                <div>
+                    <small>Module slug is used as identifier. It is generated when creating the module.</small>
+                </div>
+            </div>
+
+            <div>
+                <button id="btnSaveModule" type="button">Save</button>
+                <button type="button" data-close="moduleModalOverlay">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Lesson modal -->
+<div id="lessonModalOverlay" hidden data-modal-overlay>
+    <div id="lessonDialog">
+        <form id="lessonForm" onsubmit="return false;">
+            @Html.AntiForgeryToken()
+            <div>
+                <strong>Edit Lesson</strong>
+                <button type="button" data-close="lessonModalOverlay">✕</button>
+            </div>
+
+            <div>
+                <input type="hidden" id="modalLessonId" name="LessonId" />
+                <input type="hidden" id="modalLessonModuleId" name="ModuleId" />
+
+                <div>
+                    <label>Title</label><br />
+                    <input id="modalLessonTitle" name="Title" />
+                </div>
+
+                <div>
+                    <label>Slug</label><br />
+                    <input id="modalLessonSlug" name="Slug" />
+                </div>
+
+                <div>
+                    <label>Pos</label><br />
+                    <input id="modalLessonPosition" name="Position" type="number" />
+                </div>
+
+                <div>
+                    <label><input id="modalLessonPublished" name="IsPublished" type="checkbox" /> Published</label>
+                    <label><input id="modalLessonFree" name="IsFreePreview" type="checkbox" /> Free preview</label>
+                </div>
+
+                <div>
+                    <label>Lesson HTML / Body</label><br />
+                    <textarea id="modalLessonHtml" placeholder="Lesson HTML body (raw)"></textarea>@*Тут должен редактор текста*@
+                </div>
+
+                <div>
+                    <label>Preview</label>
+                    <div id="lessonPreview"></div> @*Тут должен быть html тоже как редактор*@
+                </div>
+            </div>
+
+            <div>
+                <button id="btnSaveLesson" type="button">Save lesson</button>
+                <button type="button" data-close="lessonModalOverlay">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // ---------- Utilities ----------
+    function debounce(fn, ms){ let t; return (...args)=>{ clearTimeout(t); t = setTimeout(()=>fn(...args), ms); }; }
+    function getAntiForgeryToken(){ const el = document.querySelector('input[name="__RequestVerificationToken"]'); return el ? el.value : ''; }
+    async function postUrlEncoded(url, obj){
+      const token = getAntiForgeryToken();
+      const params = new URLSearchParams();
+      for (const k in obj) if (obj[k] !== undefined && obj[k] !== null) params.append(k, obj[k]);
+      const resp = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'RequestVerificationToken': token }, body: params.toString() });
+      try { return await resp.json(); } catch { return { success:false, message:'Invalid server response' }; }
+    }
+    async function getJson(url){
+      try {
+        const r = await fetch(url);
+        return await r.json();
+      } catch (err) {
+        console.error('getJson failed for', url, err);
+        return { success:false, message:'Invalid server response' };
+      }
+    }
+
+    function decodeHtmlEntitiesIfNeeded(str){
+      if (!str) return '';
+      if (str.indexOf('&lt;') === -1 && str.indexOf('&gt;') === -1 && str.indexOf('&amp;') === -1) return str;
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(str, 'text/html');
+      return doc.documentElement.textContent || '';
+    }
+
+    function updatePreview(html) {
+      const preview = document.getElementById('lessonPreview');
+      if (!preview) return;
+      const decoded = decodeHtmlEntitiesIfNeeded(html);
+      preview.innerHTML = decoded || '';
+    }
+
+    function showModal(overlayId){
+      const o = document.getElementById(overlayId);
+      if (!o) return;
+      o.removeAttribute('hidden');
+    }
+    function hideModal(overlayId){
+      const o = document.getElementById(overlayId);
+      if (!o) return;
+      o.setAttribute('hidden', '');
+    }
+
+    // Close buttons with data-close
+    document.addEventListener('click', function(e){
+      const closeTarget = e.target.getAttribute && e.target.getAttribute('data-close');
+      if (closeTarget) hideModal(closeTarget);
+    });
+
+    // Close overlay when clicking outside dialog area
+    document.querySelectorAll('[data-modal-overlay]').forEach(ov => {
+      ov.addEventListener('click', function(e){
+        if (e.target === ov) ov.setAttribute('hidden', '');
+      });
+    });
+
+    // Escape helper
+    function escapeHtml(unsafe) {
+      if (unsafe === undefined || unsafe === null) return '';
+      return String(unsafe)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+    }
+
+    // Render modules WITHOUT classes
+    function renderModules(modules){
+      const container = document.getElementById('modulesContainer');
+      container.innerHTML = '';
+      if (!modules || modules.length === 0) {
+        const no = document.createElement('div');
+        no.textContent = 'No modules yet';
+        container.appendChild(no);
+        return;
+      }
+      modules.sort((a,b) => (a.position || 0) - (b.position || 0));
+      modules.forEach(m => {
+        const moduleDiv = document.createElement('div');
+
+        const titleDiv = document.createElement('div');
+        titleDiv.textContent = m.title || '';
+        titleDiv.dataset.moduleSlug = m.slug || '';
+        titleDiv.style.fontWeight = 'bold';
+        titleDiv.style.cursor = 'pointer';
+        moduleDiv.appendChild(titleDiv);
+
+        const posDiv = document.createElement('div');
+        posDiv.textContent = 'Position: ' + (m.position || 0);
+        moduleDiv.appendChild(posDiv);
+
+        const controlsDiv = document.createElement('div');
+
+        const editBtn = document.createElement('button');
+        editBtn.textContent = 'Edit';
+        editBtn.dataset.action = 'edit-module';
+        editBtn.dataset.moduleSlug = m.slug || '';
+        editBtn.dataset.moduleTitle = m.title || '';
+        editBtn.dataset.modulePosition = m.position || 0;
+        controlsDiv.appendChild(editBtn);
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.textContent = 'Delete';
+        deleteBtn.dataset.action = 'delete-module';
+        deleteBtn.dataset.moduleSlug = m.slug || '';
+        controlsDiv.appendChild(deleteBtn);
+
+        const addLessonBtn = document.createElement('button');
+        addLessonBtn.textContent = '+ Lesson';
+        addLessonBtn.dataset.action = 'add-lesson';
+        addLessonBtn.dataset.moduleId = m.id || '';
+        addLessonBtn.dataset.moduleSlug = m.slug || '';
+        controlsDiv.appendChild(addLessonBtn);
+
+        moduleDiv.appendChild(controlsDiv);
+
+        // Lessons list
+        if (m.lessons && m.lessons.length > 0) {
+          const ul = document.createElement('ul');
+          m.lessons.slice().sort((x,y) => (x.position||0)-(y.position||0)).forEach(l => {
+            const li = document.createElement('li');
+
+            const left = document.createElement('div');
+            const lessonTitle = document.createElement('div');
+            lessonTitle.textContent = l.title || '';
+            lessonTitle.dataset.action = 'edit-lesson';
+            lessonTitle.dataset.lessonId = l.id || '';
+            lessonTitle.dataset.moduleId = m.id || '';
+            lessonTitle.style.cursor = 'pointer';
+            left.appendChild(lessonTitle);
+
+            const slugSmall = document.createElement('div');
+            slugSmall.textContent = l.slug || '';
+            left.appendChild(slugSmall);
+
+            li.appendChild(left);
+
+            const right = document.createElement('div');
+
+            const editLessonBtn = document.createElement('button');
+            editLessonBtn.textContent = 'Edit';
+            editLessonBtn.dataset.action = 'edit-lesson';
+            editLessonBtn.dataset.lessonId = l.id || '';
+            editLessonBtn.dataset.moduleId = m.id || '';
+            right.appendChild(editLessonBtn);
+
+            const deleteLessonBtn = document.createElement('button');
+            deleteLessonBtn.textContent = 'Delete';
+            deleteLessonBtn.dataset.action = 'delete-lesson';
+            deleteLessonBtn.dataset.lessonId = l.id || '';
+            right.appendChild(deleteLessonBtn);
+
+            li.appendChild(right);
+            ul.appendChild(li);
+          });
+          moduleDiv.appendChild(ul);
+        } else {
+          const none = document.createElement('div');
+          none.textContent = 'No lessons yet';
+          moduleDiv.appendChild(none);
+        }
+
+        container.appendChild(moduleDiv);
+        // separator
+        const hr = document.createElement('hr');
+        container.appendChild(hr);
+      });
+    }
+
+    // Load modules
+    async function loadModules(){
+      const slug = document.getElementById('CourseSlug') ? document.getElementById('CourseSlug').value : '';
+      if (!slug) { document.getElementById('modulesContainer').innerHTML = '<div>Course slug missing</div>'; return; }
+      const loader = document.getElementById('modulesLoading'); if (loader) loader.style.display = 'block';
+      const json = await getJson(`/AdminCourse/GetCourseModules?slug=${encodeURIComponent(slug)}`);
+      if (json && json.success) renderModules(json.data); else document.getElementById('modulesContainer').innerHTML = 'Unable to load modules: ' + (json?.message || 'unknown');
+      if (loader) loader.style.display = 'none';
+    }
+
+    // Open lesson modal with data
+    async function openLessonModalWithData(lesson){
+      document.getElementById('modalLessonId').value = lesson.id || '';
+      document.getElementById('modalLessonModuleId').value = lesson.moduleId || '';
+      document.getElementById('modalLessonTitle').value = lesson.title || '';
+      document.getElementById('modalLessonSlug').value = lesson.slug || '';
+      document.getElementById('modalLessonPosition').value = lesson.position || 0;
+      document.getElementById('modalLessonPublished').checked = !!lesson.isPublished;
+      document.getElementById('modalLessonFree').checked = !!lesson.isFreePreview;
+
+      const body = decodeHtmlEntitiesIfNeeded(lesson.body || '');
+      document.getElementById('modalLessonHtml').value = body;
+      updatePreview(body);
+
+      showModal('lessonModalOverlay');
+    }
+
+    // Global delegated click handler using data-action
+    document.addEventListener('click', async function(e){
+      // find element with data-action
+      const actionEl = e.target.closest && e.target.closest('[data-action]');
+      if (actionEl) {
+        const action = actionEl.dataset.action;
+        if (action === 'edit-module') {
+          const slug = actionEl.dataset.moduleSlug || '';
+          document.getElementById('modalModuleSlug').value = slug;
+          document.getElementById('modalModuleTitle').value = actionEl.dataset.moduleTitle || '';
+          document.getElementById('modalModulePosition').value = actionEl.dataset.modulePosition || 0;
+          showModal('moduleModalOverlay');
+          return;
+        }
+        if (action === 'delete-module') {
+          const slug = actionEl.dataset.moduleSlug;
+          if (!slug) { alert('Module identifier missing'); return; }
+          if (!confirm('Delete module and its lessons?')) return;
+          const res = await postUrlEncoded('/AdminCourse/DeleteModule', { moduleSlug: slug });
+          if (res && res.success) await loadModules(); else alert(res && res.message ? res.message : 'Error deleting module');
+          return;
+        }
+        if (action === 'add-lesson') {
+          const moduleSlug = actionEl.dataset.moduleSlug;
+          if (!moduleSlug) { alert('Module id missing'); return; }
+          const title = prompt('Lesson title:');
+          if (!title) return;
+          const lessonSlug = prompt('Lesson slug (optional):') || '';
+          const res = await postUrlEncoded('/AdminCourse/AddLesson', { ModuleSlug: moduleSlug, Title: title, Slug: lessonSlug });
+          if (res && res.success) await loadModules(); else alert(res && res.message ? res.message : 'Error adding lesson');
+          return;
+        }
+        if (action === 'edit-lesson') {
+          const lessonId = actionEl.dataset.lessonId;
+          if (!lessonId) { alert('Lesson id missing'); return; }
+          const json = await getJson(`/AdminCourse/GetLesson?lessonId=${encodeURIComponent(lessonId)}`);
+          if (!json || !json.success) { alert('Unable to load lesson for editing'); return; }
+          await openLessonModalWithData(json.data);
+          return;
+        }
+        if (action === 'delete-lesson') {
+          const lessonId = actionEl.dataset.lessonId;
+          if (!lessonId) { alert('Lesson id missing'); return; }
+          if (!confirm('Delete lesson?')) return;
+          const res = await postUrlEncoded('/AdminCourse/DeleteLesson', { lessonId });
+          if (res && res.success) await loadModules(); else alert(res && res.message ? res.message : 'Error deleting lesson');
+          return;
+        }
+      }
+    });
+
+    // Save module
+    document.getElementById('btnSaveModule').addEventListener('click', async function(){
+      const slug = document.getElementById('modalModuleSlug').value;
+      const title = document.getElementById('modalModuleTitle').value;
+      const position = document.getElementById('modalModulePosition').value || 0;
+      if (!slug) { alert('Module identifier missing'); return; }
+      const res = await postUrlEncoded('/AdminCourse/UpdateModule', { Slug: slug, Title: title, Position: position });
+      if (res && res.success) { hideModal('moduleModalOverlay'); await loadModules(); } else alert(res && res.message ? res.message : 'Unable to save module');
+    });
+
+    // Add module button
+    document.getElementById('btnAddModule').addEventListener('click', async function(){
+      const title = prompt('Module title:');
+      if (!title) return;
+      const courseSlug = document.getElementById('CourseSlug').value || '';
+      if (!courseSlug) { alert('Course slug missing'); return; }
+      const moduleSlug = prompt('Module slug (optional):') || '';
+      const res = await postUrlEncoded('/AdminCourse/AddModule', { Slug: moduleSlug, Title: title, CourseSlug: courseSlug });
+      if (res && res.success) await loadModules(); else alert(res && res.message ? res.message : 'Error adding module');
+    });
+
+    // Save basics (AJAX)
+    document.getElementById('courseBasicsForm').addEventListener('submit', async function(e){
+      e.preventDefault();
+      const dto = {
+        Id: document.querySelector('input[name="Id"]').value,
+        Name: document.getElementById('CourseName').value,
+        Slug: document.getElementById('CourseSlugInput').value,
+        ShortDescription: document.getElementById('ShortDescription').value,
+        FullDescription: document.getElementById('FullDescription').value,
+        MainImageUrl: document.getElementById('MainImageUrl').value
+      };
+      const res = await postUrlEncoded('/AdminCourse/UpdateCourse', dto);
+      if (res && res.success) {
+        const targetSlug = dto.Slug && dto.Slug.trim() !== '' ? dto.Slug : dto.Name;
+        window.location.href = `/AdminCourse/EditCourse?slug=${encodeURIComponent(targetSlug)}`;
+      } else {
+        alert(res && res.message ? res.message : 'Error saving course');
+      }
+    });
+
+    // Save lesson
+    document.getElementById('btnSaveLesson').addEventListener('click', async function(){
+      const lessonId = document.getElementById('modalLessonId').value;
+      const moduleId = document.getElementById('modalLessonModuleId').value;
+      const title = document.getElementById('modalLessonTitle').value;
+      const slug = document.getElementById('modalLessonSlug').value;
+      const position = document.getElementById('modalLessonPosition').value || 0;
+      const isPublished = document.getElementById('modalLessonPublished').checked;
+      const isFree = document.getElementById('modalLessonFree').checked;
+      const body = document.getElementById('modalLessonHtml').value || '';
+      if (!lessonId) { alert('Lesson id missing'); return; }
+      const data = { ModuleId: moduleId, LessonId: lessonId, Title: title, Slug: slug, Body: body, Position: position, IsPublished: isPublished, IsFreePreview: isFree };
+      const res = await postUrlEncoded('/AdminCourse/UpdateLesson', data);
+      if (res && res.success) {
+        hideModal('lessonModalOverlay');
+        if (typeof loadModules === 'function') await loadModules();
+      } else alert(res && res.message ? res.message : 'Unable to save lesson');
+    });
+
+    // Update preview while editing lesson HTML (debounced)
+    const lessonHtmlEl = document.getElementById('modalLessonHtml');
+    if (lessonHtmlEl) {
+      lessonHtmlEl.addEventListener('input', debounce(function(e){
+        updatePreview(e.target.value);
+      }, 250));
+    }
+
+    // Update image preview when MainImageUrl changes
+    const mainImgEl = document.getElementById('MainImageUrl');
+    if (mainImgEl) {
+      mainImgEl.addEventListener('input', debounce(function(e){
+        const url = e.target.value.trim();
+        const wrap = document.getElementById('imagePreviewWrap');
+        const img = document.getElementById('imgPreview');
+        if (!url) { wrap.setAttribute('hidden',''); img.src = ''; return; }
+        img.src = url;
+        wrap.removeAttribute('hidden');
+      }, 300));
+    }
+
+    // Init
+    (function init(){ loadModules(); })();
+</script>
+
+<partial name="_ValidationScriptsPartial" />

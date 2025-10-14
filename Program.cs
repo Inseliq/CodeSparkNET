@@ -1,4 +1,6 @@
 using CodeSparkNET.Data;
+using CodeSparkNET.Identity;
+using CodeSparkNET.Infrastructure;
 using CodeSparkNET.Interfaces.Repositories;
 using CodeSparkNET.Interfaces.Services;
 using CodeSparkNET.Models;
@@ -6,7 +8,13 @@ using CodeSparkNET.Redis;
 using CodeSparkNET.Repositories;
 using CodeSparkNET.Services;
 using CodeSparkNET.Validators.Account;
+using CodeSparkNET.Validators.AdminCourse;
+using CodeSparkNET.Validators.Catalogs;
+using CodeSparkNET.Validators.Profile;
 using CodeSparkNET.ViewModels.Account;
+using CodeSparkNET.ViewModels.AdminCourse;
+using CodeSparkNET.ViewModels.Catalogs;
+using CodeSparkNET.ViewModels.Profile;
 using FluentValidation;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
@@ -53,7 +61,7 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
     options.Password.RequireUppercase = true;
     options.Password.RequireLowercase = true;
     options.Password.RequireNonAlphanumeric = false;
-}).AddErrorDescriber<IdentityErrorDescriber>()
+}).AddErrorDescriber<RussianIdentityErrorDescriber>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
@@ -108,10 +116,41 @@ builder.Services.AddSingleton<ICacheProvider, CacheProvider>();
 builder.Services.AddFluentValidationAutoValidation(conf =>
 {
     conf.DisableBuiltInModelValidation = true;
-    conf.ValidationStrategy = SharpGrip.FluentValidation.AutoValidation.Mvc.Enums.ValidationStrategy.Annotations;
+    conf.ValidationStrategy = SharpGrip.FluentValidation.AutoValidation.Mvc.Enums.ValidationStrategy.All;
+
+    conf.EnableFormBindingSourceAutomaticValidation = true;
+    conf.EnableQueryBindingSourceAutomaticValidation = true;
+    conf.EnableBodyBindingSourceAutomaticValidation = true;
+
+    conf.OverrideDefaultResultFactoryWith<MvcValidationResultFactory>();
+
 });
+//Account validators
+builder.Services.AddTransient<MvcValidationResultFactory>();
 builder.Services.AddScoped<IValidator<LoginViewModel>, LoginViewModelValidator>();
-builder.Services.AddScoped<IValidator<RegisterViewModel>, RegisterViewModelValidator>();
+//builder.Services.AddScoped<IValidator<RegisterViewModel>, RegisterViewModelValidator>();
+builder.Services.AddScoped<IValidator<ForgotPasswordViewModel>, ForgotPasswordViewModelValidator>();
+builder.Services.AddScoped<IValidator<ResetPasswordViewModel>, ResetPasswordViewModelValidator>();
+
+//AdminCourse validators
+builder.Services.AddScoped<IValidator<AddLessonViewModel>, AddLessonViewModelValidator>();
+builder.Services.AddScoped<IValidator<AddModuleViewModel>, AddModuleViewModelValidator>();
+builder.Services.AddScoped<IValidator<CreateCourseViewModel>, CreateCourseViewModelValidator>();
+builder.Services.AddScoped<IValidator<EditCourseViewModel>, EditCourseViewModelValidator>();
+builder.Services.AddScoped<IValidator<UpdateLessonViewModel>, UpdateLessonViewModelValidator>();
+builder.Services.AddScoped<IValidator<UpdateModuleViewModel>, UpdateModuleViewModelValidator>();
+
+//Catalogs validator
+builder.Services.AddScoped<IValidator<CatalogNamesViewModel>, CatalogNamesViewModelValidator>();
+builder.Services.AddScoped<IValidator<CatalogProductDetailsViewModel>, CatalogProductDetailsViewModelValidator>();
+builder.Services.AddScoped<IValidator<CatalogProductImageViewModel>, CatalogProductImageViewModelValidator>();
+builder.Services.AddScoped<IValidator<CatalogProductsViewModel>, CatalogProductsViewModelValidator>();
+builder.Services.AddScoped<IValidator<CatalogViewModel>, CatalogViewModelValidator>();
+
+//Profile
+builder.Services.AddScoped<IValidator<ChangePasswordViewModel>, ChangePasswordViewModelValidator>();
+builder.Services.AddScoped<IValidator<PersonalProfileViewModel>, PersonalProfileViewModelValidator>();
+builder.Services.AddScoped<IValidator<UpdatePersonalProfileViewModel>, UpdatePersonalProfileViewModelValidator>();
 
 //Add keys
 StackExchange.Redis.ConnectionMultiplexer? redis = null;

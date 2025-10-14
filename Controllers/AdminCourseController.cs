@@ -3,10 +3,12 @@ using CodeSparkNET.Interfaces.Services;
 using CodeSparkNET.Mapper.AdminCourse;
 using CodeSparkNET.ViewModels.AdminCourse;
 using Microsoft.AspNetCore.Mvc;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
 
 namespace CodeSparkNET.Controllers
 {
     //[Authorize(Roles = "Admin")]
+    [AutoValidation]
     public class AdminCourseController : Controller
     {
         private readonly ICourseService _courseService;
@@ -24,7 +26,7 @@ namespace CodeSparkNET.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateCourse(CreateCourseViewModel viewModel)
+        public async Task<IActionResult> CreateCourse([FromForm] CreateCourseViewModel viewModel)
         {
             if (!ModelState.IsValid)
                 return View(viewModel);
@@ -66,7 +68,7 @@ namespace CodeSparkNET.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateCourse(EditCourseViewModel viewModel)
+        public async Task<IActionResult> UpdateCourse([FromForm] EditCourseViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
@@ -84,7 +86,7 @@ namespace CodeSparkNET.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddModule(AddModuleViewModel viewModel)
+        public async Task<IActionResult> AddModule([FromForm] AddModuleViewModel viewModel)
         {
             var model = viewModel.ToDto();
 
@@ -100,7 +102,7 @@ namespace CodeSparkNET.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateModule(UpdateModuleViewModel viewModel)
+        public async Task<IActionResult> UpdateModule([FromForm] UpdateModuleViewModel viewModel)
         {
             var model = viewModel.ToDto();
 
@@ -144,7 +146,7 @@ namespace CodeSparkNET.Controllers
         // Add lesson
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddLesson(AddLessonViewModel viewModel)
+        public async Task<IActionResult> AddLesson([FromForm] AddLessonViewModel viewModel)
         {
             var model = viewModel.ToDto();
 
@@ -180,7 +182,7 @@ namespace CodeSparkNET.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateLesson(UpdateLessonViewModel viewModel)
+        public async Task<IActionResult> UpdateLesson([FromForm] UpdateLessonViewModel viewModel)
         {
             var model = viewModel.ToDto();
 

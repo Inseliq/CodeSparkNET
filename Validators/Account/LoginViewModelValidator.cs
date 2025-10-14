@@ -18,7 +18,6 @@ namespace CodeSparkNET.Validators.Account
                 .Matches("[A-Z]").WithMessage("Пароль должен содержать хотя бы одну заглавную букву.")
                 .Matches("[a-z]").WithMessage("Пароль должен содержать хотя бы одну строчную букву.")
                 .Matches("[0-9]").WithMessage("Пароль должен содержать хотя бы одну цифру.");
-
         }
     }
 }

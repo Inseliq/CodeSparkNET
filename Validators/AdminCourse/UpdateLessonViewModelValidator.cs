@@ -7,8 +7,6 @@ namespace CodeSparkNET.Validators.AdminCourse
     {
         public UpdateLessonViewModelValidator()
         {
-            RuleFor(x => x.Id)
-                .NotEmpty().WithMessage("Идентификатор урока обязателен.");
 
             RuleFor(x => x.ModuleId)
                 .NotEmpty().WithMessage("Идентификатор модуля обязателен.");

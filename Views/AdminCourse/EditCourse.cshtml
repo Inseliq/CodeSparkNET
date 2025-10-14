@@ -198,9 +198,19 @@
     const token = getAntiForgeryToken();
     const params = new URLSearchParams();
     for (const k in obj) if (obj[k] !== undefined && obj[k] !== null) params.append(k, obj[k]);
-    const resp = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'RequestVerificationToken': token }, body: params.toString() });
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'RequestVerificationToken': token,
+        'X-Requested-With': 'XMLHttpRequest',
+        'Accept': 'application/json'
+      },
+      body: params.toString()
+    });
     try { return await resp.json(); } catch { return { success:false, message:'Invalid server response' }; }
   }
+
   async function getJson(url){
     try {
       const r = await fetch(url);
@@ -632,7 +642,7 @@
         const title = prompt('Lesson title:');
         if (!title) return;
         const lessonSlug = prompt('Lesson slug (optional):') || '';
-        const res = await postUrlEncoded('/AdminCourse/AddLesson', { ModuleSlug: moduleSlug, Title: title, Slug: lessonSlug });
+        const res = await postUrlEncoded('/AdminCourse/AddLesson', { ModuleSlug: moduleSlug, Title: title, Body: "", Slug: lessonSlug });
         if (res && res.success) await loadModules(); else alert(res && res.message ? res.message : 'Error adding lesson');
       } else if (action === 'edit-lesson') {
         const lessonId = actionEl.dataset.lessonId;

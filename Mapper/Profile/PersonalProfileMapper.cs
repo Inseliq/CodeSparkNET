@@ -53,7 +53,6 @@ namespace CodeSparkNET.Mapper.Profile
             return new ChangePasswordDto
             {
                 CurrentPassword = viewModel.CurrentPassword.Trim(),
-                ConfirmPassword = viewModel.ConfirmPassword.Trim(),
                 NewPassword = viewModel.NewPassword.Trim()
             };
         }

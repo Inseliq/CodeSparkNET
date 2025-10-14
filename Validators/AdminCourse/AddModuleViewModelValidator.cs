@@ -7,10 +7,6 @@ namespace CodeSparkNET.Validators.AdminCourse
     {
         public AddModuleViewModelValidator()
         {
-            RuleFor(x => x.Id)
-                .NotEmpty().WithMessage("Идентификатор обязателен.")
-                .MaximumLength(100).WithMessage("Идентификатор не должен превышать 100 символов.");
-
             RuleFor(x => x.Slug)
                 .NotEmpty().WithMessage("Slug обязателен.")
                 .MaximumLength(200).WithMessage("Slug не должен превышать 200 символов.")

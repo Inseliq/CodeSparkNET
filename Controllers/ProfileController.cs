@@ -81,7 +81,7 @@ namespace CodeSparkNET.Controllers
         /// <returns>Returns the updated profile view with the result of the operation.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateProfile([Bind(Prefix = "UpdatePersonalProfileDto")] UpdatePersonalProfileViewModel model)
+        public async Task<IActionResult> UpdateProfile([FromForm][Bind(Prefix = "UpdatePersonalProfile")] UpdatePersonalProfileViewModel model)
         {
             try
             {
@@ -210,7 +210,7 @@ namespace CodeSparkNET.Controllers
         /// <returns>A JSON response indicating the success or failure of the password change operation.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ChangePassword([Bind(Prefix = "ChangePasswordDto")] ChangePasswordViewModel model)
+        public async Task<IActionResult> ChangePassword([FromForm][Bind(Prefix = "ChangePassword")] ChangePasswordViewModel model)
         {
             try
             {

@@ -173,7 +173,7 @@ document.addEventListener("DOMContentLoaded", () => {
       try {
         await fetch('@Url.Action("SendEmailConfirmation", "Profile")', {
           method: "POST",
-          headers: { "Content-Type": "application/json" }
+            headers: { "Content-Type": "application/json", 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
         });
       } catch (error) {
         console.error("Произошла ошибка:", error);

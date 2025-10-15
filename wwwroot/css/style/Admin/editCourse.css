@@ -2,7 +2,6 @@ html[cross-browser] {
   main[data-layout="main"][role="main"] {
     align-items: stretch;
     flex-direction: column;
-
     padding: 25px 10px;
 
     #container {
@@ -268,6 +267,7 @@ html[cross-browser] {
       justify-content: center;
       background: rgba(151, 128, 229, 0.3);
       box-shadow: none;
+      cursor: pointer;
     }
 
     .toolbar-btn:hover {
@@ -285,71 +285,246 @@ html[cross-browser] {
       margin: 0 5px;
     }
 
-    #modalLessonHtml {
+    /* Visual Editor Styles */
+    .visual-editor {
       flex: 1;
       padding: 20px;
       background: rgba(255, 255, 255, 0.03);
       border: none;
       border-radius: 0;
-      resize: none;
-      font-family: 'Courier New', monospace;
-      font-size: 0.95rem;
-      line-height: 1.6;
-    }
-
-    #lessonPreview {
-      flex: 1;
-      padding: 20px;
-      background: rgba(255, 255, 255, 0.03);
       overflow-y: auto;
-      color: var(--palette-text-inv);
+      font-family: inherit;
+      font-size: 1rem;
       line-height: 1.8;
+      color: var(--palette-text-inv);
+      outline: none;
     }
 
-    #lessonPreview h3 {
+    .visual-editor:empty:before {
+      content: "Start typing or use toolbar buttons...";
+      color: var(--palette-color-tc);
+      font-style: italic;
+    }
+
+    /* Styles for content inside visual editor */
+    .visual-editor h3 {
       color: var(--palette-acient);
       margin: 20px 0 10px;
+      font-weight: 700;
+      font-size: 1.5rem;
     }
 
-    #lessonPreview h4 {
+    .visual-editor h4 {
       color: var(--palette-custom);
       margin: 15px 0 10px;
+      font-weight: 600;
+      font-size: 1.25rem;
     }
 
-    #lessonPreview ul,
-    #lessonPreview ol {
+    .visual-editor p {
+      margin-bottom: 15px;
+    }
+
+    .visual-editor strong {
+      font-weight: 600;
+      color: var(--palette-text-inv);
+    }
+
+    .visual-editor b {
+      font-weight: 600;
+      color: var(--palette-text-shadow);
+    }
+
+    .visual-editor i {
+      font-style: italic;
+    }
+
+    .visual-editor ul,
+    .visual-editor ol {
       margin-left: 30px;
       margin-bottom: 15px;
     }
 
-    #lessonPreview li {
+    .visual-editor li {
       margin-bottom: 8px;
     }
 
-    #lessonPreview table {
+    .visual-editor table {
       border-collapse: collapse;
       width: 100%;
       margin: 20px 0;
     }
 
-    #lessonPreview table td {
+    .visual-editor table td {
       border: 1px solid var(--palette-acient);
       padding: 10px;
     }
 
-    #lessonPreview [data-editor] {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 15px;
-      border-radius: 8px;
-      border-left: 4px solid var(--palette-second);
-      margin: 15px 0;
-      font-family: 'Courier New', monospace;
-    }
-
-    #lessonPreview img {
+    .visual-editor img {
       max-width: 100%;
       border-radius: 8px;
       margin: 15px 0;
+    }
+
+    /* Code Editor Styles (VS Code-like) */
+    .visual-editor .editor.code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;
+      background: #252526;
+      color: #d4d4d4;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(0, 0, 0, 0.5);
+      margin: 1em 0;
+    }
+
+    .visual-editor .editor.code::before {
+      content: "";
+      display: block;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent, var(--palette-acient)) 0%, rgba(255, 255, 255, 0.03) 100%);
+    }
+
+    .visual-editor .editor.code .editor-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 8px 10px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    }
+
+    .visual-editor .editor.code .lang-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .visual-editor .editor.code .copy-btn {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      color: #d4d4d4;
+      padding: 6px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 12px;
+    }
+
+    .visual-editor .editor.code .copy-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .visual-editor .editor.code pre {
+      margin: 0;
+      padding: 16px;
+      max-height: 40vh;
+      overflow-x: auto;
+      overflow-y: auto;
+      white-space: pre;
+      line-height: 1.45;
+      font-size: 0.95rem;
+      tab-size: 2;
+    }
+
+    .visual-editor .editor.code[data-lang="js"],
+    .visual-editor .editor.code[data-lang="javascript"] {
+      --accent: #f7df1e;
+    }
+
+    .visual-editor .editor.code[data-lang="html"] {
+      --accent: #e44d26;
+    }
+
+    .visual-editor .editor.code[data-lang="css"] {
+      --accent: #2965f1;
+    }
+
+    .visual-editor .editor.code[data-lang="json"] {
+      --accent: #56b6c2;
+    }
+
+    .visual-editor .editor.code[data-lang="c-sharp"],
+    .visual-editor .editor.code[data-lang="csharp"] {
+      --accent: #178600;
+    }
+
+    .visual-editor .editor.code[data-lang="python"] {
+      --accent: #3572A5;
+    }
+
+    /* Console Styles */
+    .visual-editor .console {
+      font-family: ui-monospace, Menlo, Monaco, monospace;
+      border-radius: 10px;
+      padding: 12px;
+      margin: 1em 0;
+      box-shadow: 0 6px 18px rgba(77, 77, 77, 0.22);
+      background: linear-gradient(180deg, var(--palette-nav-site), var(--palette-nav-site));
+      color: #e6e6e6;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .visual-editor .console .mac-top {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .visual-editor .console .mac-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.12);
+    }
+
+    .visual-editor .console .mac-dot:nth-child(1) {
+      background: var(--palette-second);
+    }
+
+    .visual-editor .console .mac-dot:nth-child(2) {
+      background: var(--palette-acient);
+    }
+
+    .visual-editor .console .mac-dot:nth-child(3) {
+      background: var(--palette-text-shadow);
+    }
+
+    .visual-editor .console pre {
+      margin: 0;
+      padding: 6px 8px;
+      max-height: 50vh;
+      overflow-x: auto;
+      overflow-y: auto;
+      background: transparent;
+      white-space: pre-wrap;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    /* HTML Code Preview */
+    .html-code-preview {
+      flex: 1;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.03);
+      border: none;
+      border-radius: 0;
+      overflow-x: auto;
+      overflow-y: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: var(--palette-text-shadow);
+      margin: 0;
+      white-space: pre;
+      tab-size: 2;
     }
 
     .dropdown-menu {
@@ -359,7 +534,7 @@ html[cross-browser] {
       border-radius: 8px;
       padding: 10px;
       display: none;
-      z-index: 100;
+      z-index: 1000;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
 
@@ -372,6 +547,7 @@ html[cross-browser] {
       width: 100%;
       margin-bottom: 5px;
       text-align: left;
+      white-space: nowrap;
     }
 
     .modal-input {
@@ -397,6 +573,7 @@ html[cross-browser] {
       border: 1px solid var(--palette-acient);
       cursor: pointer;
       border-radius: 4px;
+      transition: background 0.2s;
     }
 
     .table-cell-picker:hover,
@@ -410,6 +587,5 @@ html[cross-browser] {
       gap: 20px;
       margin-bottom: 20px;
     }
-
   }
 }

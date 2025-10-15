@@ -205,11 +205,27 @@
     const token = getAntiForgeryToken();
     const params = new URLSearchParams();
     for (const k in obj) if (obj[k] !== undefined && obj[k] !== null) params.append(k, obj[k]);
-    const resp = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'RequestVerificationToken': token }, body: params.toString() });
-    try { return await resp.json(); } catch { return { success: false, message: 'Invalid server response' }; }
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'RequestVerificationToken': token,
+        'X-Requested-With': 'XMLHttpRequest',
+        'Accept': 'application/json'
+      },
+      body: params.toString()
+    });
+    try { return await resp.json(); } catch { return { success:false, message:'Invalid server response' }; }
   }
-  async function getJson(url) {
-    try { const r = await fetch(url); return await r.json(); } catch (err) { console.error('getJson failed for', url, err); return { success: false, message: 'Invalid server response' }; }
+
+  async function getJson(url){
+    try {
+      const r = await fetch(url);
+      return await r.json();
+    } catch (err) {
+      console.error('getJson failed for', url, err);
+      return { success:false, message:'Invalid server response' };
+    }
   }
 
   function decodeHtmlEntitiesIfNeeded(str) {
@@ -530,7 +546,13 @@
       } else if (action === 'delete-module') {
         const slug = actionEl.dataset.moduleSlug; if (!slug) { alert('Module identifier missing'); return; } if (!confirm('Delete module and its lessons?')) return; const res = await postUrlEncoded('/AdminCourse/DeleteModule', { moduleSlug: slug }); if (res && res.success) await loadModules(); else alert(res && res.message ? res.message : 'Error deleting module');
       } else if (action === 'add-lesson') {
-        const moduleSlug = actionEl.dataset.moduleSlug; if (!moduleSlug) { alert('Module id missing'); return; } const title = prompt('Lesson title:'); if (!title) return; const lessonSlug = prompt('Lesson slug (optional):') || ''; const res = await postUrlEncoded('/AdminCourse/AddLesson', { ModuleSlug: moduleSlug, Title: title, Slug: lessonSlug }); if (res && res.success) await loadModules(); else alert(res && res.message ? res.message : 'Error adding lesson');
+        const moduleSlug = actionEl.dataset.moduleSlug;
+        if (!moduleSlug) { alert('Module id missing'); return; }
+        const title = prompt('Lesson title:');
+        if (!title) return;
+        const lessonSlug = prompt('Lesson slug (optional):') || '';
+        const res = await postUrlEncoded('/AdminCourse/AddLesson', { ModuleSlug: moduleSlug, Title: title, Body: "", Slug: lessonSlug });
+        if (res && res.success) await loadModules(); else alert(res && res.message ? res.message : 'Error adding lesson');
       } else if (action === 'edit-lesson') {
         const lessonId = actionEl.dataset.lessonId; if (!lessonId) { alert('Lesson id missing'); return; } const json = await getJson(`/AdminCourse/GetLesson?lessonId=${encodeURIComponent(lessonId)}`); if (!json || !json.success) { alert('Unable to load lesson for editing'); return; } openLessonModalWithData(json.data || {});
       } else if (action === 'delete-lesson') {

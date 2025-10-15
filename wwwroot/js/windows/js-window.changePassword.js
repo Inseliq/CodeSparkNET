@@ -114,8 +114,12 @@ document.addEventListener('DOMContentLoaded', () => {
       try {
         const response = await fetch(changePasswordForm.action || window.location.pathname, {
           method: 'POST',
-          headers: headers,
-          body: formData
+            headers: {
+                ...headers,
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json'
+            },
+            body: formData
         });
 
         const result = await response.json();

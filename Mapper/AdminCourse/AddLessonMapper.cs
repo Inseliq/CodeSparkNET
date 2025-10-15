@@ -12,7 +12,7 @@ namespace CodeSparkNET.Mapper.AdminCourse
                 ModuleSlug = viewModel.ModuleSlug.Trim().ToLower(),
                 Title = viewModel.Title.Trim(),
                 Slug = viewModel.Slug.Trim().ToLower(),
-                Body = viewModel.Body.Trim(),
+                Body = viewModel.Body?.Trim(),
                 IsPublished = viewModel.IsPublished,
                 IsFreePreview = viewModel.IsFreePreview
             };

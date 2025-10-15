@@ -1,11 +1,10 @@
-using CodeSparkNET.Dtos.Account;
 using CodeSparkNET.Interfaces.Services;
 using CodeSparkNET.Mapper.Account;
 using CodeSparkNET.Models;
 using CodeSparkNET.ViewModels.Account;
-using Humanizer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
 using System.Diagnostics;
 using System.Security.Claims;
 
@@ -15,6 +14,7 @@ namespace CodeSparkNET.Controllers
     /// Controller responsible for handling account-related actions such as registration, login, and password management.
     /// </summary>
     [Authorize]
+    [AutoValidation]
     public class AccountController : Controller
     {
         private readonly IAccountService _accountService;
@@ -51,7 +51,7 @@ namespace CodeSparkNET.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(RegisterViewModel viewModel)
+        public async Task<IActionResult> Register([FromForm] RegisterViewModel viewModel)
         {
             try
             {
@@ -109,7 +109,7 @@ namespace CodeSparkNET.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginViewModel viewModel)
+        public async Task<IActionResult> Login([FromForm] LoginViewModel viewModel)
         {
             try
             {
@@ -193,7 +193,7 @@ namespace CodeSparkNET.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel viewModel)
+        public async Task<IActionResult> ForgotPassword([FromForm] ForgotPasswordViewModel viewModel)
         {
             try
             {
@@ -254,7 +254,7 @@ namespace CodeSparkNET.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel viewModel)
+        public async Task<IActionResult> ResetPassword([FromForm] ResetPasswordViewModel viewModel)
         {
             try
             {

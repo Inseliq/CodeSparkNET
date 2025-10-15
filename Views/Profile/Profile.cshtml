@@ -1,6 +1,6 @@
 @using Microsoft.AspNetCore.Identity
 @using System.Collections
-@model CodeSparkNET.Dtos.Profile.ProfileDto
+@model CodeSparkNET.ViewModels.Profile.ProfileViewModel
 @inject UserManager<AppUser> UserManager
 @{
     ViewData["Title"] = "Личный кабинет";
@@ -29,7 +29,7 @@
                 <h2>Личные данные</h2>
             </div>
             <div class="block body">
-                <h3 hover el="user-name" title="Имя пользователя">@Model.PersonalProfileDto.UserName</h3>
+                <h3 hover el="user-name" title="Имя пользователя">@Model.PersonalProfile.UserName</h3>
                 @if (UserManager.IsEmailConfirmedAsync(user).Result is false)
                 {
                     <button class="edit" disabled data-style="link" hover
@@ -45,7 +45,7 @@
                 }
             </div>
             <div class="block body">
-                <h3 hover el="role" title="Роль">@((string?)Model.PersonalProfileDto.Roles ?? "—")</h3>
+                <h3 hover el="role" title="Роль">@((string?)Model.PersonalProfile.Roles ?? "—")</h3>
             </div>
             <div class="block body">
                 <h3 hover el="p-time" title="Время до окончания подписки">$prime-time</h3>
@@ -71,7 +71,7 @@
             {
                 <div class="block body n_confirm">
                     <div class="left" hover>
-                        <h3 title="Подтвердите адрес электронной почты">@Model.PersonalProfileDto.Email</h3>
+                        <h3 title="Подтвердите адрес электронной почты">@Model.PersonalProfile.Email</h3>
                         <span>Ваш Email не подтвержден!</span>
                     </div>
                     <button data-function="send-confirmation-email" class="btn right" data-style="link" hover
@@ -82,10 +82,10 @@
             {
                 <div class="block body confirm">
                     <div class="left" hover>
-                        <h3 title="Электронная почта">@Model.PersonalProfileDto.Email</h3>
-                        <span>Email добавлен: @Model.PersonalProfileDto.EmailAddAt</span>
-                        <span>@(Model.PersonalProfileDto.EmailConfirmedAt == DateTime.MinValue ? "" : $"Email подтвержден: {Model.PersonalProfileDto.EmailConfirmedAt}")</span>
-                        <span>@(Model.PersonalProfileDto.EmailChangedAt == DateTime.MinValue ? "" : $"Email изменен: {Model.PersonalProfileDto.EmailChangedAt}")</span>
+                        <h3 title="Электронная почта">@Model.PersonalProfile.Email</h3>
+                        <span>Email добавлен: @Model.PersonalProfile.EmailAddAt</span>
+                        <span>@(Model.PersonalProfile.EmailConfirmedAt == DateTime.MinValue ? "" : $"Email подтвержден: {Model.PersonalProfile.EmailConfirmedAt}")</span>
+                        <span>@(Model.PersonalProfile.EmailChangedAt == DateTime.MinValue ? "" : $"Email изменен: {Model.PersonalProfile.EmailChangedAt}")</span>
                     </div>
                     <button data-function="editEmailBtn" class="btn right" data-style="link" hover>Изменить</button>
                 </div>
@@ -140,7 +140,7 @@
         <div class="content">
             <div class="left">
                 <h2>$Защита данных</h2>
-                @foreach (var course in Model.PersonalProfileDto.AllUserCourses)
+                @foreach (var course in Model.PersonalProfile.AllUserCourses)
                 {
                     <div>
                         <span>@course.Name | @(course.IsCompleted ? "Пройден" : "Не пройден")</span>
@@ -180,12 +180,12 @@ else
                     @Html.AntiForgeryToken()
                     <span asp-validation-summary="ModelOnly" class="error_message_form"></span>
                     <div class="input_block" hover>
-                        <span asp-validation-for="UpdatePersonalProfileDto.UserName"></span>
-                        <label asp-for="UpdatePersonalProfileDto.UserName">Имя пользователя</label>
-                        <input asp-for="UpdatePersonalProfileDto.UserName" id="names" type="text" required hover
-                               placeholder="@Model.PersonalProfileDto.UserName">
+                        <span asp-validation-for="UpdatePersonalProfile.UserName"></span>
+                        <label asp-for="UpdatePersonalProfile.UserName">Имя пользователя</label>
+                        <input asp-for="UpdatePersonalProfile.UserName" id="names" type="text" required hover
+                               placeholder="@Model.PersonalProfile.UserName">
                                @* TODO: Удалить поле с почтой и поменять контроллер *@
-                        <input asp-for="UpdatePersonalProfileDto.Email" id="email" type="email" value="@Model.PersonalProfileDto.Email"
+                        <input asp-for="UpdatePersonalProfile.Email" id="email" type="email" value="@Model.PersonalProfile.Email"
                             required hover hidden="!">
                     </div>
                     <div class="block-button">
@@ -224,11 +224,11 @@ else
                     @Html.AntiForgeryToken()
                     <span asp-validation-summary="ModelOnly" class="error_message_form"></span>
                     <div class="input_block" hover>
-                        <span asp-validation-for="UpdatePersonalProfileDto.Email"></span>
-                        <label asp-for="UpdatePersonalProfileDto.Email">Новый Email</label>
-                        <input asp-for="UpdatePersonalProfileDto.UserName" id="names" type="text" required hover
-                               value="@Model.PersonalProfileDto.UserName" hidden="!">
-                        <input asp-for="UpdatePersonalProfileDto.Email" id="email" type="email" placeholder="@Model.PersonalProfileDto.Email"
+                        <span asp-validation-for="UpdatePersonalProfile.Email"></span>
+                        <label asp-for="UpdatePersonalProfile.Email">Новый Email</label>
+                        <input asp-for="UpdatePersonalProfile.UserName" id="names" type="text" required hover
+                               value="@Model.PersonalProfile.UserName" hidden="!">
+                        <input asp-for="UpdatePersonalProfile.Email" id="email" type="email" placeholder="@Model.PersonalProfile.Email"
                             required hover>
                     </div>
                     <div class="block-button">
@@ -267,19 +267,19 @@ else
                     <span asp-validation-summary="ModelOnly" class="error_message_form"></span>
                     <div class="input_block">
                         <div class="password-block">
-                            <span asp-validation-for="ChangePasswordDto.CurrentPassword"></span>
-                            <label asp-for="ChangePasswordDto.CurrentPassword">Текущий пароль</label>
-                            <input asp-for="ChangePasswordDto.CurrentPassword" id="names" type="password" required hover>
+                            <span asp-validation-for="ChangePassword.CurrentPassword"></span>
+                            <label asp-for="ChangePassword.CurrentPassword">Текущий пароль</label>
+                            <input asp-for="ChangePassword.CurrentPassword" id="names" type="password" required hover>
                         </div>
                         <div class="password-block">
-                            <span asp-validation-for="ChangePasswordDto.NewPassword" class="not_margin_top"></span>
-                            <label asp-for="ChangePasswordDto.NewPassword">Новый пароль</label>
-                            <input asp-for="ChangePasswordDto.NewPassword" id="email" type="password" required hover>
+                            <span asp-validation-for="ChangePassword.NewPassword" class="not_margin_top"></span>
+                            <label asp-for="ChangePassword.NewPassword">Новый пароль</label>
+                            <input asp-for="ChangePassword.NewPassword" id="email" type="password" required hover>
                         </div>
                         <div class="password-block">
-                            <span asp-validation-for="ChangePasswordDto.ConfirmPassword" class="not_margin_top"></span>
-                            <label asp-for="ChangePasswordDto.ConfirmPassword">Подтверждение пароля</label>
-                            <input asp-for="ChangePasswordDto.ConfirmPassword" id="email" type="password" required hover>
+                            <span asp-validation-for="ChangePassword.ConfirmPassword" class="not_margin_top"></span>
+                            <label asp-for="ChangePassword.ConfirmPassword">Подтверждение пароля</label>
+                            <input asp-for="ChangePassword.ConfirmPassword" id="email" type="password" required hover>
                         </div>
                     </div>
                     <div class="block-button">

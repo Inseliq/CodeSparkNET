@@ -1,5 +1,7 @@
 ﻿using CodeSparkNET.Dtos.Course;
 using CodeSparkNET.Interfaces.Services;
+using CodeSparkNET.Mapper.Course;
+using CodeSparkNET.ViewModels.Course;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,12 +26,14 @@ namespace CodeSparkNET.Controllers
 
         [HttpGet("Courses/GetCourseBySlug/{slug}")]
         [AllowAnonymous] 
-        public async Task<ActionResult<CourseDto>> GetCourseBySlug(string slug)
+        public async Task<ActionResult<CourseViewModel>> GetCourseBySlug(string slug)
         {
             var courseDto = await _courseService.GetCourseBySlugAsync(slug);
 
             if (courseDto == null) return NotFound();
-            return Ok(courseDto);
+
+            var courseViewModel = courseDto.ToViewModel();
+            return Ok(courseViewModel);
         }
 
         [HttpGet("Courses/GetLessonContent/{courseSlug}/lessons/{lessonSlug}")]
@@ -39,7 +43,9 @@ namespace CodeSparkNET.Controllers
             var lesson = await _courseService.GetLessonBySlugAsync(courseSlug, lessonSlug);
 
             if (lesson == null) return NotFound();
-            return Ok(lesson);
+
+            var lessonViewModel = lesson.ToLessonViewModel();
+            return Ok(lessonViewModel);
         }
     }
 }

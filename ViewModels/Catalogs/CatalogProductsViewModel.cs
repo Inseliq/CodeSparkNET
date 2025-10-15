@@ -1,5 +1,4 @@
-﻿using CodeSparkNET.Dtos.Catalog;
-
+﻿
 namespace CodeSparkNET.ViewModels.Catalogs
 {
     public class CatalogProductsViewModel

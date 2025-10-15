@@ -1,4 +1,3 @@
-/*layout.css*/
 html[data-theme-color="white"] {
   --palette-main: #f5f1ee;
   --palette-acient: #ecc1a1;
@@ -146,8 +145,8 @@ html[cross-browser][data-theme-color="dark"] {
         right: 0;
         transform: translate(110%, -50%);
         background-color: var(--palette-acient);
-        mask: url(../assets/icon/link.icon-new.svg) center/cover no-repeat;
-        -webkit-mask: url(../assets/icon/link.icon-new.svg) center/cover no-repeat;
+        mask: url(../../assets/icon/link.icon-new.svg) center/cover no-repeat;
+        -webkit-mask: url(../../assets/icon/link.icon-new.svg) center/cover no-repeat;
         transition: var(--transition-time);
       }
     }
@@ -190,8 +189,8 @@ html[cross-browser][data-theme-color="dark"] {
         right: 0;
         transform: translate(110%, -50%);
         background-color: var(--palette-acient);
-        mask: url(../assets/icon/link.icon-cube.svg) center/cover no-repeat;
-        -webkit-mask: url(../assets/icon/link.icon-cube.svg) center/cover no-repeat;
+        mask: url(../../assets/icon/link.icon-cube.svg) center/cover no-repeat;
+        -webkit-mask: url(../../assets/icon/link.icon-cube.svg) center/cover no-repeat;
         transition: var(--transition-time);
         /* cube */
       }
@@ -205,8 +204,8 @@ html[cross-browser][data-theme-color="dark"] {
         right: 0;
         transform: translate(110%, -50%);
         background-color: var(--palette-acient);
-        mask: url(../assets/icon/link.icon-arrow.svg) center/cover no-repeat;
-        -webkit-mask: url(../assets/icon/link.icon-arrow.svg) center/cover no-repeat;
+        mask: url(../../assets/icon/link.icon-arrow.svg) center/cover no-repeat;
+        -webkit-mask: url(../../assets/icon/link.icon-arrow.svg) center/cover no-repeat;
         transition: var(--transition-time);
         /* arrow */
       }
@@ -290,7 +289,7 @@ html[cross-browser][data-theme-color="dark"] {
       .btn-icon {
         &::before {
           transform: translate(20%, -50%);
-          background-image: url(../assets/icon/nav_site.moon.svg);
+          background-image: url(../../assets/icon/nav_site.moon.svg);
         }
       }
     }
@@ -421,7 +420,7 @@ html[cross-browser][data-theme-color="white"] {
       .btn-icon {
         &::before {
           transform: translate(180%, -50%);
-          background-image: url(../assets/icon/nav_site.sun.svg);
+          background-image: url(../../assets/icon/nav_site.sun.svg);
         }
       }
     }
@@ -484,7 +483,7 @@ html[cross-browser] {
             background-position: center;
             background-repeat: no-repeat;
             background-size: cover;
-            background-image: url(../assets/icon/logo.webp);
+            background-image: url(../../assets/icon/logo.webp);
             width: 19px;
             height: 19px;
           }
@@ -560,7 +559,7 @@ html[cross-browser] {
 
         a[help] {
           &::after {
-            background-image: url(../assets/icon/nav_site.help.svg);
+            background-image: url(../../assets/icon/nav_site.help.svg);
             filter: invert(1);
           }
         }
@@ -569,7 +568,7 @@ html[cross-browser] {
           margin-left: 15px;
 
           &::after {
-            background-image: url(../assets/icon/nav_site.enter.svg);
+            background-image: url(../../assets/icon/nav_site.enter.svg);
             filter: invert(1);
           }
         }
@@ -578,7 +577,7 @@ html[cross-browser] {
           margin-left: 15px;
 
           &::after {
-            background-image: url(../assets/icon/nav_site.reg.svg);
+            background-image: url(../../assets/icon/nav_site.reg.svg);
             filter: invert(1);
           }
         }
@@ -623,7 +622,7 @@ html[cross-browser] {
             background-position: center;
             background-repeat: no-repeat;
             background-size: cover;
-            background-image: url(../assets/icon/profile.user-name.svg);
+            background-image: url(../../assets/icon/profile.user-name.svg);
             width: 14px;
             height: 14px;
             filter: invert(1);
@@ -727,7 +726,7 @@ html[cross-browser] {
           mask-position: center;
           mask-size: cover;
           mask-repeat: no-repeat;
-          mask-image: url(../assets/icon/settings-icon.svg);
+          mask-image: url(../../assets/icon/settings-icon.svg);
           background-color: var(--async-color-hover);
           transition: .3s ease;
         }
@@ -794,7 +793,7 @@ html[cross-browser] {
                 margin-left: 5px;
                 width: 19px;
                 height: 19px;
-                background-image: url(../assets/icon/footer_site.ru-fg.svg);
+                background-image: url(../../assets/icon/footer_site.ru-fg.svg);
                 background-position: center;
                 background-repeat: no-repeat;
                 background-size: cover;
@@ -1209,8 +1208,8 @@ html[cross-browser] {
                   background-color: var(--not-allowed);
                   width: 17px;
                   height: 17px;
-                  mask: url(../assets/icon/profile.mail_n_confirm.svg) center / cover no-repeat;
-                  -webkit-mask: url(../assets/icon/profile.mail_n_confirm.svg) center / cover no-repeat;
+                  mask: url(../../assets/icon/profile.mail_n_confirm.svg) center / cover no-repeat;
+                  -webkit-mask: url(../../assets/icon/profile.mail_n_confirm.svg) center / cover no-repeat;
                   transition: .3s ease;
                 }
               }
@@ -1245,8 +1244,8 @@ html[cross-browser] {
                 --allowed: #1E7F34;
                 display: block;
                 background-color: var(--allowed);
-                mask: url(../assets/icon/profile.mail_confirm.svg) center / cover no-repeat;
-                -webkit-mask: url(../assets/icon/profile.mail_confirm.svg) center / cover no-repeat;
+                mask: url(../../assets/icon/profile.mail_confirm.svg) center / cover no-repeat;
+                -webkit-mask: url(../../assets/icon/profile.mail_confirm.svg) center / cover no-repeat;
                 transition: .3s ease;
                 width: 17px;
                 height: 17px;
@@ -1291,8 +1290,8 @@ html[cross-browser] {
               left: 100%;
               transform: translate(6%, -50%);
               background-color: var(--palette-acient);
-              mask: url(../assets/icon/link.icon-cube.svg) center/cover no-repeat;
-              -webkit-mask: url(../assets/icon/link.icon-cube.svg) center/cover no-repeat;
+              mask: url(../../assets/icon/link.icon-cube.svg) center/cover no-repeat;
+              -webkit-mask: url(../../assets/icon/link.icon-cube.svg) center/cover no-repeat;
               transition: var(--transition-time);
               /* cube */
             }
@@ -1306,8 +1305,8 @@ html[cross-browser] {
               right: 0;
               transform: translate(110%, -50%);
               background-color: var(--palette-acient);
-              mask: url(../assets/icon/link.icon-arrow.svg) center/cover no-repeat;
-              -webkit-mask: url(../assets/icon/link.icon-arrow.svg) center/cover no-repeat;
+              mask: url(../../assets/icon/link.icon-arrow.svg) center/cover no-repeat;
+              -webkit-mask: url(../../assets/icon/link.icon-arrow.svg) center/cover no-repeat;
               transition: var(--transition-time);
               /* arrow */
             }
@@ -1350,8 +1349,8 @@ html[cross-browser] {
                 left: 0;
                 transform: translate(-110%, -50%);
                 background-color: var(--palette-text-shadow);
-                mask: url(../assets/icon/js-window.profile.leave.svg) center/cover no-repeat;
-                -webkit-mask: url(../assets/icon/js-window.profile.leave.svg) center/cover no-repeat;
+                mask: url(../../assets/icon/js-window.profile.leave.svg) center/cover no-repeat;
+                -webkit-mask: url(../../assets/icon/js-window.profile.leave.svg) center/cover no-repeat;
                 width: 19px;
                 height: 19px;
                 transition: .3s ease;
@@ -1454,8 +1453,8 @@ html[cross-browser] {
           top: -24.5px;
           left: 50%;
           transform: translate(-50%, -50%);
-          mask: url(../assets/icon/mail.unread-msg.svg) center/cover no-repeat;
-          -webkit-mask: url(../assets/icon/mail.unread-msg.svg) center/cover no-repeat;
+          mask: url(../../assets/icon/mail.unread-msg.svg) center/cover no-repeat;
+          -webkit-mask: url(../../assets/icon/mail.unread-msg.svg) center/cover no-repeat;
         }
 
         &::before {
@@ -1790,7 +1789,7 @@ html[cross-browser] {
 
           button[js-service-prime-store] {
             &::before {
-              mask-image: url(../assets/icon/canvas.stie.service-prime-shop.svg);
+              mask-image: url(../../assets/icon/canvas.stie.service-prime-shop.svg);
             }
           }
         }
@@ -1961,7 +1960,7 @@ html[cross-browser] {
 
           button[js-app-create-site] {
             &::before {
-              mask-image: url(../assets/icon/canvas.stie.app-create-site.svg);
+              mask-image: url(../../assets/icon/canvas.stie.app-create-site.svg);
             }
           }
         }

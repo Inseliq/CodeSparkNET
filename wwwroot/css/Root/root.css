@@ -9,37 +9,37 @@
 
 @font-face {
   font-family: 'Jost__static';
-  src: url('~/../../assets/fonts/Jost-VariableFont_wght.ttf');
+  src: url('~/../../../assets/fonts/Jost-VariableFont_wght.ttf');
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Jost__static';
-  src: url('~/../../assets/fonts/Jost-Italic-VariableFont_wght.ttf');
+  src: url('~/../../../assets/fonts/Jost-Italic-VariableFont_wght.ttf');
   font-style: italic;
 }
 
 @font-face {
   font-family: 'Motserrat__static';
-  src: url('~/../../assets/fonts/Montserrat-VariableFont_wght.ttf');
+  src: url('~/../../../assets/fonts/Montserrat-VariableFont_wght.ttf');
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Motserrat__static';
-  src: url('~/../../assets/fonts/Montserrat-Italic-VariableFont_wght.ttf');
+  src: url('~/../../../assets/fonts/Montserrat-Italic-VariableFont_wght.ttf');
   font-style: italic;
 }
 
 @font-face {
   font-family: 'Roboto__static';
-  src: url('~/../../assets/fonts/Roboto-VariableFont_wdth.ttf');
+  src: url('~/../../../assets/fonts/Roboto-VariableFont_wdth.ttf');
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Roboto__static';
-  src: url('~/../../assets/fonts/Roboto-Italic-VariableFont_wdth.ttf');
+  src: url('~/../../../assets/fonts/Roboto-Italic-VariableFont_wdth.ttf');
   font-style: italic;
 }
 
@@ -145,18 +145,6 @@ textarea {
     --fs-small: clamp(0.6875rem, 0.6139rem + 0.2175vw, 0.875rem);
   }
 }
-
-/* @media screen and (max-width: 880px) {
-  html[cross-browser] {
-    --fs-body: clamp(0.75rem, 0.3529rem + 1.1765vw, 1rem);
-    --fs-p: clamp(0.75rem, 0.3529rem + 1.1765vw, 1rem);
-    --fs-h1: clamp(1.875rem, 1.4779rem + 1.1765vw, 2.125rem);
-    --fs-h2: clamp(1.375rem, 0.9779rem + 1.1765vw, 1.625rem);
-    --fs-h3: clamp(1rem, 0.6029rem + 1.1765vw, 1.25rem);
-    --fs-btn: clamp(0.75rem, 0.3529rem + 1.1765vw, 1rem);
-    --fs-small: clamp(0.75rem, 0.5515rem + 0.5882vw, 0.875rem);
-  }
-} */
 
 @media screen and (max-width: 540px) {
   html[cross-browser] {

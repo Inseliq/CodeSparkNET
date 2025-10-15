@@ -14,9 +14,9 @@
 }
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/style/WebApp.CodeSpark/_layout.header.css" asp-append-version="true">
-    <link rel="stylesheet" href="~/css/style/WebApp.CodeSpark/_layout.footer.css" asp-append-version="true">
-    <link rel="stylesheet" href="~/css/style/catalogs.mini-app.css">
+    <link rel="stylesheet" href="~/css/Style/layout-header.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/css/Style/layout-footer.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/css/Style/mini-app.css">
 }
 
 <partial name="_WebApp_Navbar_header" />
@@ -27,15 +27,15 @@
         {
             @if (catalog.IsLinkOnly)
             {
-                <a asp-controller="@catalog.PageController" asp-action="@catalog.PageName"
-                   data-name="@catalog.Name" class="pre-view">
+                <a asp-controller="@catalog.PageController" asp-action="@catalog.PageName" data-name="@catalog.Name"
+                    class="pre-view">
                     <div class="overflow-container">
                         <div class="overflow-container">
                             <span class="name_tag">@catalog.Name</span>
                             <img class="poster-img" src="@Url.Content("~/assets/img/banner-tag.webp")" />
                             <video class="content video" muted preload="metadata" playsinline>
                                 <source src="@Url.Action("GetVideo", "Catalogs", new { fileName = catalog.Name + ".mp4" })"
-                                        type="video/mp4" />
+                                    type="video/mp4" />
                             </video>
                             <div class="content button" hover><span>Подробнее</span></div>
                         </div>
@@ -44,7 +44,8 @@
                         </div>
                     </div>
                 </a>
-            } else
+            }
+            else
             {
                 <a asp-controller="Catalogs" asp-action="Catalog" asp-route-catalogSlug="@catalog.Slug"
                     data-name="@catalog.Name" class="pre-view">
@@ -71,4 +72,6 @@
 
 <partial name="_WebApp_Navbar_footer" />
 
-<script src="~/js/style/js-video.mini-app.js" defer></script>
+@section ScriptsMain {
+    <script src="~/js/style/js-video.mini-app.js" data-load-priority="main"></script>
+}

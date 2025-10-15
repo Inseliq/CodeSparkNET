@@ -4,13 +4,9 @@
   ViewData["App"] = "CodeSpark";
 }
 @section Styles {
-  <link rel="stylesheet" href="~/css/style/WebApp.CodeSpark/_layout.header.css" asp-append-version="true">
-  <link rel="stylesheet" href="~/css/style/WebApp.CodeSpark/_layout.footer.css" asp-append-version="true">
-  <link rel="stylesheet" href="~/css/style/catalog.css" asp-append-version="true">
-}
-@section Meta {
-  <meta name="CodeSpark" content="_Navbar.header">
-  <meta name="CodeSpark" content="_Navbar.footer">
+  <link rel="stylesheet" href="~/css/Style/layout-header.css" asp-append-version="true">
+  <link rel="stylesheet" href="~/css/Style/layout-footer.css" asp-append-version="true">
+  <link rel="stylesheet" href="~/css/Style/catalog.css" asp-append-version="true">
 }
 
 <partial name="_WebApp_Navbar_header" />
@@ -35,17 +31,16 @@
       {
         <article class="card">
           <a asp-controller="Catalogs" asp-action="ProductDetails" asp-route-catalogSlug="@Model.Slug"
-
             asp-route-productSlug="@p.Slug" hover>
 
-              @if (p.ProductImages?.Any() == true && !string.IsNullOrEmpty(p.ProductImages.First().Url))
-              {
-                  <img src="@p.ProductImages.First().Url" alt="@p.Name" />
-              }
-              else
-              {
-                  <img class="no-image" src="~/assets/img/no-image.png" alt="no image" />
-              }
+            @if (p.ProductImages?.Any() == true && !string.IsNullOrEmpty(p.ProductImages.First().Url))
+            {
+              <img src="@p.ProductImages.First().Url" alt="@p.Name" />
+            }
+            else
+            {
+              <img class="no-image" src="~/assets/img/no-image.png" alt="no image" />
+            }
 
             <div class="overview-bg">
               <h3 class="name">@p.Name</h3>

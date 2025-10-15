@@ -10,13 +10,9 @@
     var mainImageSrc = !string.IsNullOrEmpty(firstImage?.Url);
 }
 @section Styles {
-    <link rel="stylesheet" href="~/css/style/WebApp.CodeSpark/_layout.header.css" asp-append-version="true">
-    <link rel="stylesheet" href="~/css/style/WebApp.CodeSpark/_layout.footer.css" asp-append-version="true">
-    <link rel="stylesheet" href="~/css/style/product-detail.css" asp-append-version="true">
-}
-@section Meta {
-    <meta name="CodeSpark" content="_Navbar.header">
-    <meta name="CodeSpark" content="_Navbar.footer">
+    <link rel="stylesheet" href="~/css/Style/layout-header.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/css/Style/layout-footer.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/css/Style/product-detail.css" asp-append-version="true">
 }
 
 <partial name="_WebApp_Navbar_header" />
@@ -37,7 +33,6 @@
     </nav>
 
     <div class="product-grid">
-        <!-- Gallery -->
         <aside class="gallery" aria-label="Галерея изображений товара">
             <div class="gallery__main">
                 <img id="mainProductImage" class="gallery__image"

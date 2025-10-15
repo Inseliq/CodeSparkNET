@@ -13,7 +13,7 @@
 }
 
 @section Styles {
-  <link rel="stylesheet" href="~/css/style/catalogs.mini-app.css">
+  <link rel="stylesheet" href="~/css/Style/mini-app.css">
 }
 
 <div class="__container platform">
@@ -94,4 +94,6 @@
   </div>
 </div>
 
-<script src="~/js/style/js-video.mini-app.js" defer></script>
+@section ScriptsMain {
+  <script src="~/js/style/js-video.mini-app.js" data-load-priority="main"></script>
+}

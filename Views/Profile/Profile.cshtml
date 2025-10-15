@@ -9,10 +9,7 @@
     var user = await UserManager.GetUserAsync(User);
 }
 @section Styles {
-    <link rel="stylesheet" href="~/css/style/profile.css">
-}
-@section Meta {
-
+    <link rel="stylesheet" href="~/css/Style/profile.css">
 }
 
 <div logo-banner hover>
@@ -201,8 +198,6 @@ else
             </div>
         </div>
     </div>
-    <script src="~/js/windows/js-window.changeName.js" defer></script>
-
     <div class="js-window hidden" js-window-update-profile-email>
         <div class="description" hover step="1">
             <div class="progress-bar"></div>
@@ -244,8 +239,6 @@ else
             </div>
         </div>
     </div>
-    <script src="~/js/windows/js-window.changeEmail.js" defer></script>
-
     <div class="js-window hidden" js-window-update-profile-password>
         <div class="description" hover step="1">
             <div class="progress-bar"></div>
@@ -294,10 +287,14 @@ else
             </div>
         </div>
     </div>
-    <script src="~/js/windows/js-window.changePassword.js" defer></script>
+    @section ScriptsAdditions {
+        <script data-src="@(Url.Content("~/js/windows/js-window.changePassword.js"))" type="text/plain"></script>
+        <script data-src="@(Url.Content("~/js/windows/js-window.changeEmail.js"))" type="text/plain"></script>
+        <script data-src="@(Url.Content("~/js/windows/js-window.changeName.js"))" type="text/plain"></script>
+    }
 }
 
-@section Scripts {
+@section ScriptsMain {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }

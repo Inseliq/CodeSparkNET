@@ -1,0 +1,372 @@
+// ---------- Utilities ----------
+function debounce(fn, ms) { let t; return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); }; }
+function getAntiForgeryToken() { const el = document.querySelector('input[name="__RequestVerificationToken"]'); return el ? el.value : ''; }
+async function postUrlEncoded(url, obj) {
+  const token = getAntiForgeryToken();
+  const params = new URLSearchParams();
+  for (const k in obj) if (obj[k] !== undefined && obj[k] !== null) params.append(k, obj[k]);
+  const resp = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'RequestVerificationToken': token,
+      'X-Requested-With': 'XMLHttpRequest',
+      'Accept': 'application/json'
+    },
+    body: params.toString()
+  });
+  try { return await resp.json(); } catch { return { success: false, message: 'Invalid server response' }; }
+}
+
+async function getJson(url) {
+  try {
+    const r = await fetch(url);
+    return await r.json();
+  } catch (err) {
+    console.error('getJson failed for', url, err);
+    return { success: false, message: 'Invalid server response' };
+  }
+}
+
+function decodeHtmlEntitiesIfNeeded(str) {
+  if (!str) return '';
+  if (str.indexOf('&lt;') === -1 && str.indexOf('&gt;') === -1 && str.indexOf('&amp;') === -1) return str;
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(str, 'text/html');
+  return doc.documentElement.textContent || '';
+}
+
+// Pretty-print HTML for code view (simple formatter)
+function prettyPrintHtml(html) {
+  if (!html) return '';
+  // Collapse multiple whitespace between tags
+  let s = html.replace(/>\s+</g, '><');
+  // Put each tag on its own line
+  s = s.replace(/></g, '>' + '\n' + '<');
+  const lines = s.split('\n');
+  let indent = 0;
+  const out = [];
+  lines.forEach(line => {
+    const trimmed = line.trim();
+    if (!trimmed) return;
+    if (/^<\/.+>/.test(trimmed)) {
+      // closing tag
+      indent = Math.max(indent - 1, 0);
+    }
+    out.push('  '.repeat(indent) + trimmed);
+    // opening tag that is not self-closing and not a single-line open/close
+    if (/^<[^\/!][^>]*[^\/]$/.test(trimmed) && !/^<.*<.*>.*<.*>$/.test(trimmed) && !/^<[^>]+>.*<\/[^>]+>$/.test(trimmed)) {
+      // increase indent for following lines
+      if (!/^<.*<\/.*>$/.test(trimmed) && !/\/>$/.test(trimmed)) indent++;
+    }
+  });
+  return out.join('\n');
+}
+
+// Replace or insert <pre data-editor=\"...\"> blocks to avoid nested attribute issues
+function findAncestor(node, tag) {
+  while (node && node.nodeType === 1) {
+    if (node.tagName && node.tagName.toLowerCase() === tag) return node;
+    node = node.parentElement;
+  }
+  return null;
+}
+
+function insertOrReplacePre(type, lang) {
+  const editor = document.getElementById('lesson-body');
+  editor.focus();
+  const sel = window.getSelection();
+  let ancestor = sel && sel.anchorNode ? findAncestor(sel.anchorNode, 'pre') : null;
+  if (ancestor) {
+    // if already inside a <pre>, just change its data-editor and data-ln
+    ancestor.setAttribute('data-editor', type === 'code' ? 'code' : type);
+    if (type === 'code' && lang) ancestor.setAttribute('data-ln', lang);
+    syncFromVisual();
+    pushHistory();
+    return;
+  }
+  // otherwise insert new pre block
+  const content = (type === 'code') ? `<pre data-editor=\"code\" data-ln=\"${lang}\"><code>// code sample</code></pre>` : `<pre data-editor=\"${type}\">Output</pre>`;
+  insertHtmlAtCursor(editor, content);
+}
+
+// Attach improved codeDropdown handler to visual editor
+(function bindCodeDropdown() {
+  const cd = document.getElementById('codeDropdown');
+  if (!cd) return;
+  try { if (cd._handler) cd.removeEventListener('click', cd._handler); } catch (e) { }
+  const handler = function (e) {
+    const btn = e.target.closest('[data-code-type]'); if (!btn) return;
+    const type = btn.dataset.codeType;
+    if (type === 'code') {
+      const lang = prompt('Enter language (e.g., js, python):') || 'js';
+      insertOrReplacePre('code', lang);
+    } else {
+      insertOrReplacePre(type);
+    }
+    hideAllDropdowns();
+  };
+  cd.addEventListener('click', handler);
+  cd._handler = handler;
+})();
+
+// Escape HTML for code view
+function escapeHtml(s) {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+// Sync visual -> hidden textarea -> code view
+function syncFromVisual() {
+  const visual = document.getElementById('modalLessonVisual');
+  const hidden = document.getElementById('modalLessonHtml');
+  const code = document.getElementById('lessonCodeView');
+  if (!visual || !hidden || !code) return;
+  // Use innerHTML as canonical source
+  const html = visual.innerHTML;
+  hidden.value = html;
+  code.textContent = prettyPrintHtml(html); // textContent shows raw HTML (escaped automatically)
+}
+
+// Apply HTML insertion into visual editor at selection
+function insertHtmlAtCursor(html) {
+  const editor = document.getElementById('modalLessonVisual');
+  editor.focus();
+  if (window.getSelection) {
+    const sel = window.getSelection();
+    if (sel.getRangeAt && sel.rangeCount) {
+      const range = sel.getRangeAt(0);
+      // create fragment
+      const el = document.createElement('div'); el.innerHTML = html;
+      const frag = document.createDocumentFragment();
+      let node, lastNode;
+      while ((node = el.firstChild)) { lastNode = frag.appendChild(node); }
+      range.deleteContents();
+      range.insertNode(frag);
+      // move caret after inserted
+      if (lastNode) {
+        range.setStartAfter(lastNode);
+        range.collapse(true);
+        sel.removeAllRanges();
+        sel.addRange(range);
+      }
+    }
+  }
+  syncFromVisual();
+  pushHistory();
+}
+
+// History for visual editor
+let editHistory = [];
+let historyIndex = -1;
+function pushHistory() {
+  const v = document.getElementById('modalLessonVisual').innerHTML;
+  // trim forward history
+  if (historyIndex < editHistory.length - 1) editHistory = editHistory.slice(0, historyIndex + 1);
+  editHistory.push(v);
+  historyIndex = editHistory.length - 1;
+  if (editHistory.length > 200) { editHistory.shift(); historyIndex--; }
+}
+function undo() { if (historyIndex > 0) { historyIndex--; const v = editHistory[historyIndex]; document.getElementById('modalLessonVisual').innerHTML = v; syncFromVisual(); } }
+function redo() { if (historyIndex < editHistory.length - 1) { historyIndex++; const v = editHistory[historyIndex]; document.getElementById('modalLessonVisual').innerHTML = v; syncFromVisual(); } }
+
+// Toolbar handling (operate on visual editor)
+const toolbar = document.querySelector('.editor-toolbar');
+if (toolbar) {
+  toolbar.addEventListener('click', function (e) {
+    const btn = e.target.closest('.toolbar-btn'); if (!btn) return;
+    const format = btn.dataset.format;
+    switch (format) {
+      case 'undo': undo(); break;
+      case 'redo': redo(); break;
+      case 'bold': document.execCommand('bold'); syncFromVisual(); pushHistory(); break;
+      case 'italic': document.execCommand('italic'); syncFromVisual(); pushHistory(); break;
+      case 'strong': document.execCommand('bold'); syncFromVisual(); pushHistory(); break;
+      case 'h3': document.execCommand('formatBlock', false, 'h3'); syncFromVisual(); pushHistory(); break;
+      case 'h4': document.execCommand('formatBlock', false, 'h4'); syncFromVisual(); pushHistory(); break;
+      case 'list': showDropdown('listDropdown', btn); break;
+      case 'code': showDropdown('codeDropdown', btn); break;
+      case 'image': {
+        const url = prompt('Enter image URL:'); if (url) insertHtmlAtCursor(`<img src="${url}" alt="Image" />`);
+        break;
+      }
+      case 'table': showDropdown('tableDropdown', btn); break;
+    }
+  });
+}
+
+function showDropdown(dropdownId, btn) {
+  hideAllDropdowns();
+  const dropdown = document.getElementById(dropdownId); if (!dropdown || !btn) return;
+  const rect = btn.getBoundingClientRect();
+  dropdown.style.position = 'fixed';
+  dropdown.style.top = (rect.bottom + 8) + 'px';
+  dropdown.style.left = rect.left + 'px';
+  dropdown.classList.add('active');
+  setTimeout(() => {
+    const dropRect = dropdown.getBoundingClientRect();
+    if (dropRect.bottom > window.innerHeight) dropdown.style.top = (rect.top - dropRect.height - 8) + 'px';
+    if (dropRect.right > window.innerWidth) dropdown.style.left = (window.innerWidth - dropRect.width - 10) + 'px';
+  }, 10);
+}
+
+function hideAllDropdowns() { document.querySelectorAll('.dropdown-menu').forEach(d => d.classList.remove('active')); }
+
+// List dropdown
+const listDropdown = document.getElementById('listDropdown');
+if (listDropdown) {
+  listDropdown.addEventListener('click', function (e) {
+    const btn = e.target.closest('[data-list-type]'); if (!btn) return;
+    const type = btn.dataset.listType;
+    if (type === 'ul') insertHtmlAtCursor('<ul><li>List item</li></ul>'); else insertHtmlAtCursor('<ol><li>List item</li></ol>');
+    hideAllDropdowns();
+  });
+}
+
+// Code dropdown
+const codeDropdown = document.getElementById('codeDropdown');
+if (codeDropdown) {
+  codeDropdown.addEventListener('click', function (e) {
+    const btn = e.target.closest('[data-code-type]'); if (!btn) return;
+    const type = btn.dataset.codeType;
+    if (type === 'code') {
+      const lang = prompt('Enter language (e.g., js, python):') || 'js';
+      insertHtmlAtCursor(`<pre data-editor="code" data-ln="${lang}"><code>// code sample</code></pre>`);
+    } else {
+      insertHtmlAtCursor(`<pre data-editor="${type}">Output</pre>`);
+    }
+    hideAllDropdowns();
+  });
+}
+
+// Table picker
+const tablePicker = document.getElementById('tablePicker');
+if (tablePicker) {
+  for (let i = 0; i < 100; i++) {
+    const cell = document.createElement('div'); cell.className = 'table-cell-picker'; cell.dataset.row = Math.floor(i / 10) + 1; cell.dataset.col = (i % 10) + 1; tablePicker.appendChild(cell);
+  }
+  tablePicker.addEventListener('mouseover', function (e) { if (!e.target.classList.contains('table-cell-picker')) return; const row = parseInt(e.target.dataset.row); const col = parseInt(e.target.dataset.col); document.querySelectorAll('.table-cell-picker').forEach(c => { const r = parseInt(c.dataset.row); const cl = parseInt(c.dataset.col); if (r <= row && cl <= col) c.classList.add('selected'); else c.classList.remove('selected'); }); const sz = document.getElementById('tableSize'); if (sz) sz.textContent = `${row}x${col}`; });
+  tablePicker.addEventListener('click', function (e) { if (!e.target.classList.contains('table-cell-picker')) return; const row = parseInt(e.target.dataset.row); const col = parseInt(e.target.dataset.col); let table = '<table>'; for (let r = 0; r < row; r++) { table += '<tr>'; for (let c = 0; c < col; c++) table += '<td>Cell</td>'; table += '</tr>'; } table += '</table>'; insertHtmlAtCursor(table); hideAllDropdowns(); });
+}
+
+// Sync changes from visual editor -> code view and history
+const visualEl = document.getElementById('modalLessonVisual');
+if (visualEl) {
+  visualEl.addEventListener('input', debounce(function () { syncFromVisual(); pushHistory(); }, 150));
+  visualEl.addEventListener('keydown', function (e) { if (e.ctrlKey && (e.key === 'z' || e.key === 'Z')) { e.preventDefault(); undo(); } else if (e.ctrlKey && (e.key === 'y' || e.key === 'Y')) { e.preventDefault(); redo(); } });
+}
+
+// When opening lesson (fill data)
+function openLessonModalWithData(lesson) {
+  document.getElementById('modalLessonId').value = lesson.id || '';
+  document.getElementById('modalLessonModuleId').value = lesson.moduleId || '';
+  document.getElementById('modalLessonTitle').value = lesson.title || '';
+  document.getElementById('modalLessonSlug').value = lesson.slug || '';
+  document.getElementById('modalLessonPosition').value = lesson.position || 0;
+  document.getElementById('modalLessonPublished').checked = !!lesson.isPublished;
+  document.getElementById('modalLessonFree').checked = !!lesson.isFreePreview;
+
+  const body = decodeHtmlEntitiesIfNeeded(lesson.body || '');
+  const visual = document.getElementById('modalLessonVisual');
+  const hidden = document.getElementById('modalLessonHtml');
+  if (visual) visual.innerHTML = body;
+  if (hidden) hidden.value = body;
+  syncFromVisual();
+  // reset history
+  editHistory = [body || '']; historyIndex = 0;
+  showModal('lessonModalOverlay');
+}
+
+// Global delegated click handlers preserved but adapted to use openLessonModalWithData
+document.addEventListener('click', function (e) {
+  const closeTarget = e.target.getAttribute && e.target.getAttribute('data-close'); if (closeTarget) hideModal(closeTarget);
+});
+document.querySelectorAll('[data-modal-overlay]').forEach(ov => { ov.addEventListener('click', function (e) { if (e.target === ov) ov.setAttribute('hidden', ''); }); });
+
+function showModal(id) { const o = document.getElementById(id); if (!o) return; o.removeAttribute('hidden'); document.body.style.overflow = 'hidden'; }
+function hideModal(id) { const o = document.getElementById(id); if (!o) return; o.setAttribute('hidden', ''); hideAllDropdowns(); document.body.style.overflow = ''; }
+
+// ---------- Save lesson: sync hidden textarea first ----------
+const btnSaveLesson = document.getElementById('btnSaveLesson');
+if (btnSaveLesson) btnSaveLesson.addEventListener('click', async function () {
+  const lessonId = document.getElementById('modalLessonId').value;
+  const moduleId = document.getElementById('modalLessonModuleId').value;
+  const title = document.getElementById('modalLessonTitle').value;
+  const slug = document.getElementById('modalLessonSlug').value;
+  const position = document.getElementById('modalLessonPosition').value || 0;
+  const isPublished = document.getElementById('modalLessonPublished').checked;
+  const isFree = document.getElementById('modalLessonFree').checked;
+  // ensure hidden textarea is synced
+  syncFromVisual();
+  const body = document.getElementById('modalLessonHtml').value || '';
+  if (!lessonId) { alert('Lesson id missing'); return; }
+  const data = { ModuleId: moduleId, LessonId: lessonId, Title: title, Slug: slug, Body: body, Position: position, IsPublished: isPublished, IsFreePreview: isFree };
+  const res = await postUrlEncoded('/AdminCourse/UpdateLesson', data);
+  if (res && res.success) { hideModal('lessonModalOverlay'); await loadModules(); } else alert(res && res.message ? res.message : 'Unable to save lesson');
+});
+
+// ---------- Existing module rendering and loadModules functions unchanged (copy from original) ----------
+function renderModules(modules) {
+  const container = document.getElementById('modulesContainer'); if (!container) return; container.innerHTML = ''; if (!modules || modules.length === 0) { container.innerHTML = '<div>No modules yet</div>'; return; }
+  modules.sort((a, b) => (a.position || 0) - (b.position || 0));
+  modules.forEach(m => {
+    const moduleDiv = document.createElement('div');
+    const titleDiv = document.createElement('div');
+    titleDiv.textContent = m.title || ''; titleDiv.dataset.action = 'edit-module'; titleDiv.dataset.moduleSlug = m.slug || ''; titleDiv.dataset.moduleTitle = m.title || ''; titleDiv.dataset.modulePosition = m.position || 0; titleDiv.style.fontWeight = '600'; titleDiv.style.cursor = 'pointer'; moduleDiv.appendChild(titleDiv);
+    const posDiv = document.createElement('div'); posDiv.textContent = 'Position: ' + (m.position || 0); posDiv.style.color = 'var(--palette-text-shadow)'; posDiv.style.fontSize = '0.9rem'; posDiv.style.marginBottom = '8px'; moduleDiv.appendChild(posDiv);
+    const controlsDiv = document.createElement('div'); controlsDiv.style.display = 'flex'; controlsDiv.style.gap = '8px'; controlsDiv.style.marginBottom = '12px';
+    const editBtn = document.createElement('button'); editBtn.textContent = '✏️ Edit'; editBtn.dataset.action = 'edit-module'; editBtn.dataset.moduleSlug = m.slug || ''; editBtn.dataset.moduleTitle = m.title || ''; editBtn.dataset.modulePosition = m.position || 0; controlsDiv.appendChild(editBtn);
+    const deleteBtn = document.createElement('button'); deleteBtn.textContent = '🗑️ Delete'; deleteBtn.dataset.action = 'delete-module'; deleteBtn.dataset.moduleSlug = m.slug || ''; controlsDiv.appendChild(deleteBtn);
+    const addLessonBtn = document.createElement('button'); addLessonBtn.textContent = '➕ Lesson'; addLessonBtn.dataset.action = 'add-lesson'; addLessonBtn.dataset.moduleId = m.id || ''; addLessonBtn.dataset.moduleSlug = m.slug || ''; controlsDiv.appendChild(addLessonBtn);
+    moduleDiv.appendChild(controlsDiv);
+    if (m.lessons && m.lessons.length > 0) { const ul = document.createElement('ul'); m.lessons.slice().sort((x, y) => (x.position || 0) - (y.position || 0)).forEach(l => { const li = document.createElement('li'); li.style.display = 'flex'; li.style.justifyContent = 'space-between'; li.style.alignItems = 'center'; li.style.marginBottom = '8px'; const left = document.createElement('div'); const lessonTitle = document.createElement('div'); lessonTitle.textContent = l.title || ''; lessonTitle.dataset.action = 'edit-lesson'; lessonTitle.dataset.lessonId = l.id || ''; lessonTitle.dataset.moduleId = m.id || ''; lessonTitle.style.cursor = 'pointer'; lessonTitle.style.fontWeight = '600'; left.appendChild(lessonTitle); const slugSmall = document.createElement('div'); slugSmall.textContent = l.slug || ''; slugSmall.style.fontSize = '0.85rem'; slugSmall.style.color = 'var(--palette-color-tc)'; left.appendChild(slugSmall); li.appendChild(left); const right = document.createElement('div'); right.style.display = 'flex'; right.style.gap = '8px'; const editLessonBtn = document.createElement('button'); editLessonBtn.textContent = '✏️'; editLessonBtn.dataset.action = 'edit-lesson'; editLessonBtn.dataset.lessonId = l.id || ''; editLessonBtn.dataset.moduleId = m.id || ''; right.appendChild(editLessonBtn); const deleteLessonBtn = document.createElement('button'); deleteLessonBtn.textContent = '🗑️'; deleteLessonBtn.dataset.action = 'delete-lesson'; deleteLessonBtn.dataset.lessonId = l.id || ''; right.appendChild(deleteLessonBtn); li.appendChild(right); ul.appendChild(li); }); moduleDiv.appendChild(ul); } else { const none = document.createElement('div'); none.textContent = 'No lessons yet'; none.style.color = 'var(--palette-color-tc)'; none.style.fontStyle = 'italic'; moduleDiv.appendChild(none); }
+    container.appendChild(moduleDiv); const hr = document.createElement('hr'); container.appendChild(hr);
+  });
+}
+
+async function loadModules() {
+  const slugEl = document.getElementById('CourseSlug') || document.getElementById('CourseSlugInput');
+  const slug = slugEl ? slugEl.value : '';
+  const container = document.getElementById('modulesContainer');
+  if (!slug) { if (container) container.innerHTML = '<div>Course slug missing</div>'; return; }
+  const json = await getJson(`/AdminCourse/GetCourseModules?slug=${encodeURIComponent(slug)}`);
+  if (json && json.success) renderModules(json.data || []); else if (container) container.innerHTML = 'Unable to load modules: ' + (json?.message || 'unknown');
+}
+
+// delegated actions
+document.addEventListener('click', async function (e) {
+  const actionEl = e.target.closest && e.target.closest('[data-action]');
+  if (!actionEl) { if (!e.target.closest('.dropdown-menu') && !e.target.closest('.toolbar-btn')) hideAllDropdowns(); return; }
+  const action = actionEl.dataset.action;
+  try {
+    if (action === 'edit-module') {
+      document.getElementById('modalModuleSlug').value = actionEl.dataset.moduleSlug || '';
+      document.getElementById('modalModuleTitle').value = actionEl.dataset.moduleTitle || '';
+      document.getElementById('modalModulePosition').value = actionEl.dataset.modulePosition || 0;
+      showModal('moduleModalOverlay');
+    } else if (action === 'delete-module') {
+      const slug = actionEl.dataset.moduleSlug; if (!slug) { alert('Module identifier missing'); return; } if (!confirm('Delete module and its lessons?')) return; const res = await postUrlEncoded('/AdminCourse/DeleteModule', { moduleSlug: slug }); if (res && res.success) await loadModules(); else alert(res && res.message ? res.message : 'Error deleting module');
+    } else if (action === 'add-lesson') {
+      const moduleSlug = actionEl.dataset.moduleSlug;
+      if (!moduleSlug) { alert('Module id missing'); return; }
+      const title = prompt('Lesson title:');
+      if (!title) return;
+      const lessonSlug = prompt('Lesson slug (optional):') || '';
+      const res = await postUrlEncoded('/AdminCourse/AddLesson', { ModuleSlug: moduleSlug, Title: title, Body: "", Slug: lessonSlug });
+      if (res && res.success) await loadModules(); else alert(res && res.message ? res.message : 'Error adding lesson');
+    } else if (action === 'edit-lesson') {
+      const lessonId = actionEl.dataset.lessonId; if (!lessonId) { alert('Lesson id missing'); return; } const json = await getJson(`/AdminCourse/GetLesson?lessonId=${encodeURIComponent(lessonId)}`); if (!json || !json.success) { alert('Unable to load lesson for editing'); return; } openLessonModalWithData(json.data || {});
+    } else if (action === 'delete-lesson') {
+      const lessonId = actionEl.dataset.lessonId; if (!lessonId) { alert('Lesson id missing'); return; } if (!confirm('Delete lesson?')) return; const res = await postUrlEncoded('/AdminCourse/DeleteLesson', { lessonId }); if (res && res.success) await loadModules(); else alert(res && res.message ? res.message : 'Error deleting lesson');
+    }
+  } catch (err) { console.error('Action handler error', err); alert('Unexpected error, see console.'); }
+});
+
+// Module modal save/add handlers (unchanged)
+const btnSaveModule = document.getElementById('btnSaveModule'); if (btnSaveModule) btnSaveModule.addEventListener('click', async function () { const slug = document.getElementById('modalModuleSlug').value; const title = document.getElementById('modalModuleTitle').value; const position = document.getElementById('modalModulePosition').value || 0; if (!slug) { alert('Module identifier missing'); return; } const res = await postUrlEncoded('/AdminCourse/UpdateModule', { Slug: slug, Title: title, Position: position }); if (res && res.success) { hideModal('moduleModalOverlay'); await loadModules(); } else alert(res && res.message ? res.message : 'Unable to save module'); });
+const btnAddModule = document.getElementById('btnAddModule'); if (btnAddModule) btnAddModule.addEventListener('click', async function () { const title = prompt('Module title:'); if (!title) return; const courseSlugEl = document.getElementById('CourseSlug') || document.getElementById('CourseSlugInput'); const courseSlug = courseSlugEl ? courseSlugEl.value : ''; if (!courseSlug) { alert('Course slug missing'); return; } const moduleSlug = prompt('Module slug (optional):') || ''; const res = await postUrlEncoded('/AdminCourse/AddModule', { Slug: moduleSlug, Title: title, CourseSlug: courseSlug }); if (res && res.success) await loadModules(); else alert(res && res.message ? res.message : 'Error adding module'); });
+
+// image preview for main image (preserve)
+const mainImgEl = document.getElementById('MainImageUrl'); if (mainImgEl) { mainImgEl.addEventListener('input', debounce(function (e) { const url = e.target.value.trim(); const wrap = document.getElementById('imagePreviewWrap'); const img = document.getElementById('imgPreview'); if (!wrap || !img) return; if (!url) { wrap.setAttribute('hidden', ''); img.src = ''; return; } img.src = url; wrap.removeAttribute('hidden'); }, 300)); }
+
+// init
+(function init() { loadModules(); })();

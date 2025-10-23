@@ -281,7 +281,7 @@ namespace CodeSparkNET.Repositories
             var newPos = course.Modules.Any() ? course.Modules.Max(m => m.Position) + 1 : 0;
             var module = new CourseModule
             {
-                Id = Guid.NewGuid().ToString(),
+                Id = model.Id,
                 Slug = model.Slug,
                 CourseId = course.Id,
                 Course = course,
@@ -292,6 +292,7 @@ namespace CodeSparkNET.Repositories
 
             _context.CourseModules.Add(module);
             await _context.SaveChangesAsync();
+            return module;
             return module;
         }
 
@@ -337,7 +338,7 @@ namespace CodeSparkNET.Repositories
 
             var lesson = new Lesson
             {
-                Id = Guid.NewGuid().ToString(),
+                Id = model.Id,
                 Slug = model.Slug,
                 ModuleId = module.Id,
                 Module = module,

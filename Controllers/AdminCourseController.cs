@@ -149,6 +149,7 @@ namespace CodeSparkNET.Controllers
         public async Task<IActionResult> AddLesson([FromForm] AddLessonViewModel viewModel)
         {
             var model = viewModel.ToDto();
+            var body = "";
 
             if (model == null || string.IsNullOrWhiteSpace(model.Slug) || string.IsNullOrWhiteSpace(model.Title))
                 return Json(new { success = false, message = "ModuleId and Title are required." });

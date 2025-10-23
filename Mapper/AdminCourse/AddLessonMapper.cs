@@ -9,6 +9,7 @@ namespace CodeSparkNET.Mapper.AdminCourse
         {
             return new AddLessonDto
             {
+                Id = viewModel.Id,
                 ModuleSlug = viewModel.ModuleSlug.Trim().ToLower(),
                 Title = viewModel.Title.Trim(),
                 Slug = viewModel.Slug.Trim().ToLower(),

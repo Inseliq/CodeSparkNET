@@ -181,8 +181,8 @@ namespace CodeSparkNET.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateLesson([FromForm] UpdateLessonViewModel viewModel)
+        //[ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateLesson(UpdateLessonViewModel viewModel)
         {
             var model = viewModel.ToDto();
 

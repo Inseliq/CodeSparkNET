@@ -1,8 +1,8 @@
 (() => {
   const appsMap = {
     "js-app-course": {
-      img: { src: "https://github.com/Inseliq/img.code-spark/blob/main/iq.tag.png?raw=true", alt: "Курсы" },
-      windowBg: "url(https://github.com/Inseliq/img.code-spark/blob/main/banner.png?raw=true)",
+      img: { src: "https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/icons/header-menu/iq.tag.png?raw=true", alt: "Курсы" },
+      windowBg: "url(https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/images/banner.png?raw=true)",
       headline: "Онлайн-курсы",
       description: "Краткое описание раздела Курсы.",
       links: [
@@ -11,8 +11,8 @@
       ]
     },
     "js-app-course-work": {
-      img: { src: "https://github.com/Inseliq/img.code-spark/blob/main/iq.tag.png?raw=true", alt: "Курсовые работы" },
-      windowBg: "url(https://github.com/Inseliq/img.code-spark/blob/main/banner.png?raw=true)",
+      img: { src: "https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/icons/header-menu/iq.tag.png?raw=true", alt: "Курсовые работы" },
+      windowBg: "url(https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/images/banner.png?raw=true)",
       headline: "Курсовые работы",
       description: "Описание курсовых работ.",
       links: [
@@ -20,8 +20,8 @@
       ]
     },
     "js-app-library": {
-      img: { src: "https://github.com/Inseliq/img.code-spark/blob/main/iq.tag.png?raw=true", alt: "Библиотека" },
-      windowBg: "url(https://github.com/Inseliq/img.code-spark/blob/main/banner.png?raw=true)",
+      img: { src: "https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/icons/header-menu/iq.tag.png?raw=true", alt: "Библиотека" },
+      windowBg: "url(https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/images/banner.png?raw=true)",
       headline: "Библиотека знаний",
       description: "Материалы и статьи.",
       links: [
@@ -30,8 +30,8 @@
       ]
     },
     "js-app-ai": {
-      img: { src: "https://github.com/Inseliq/img.code-spark/blob/main/iq.tag.png?raw=true", alt: "AI" },
-      windowBg: "url(https://github.com/Inseliq/img.code-spark/blob/main/banner.png?raw=true)",
+      img: { src: "https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/icons/header-menu/iq.tag.png?raw=true", alt: "AI" },
+      windowBg: "url(https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/images/banner.png?raw=true)",
       headline: "Искусственный интеллект",
       description: "Инструменты на базе ИИ.",
       links: [
@@ -39,8 +39,8 @@
       ]
     },
     "js-app-create-site": {
-      img: { src: "https://github.com/Inseliq/img.code-spark/blob/main/iq.tag.png?raw=true", alt: "Создание сайтов" },
-      windowBg: "url(https://github.com/Inseliq/img.code-spark/blob/main/banner.png?raw=true)",
+      img: { src: "https://raw.githubusercontent.com/Inseliq/CodeSpark/07f260353cd0c4ed02804a8b29254a67a17b4f71/blob-assets/icons/header-menu/icon.create-site.svg", alt: "Создание сайтов" },
+      windowBg: "url(https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/images/banner.png?raw=true)",
       headline: "Создание сайтов",
       description: "Сервисы и туториалы по созданию сайтов.",
       links: [
@@ -52,8 +52,8 @@
 
   const servicesMap = {
     "js-service-prime-store": {
-      img: { src: "https://github.com/Inseliq/img.code-spark/blob/main/iq.tag.png?raw=true", alt: "Премиум магазин" },
-      windowBg: "url(https://github.com/Inseliq/img.code-spark/blob/main/banner.png?raw=true)",
+      img: { src: "https://raw.githubusercontent.com/Inseliq/CodeSpark/07f260353cd0c4ed02804a8b29254a67a17b4f71/blob-assets/icons/header-menu/icon.prime-shop.svg", alt: "Премиум магазин" },
+      windowBg: "url(https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/images/banner.png?raw=true)",
       headline: "Премиум магазин",
       description: "Эксклюзивные товары и наборы.",
       links: [
@@ -61,8 +61,8 @@
       ]
     },
     "js-service-prime": {
-      img: { src: "https://github.com/Inseliq/img.code-spark/blob/main/iq.tag.png?raw=true", alt: "Prime подписка" },
-      windowBg: "url(https://github.com/Inseliq/img.code-spark/blob/main/banner.png?raw=true)",
+      img: { src: "https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/icons/header-menu/iq.tag.png?raw=true", alt: "Prime подписка" },
+      windowBg: "url(https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/images/banner.png?raw=true)",
       headline: "Prime подписка",
       description: "Подписка с дополнительными преимуществами.",
       links: [
@@ -70,8 +70,8 @@
       ]
     },
     "js-service-pattern": {
-      img: { src: "https://github.com/Inseliq/img.code-spark/blob/main/iq.tag.png?raw=true", alt: "Шаблоны сайтов" },
-      windowBg: "url(https://github.com/Inseliq/img.code-spark/blob/main/banner.png?raw=true)",
+      img: { src: "https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/icons/header-menu/iq.tag.png?raw=true", alt: "Шаблоны сайтов" },
+      windowBg: "url(https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/images/banner.png?raw=true)",
       headline: "Шаблоны сайтов",
       description: "Коллекция шаблонов для быстрого старта.",
       links: [
@@ -79,8 +79,8 @@
       ]
     },
     "js-service-library-pack": {
-      img: { src: "https://github.com/Inseliq/img.code-spark/blob/main/iq.tag.png?raw=true", alt: "Библиотеки" },
-      windowBg: "url(https://github.com/Inseliq/img.code-spark/blob/main/banner.png?raw=true)",
+      img: { src: "https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/icons/header-menu/iq.tag.png?raw=true", alt: "Библиотеки" },
+      windowBg: "url(https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/images/banner.png?raw=true)",
       headline: "Библиотеки",
       description: "Пакеты и наборы библиотек.",
       links: [
@@ -88,8 +88,8 @@
       ]
     },
     "js-service-documets": {
-      img: { src: "https://github.com/Inseliq/img.code-spark/blob/main/iq.tag.png?raw=true", alt: "Документация" },
-      windowBg: "url(https://github.com/Inseliq/img.code-spark/blob/main/banner.png?raw=true)",
+      img: { src: "https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/icons/header-menu/iq.tag.png?raw=true", alt: "Документация" },
+      windowBg: "url(https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/images/banner.png?raw=true)",
       headline: "Документация",
       description: "Полная документация по API и SDK.",
       links: [
@@ -135,7 +135,7 @@
             const a = document.createElement("a");
             a.href = link.href;
             a.textContent = link.title;
-            a.setAttribute("data-style", "link-new");
+            a.setAttribute("data-style", "link");
             a.setAttribute("hover", "");
             linkContainer.appendChild(a);
           });

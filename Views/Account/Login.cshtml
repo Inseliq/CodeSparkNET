@@ -21,7 +21,7 @@
 
     <div class="description">
       <h2>Войти</h2>
-      <h3>Нет аккаунта? <a href="@Url.Action("Register", "Account")" login hover data-style="link-new">Создать
+      <h3>Нет аккаунта? <a href="@Url.Action("Register", "Account")" login hover data-style="link">Создать
           аккаунт</a></h3>
     </div>
     <div asp-validation-summary="ModelOnly" class="error_message_form"></div>
@@ -49,15 +49,15 @@
         Не удаётся войти?
       </span>
       <a asp-action="ForgotPassword" asp-controller="Account" hover data-style="link-underline">
-      Восстановить аккаунт
+        Восстановить аккаунт
       </a>
     </div>
   </form>
 
   <footer>
     <section>
-      <a href="@Url.Action("License", "Documents")" hover data-style="link-new">Лицензионное соглашение</a>
-      <a href="@Url.Action("Privacy", "Documents")" hover data-style="link-new">Политика конфиденциальности</a>
+      <a href="@Url.Action("License", "Documents")" hover data-style="link">Лицензионное соглашение</a>
+      <a href="@Url.Action("Privacy", "Documents")" hover data-style="link">Политика конфиденциальности</a>
     </section>
     <section>
       © Code Spark, 2025. Все права на объекты прав третьих лиц принадлежат их законным правообладателям.

@@ -89,36 +89,6 @@ html[cross-browser][data-theme-color="dark"] {
       text-decoration: none;
       word-spacing: nowrap;
       position: relative;
-
-      &::after {
-        content: "";
-        position: absolute;
-        width: 0%;
-        height: 2px;
-        bottom: -0.5px;
-        left: 0;
-        background: var(--palette-acient);
-        transition: var(--transition-time);
-      }
-    }
-
-    [data-style="link"].hover {
-      color: var(--palette-custom);
-
-      &::after {
-        width: 100%;
-      }
-    }
-
-    [data-style="link-new"] {
-      background: none;
-      color: var(--palette-acient);
-      transition: var(--transition-time);
-      font-weight: normal;
-      border: none;
-      text-decoration: none;
-      word-spacing: nowrap;
-      position: relative;
       margin-right: 17px;
 
       &:last-child {
@@ -151,7 +121,7 @@ html[cross-browser][data-theme-color="dark"] {
       }
     }
 
-    [data-style="link-new"].hover {
+    [data-style="link"].hover {
       color: var(--palette-custom);
 
       &::after {

@@ -28,6 +28,16 @@
     return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 
+  function scrollToTopElement() {
+    try {
+      const scrollTo = document.getElementById('scrollTo');
+      if (!scrollTo) return;
+      scrollTo.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } catch (e) {
+      console.warn('scrollToTopElement failed', e);
+    }
+  }
+
   // ========== CODE HIGHLIGHTING ==========
   function highlight(code, lang) {
     if (!code) return '';
@@ -290,11 +300,15 @@
   async function onLessonClick(e) {
     const el = e.currentTarget;
     const lessonSlug = el.dataset.lessonSlug;
+
     if (!lessonSlug) return;
 
     document.querySelectorAll('[data-lesson-slug]').forEach(x => x.classList.remove('active'));
     el.classList.add('active');
     currentLessonSlug = lessonSlug;
+
+    // Scroll to #scrollTo smoothly when a lesson (course item) is clicked
+    scrollToTopElement();
 
     await loadLessonBySlug(lessonSlug);
 

@@ -152,7 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
   <span class="desc">${result.desc}</span>
   <div class="button-block">
     <button hover data-style="hyper-button" data-function="js-window-update-profile-name-return"><span>Повторить</span></button>
-    <button class="backlink" hover data-style="link-new" type="button" data-function="close-js-window-update-profile-name">Отмена</button>
+    <button class="backlink" hover data-style="link" type="button" data-function="close-js-window-update-profile-name">Отмена</button>
   </div>
   `;
         }
@@ -163,7 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
   <h3 class="headline">Ошибка</h3>
   <span class="desc">Произошла ошибка при обработке запроса. Попробуйте позже.</span>
   <div class="button-block">
-    <button class="backlink" hover data-style="link-new" type="button" data-function="close-js-window-update-profile-name">Закрыть</button>
+    <button class="backlink" hover data-style="link" type="button" data-function="close-js-window-update-profile-name">Закрыть</button>
   </div>
   `;
       }

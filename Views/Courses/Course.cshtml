@@ -14,7 +14,7 @@
 <partial name="_WebApp_Navbar_header" />
 
 <div class="__container scene">
-  <div class="header">
+  <div class="header" id="scrollTo">
     <div>
       <a href="javascript:history.back()" class="back-btn">← Назад</a>
     </div>
@@ -58,10 +58,6 @@
 
   <div class="mobile-overlay" id="mobileOverlay"></div>
 </div>
-
-@section ScriptsMain {
-  @* <script data-src="@(Url.Content("~/js/api/course-src.js"))" type="text/plain"></script> *@
-}
 
 @section ScriptsAdditions {
   <script data-src="@(Url.Content("~/js/api/course-src.js"))" type="text/plain"></script>

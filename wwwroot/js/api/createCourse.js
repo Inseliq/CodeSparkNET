@@ -1,4 +1,3 @@
-// image preview logic (same as earlier)
 const mainImageInput = document.getElementById('MainImageUrl');
 const imagePreviewWrap = document.getElementById('imagePreview');
 const imgPreview = document.getElementById('imgPreview');

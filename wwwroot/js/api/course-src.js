@@ -307,7 +307,6 @@
     el.classList.add('active');
     currentLessonSlug = lessonSlug;
 
-    // Scroll to #scrollTo smoothly when a lesson (course item) is clicked
     scrollToTopElement();
 
     await loadLessonBySlug(lessonSlug);

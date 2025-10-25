@@ -1,0 +1,91 @@
+@using Microsoft.AspNetCore.Identity
+@using CodeSparkNET.Domain.Models;
+@inject UserManager<AppUser> UserManager
+@{
+    var userName = User?.Identity?.Name;
+    var user = await UserManager.GetUserAsync(User);
+}
+
+@*
+    data-load-priority="main" - вместе, или
+    data-load-priority="addition" - асинхронно,
+    управляют приоритетами в partial
+*@
+
+@if (User?.Identity?.IsAuthenticated is false)
+{
+    <a help data-style="on-hover" hover href="@Url.Action("AllSupport", "Help")">Поддержка</a>
+    <a login-async href="@Url.Action("Login", "Account")" data-style="on-hover" hover>Войти</a>
+    <a register-async href="@Url.Action("Register", "Account")" data-style="on-hover" hover>Регистрация</a>
+    <script src="~/../js/style/async.replace-btn.js" defer></script>
+}
+else
+{
+    <button js-window-profile-btn class="prime none" hover>@userName</button>
+    <div class="js-window hidden" js-window-profile>
+        <div class="description" hover>
+            <div class="block header">
+                <h2>Мой профиль:</h2>
+            </div>
+            <div class="block body">
+                <div class="l_block">
+                    <img src="~/../assets/icon/logo-banner.webp" alt="logo-main" hover>
+                </div>
+                <div class="r_block">
+                    <div class="header-block">
+                        <h2 hover>CodeSpark <span>Prime</span></h2>
+                    </div>
+                    <div class="body-block">
+                        <button notify err-w hover>
+                            $notify
+                        </button>
+                        <button prime-time err-w hover>
+                            $time
+                        </button>
+                        <a help data-style="on-hover" hover href="@Url.Action("AllSupport", "Help")">
+                            Поддержка
+                        </a>
+                    </div>
+                    <div class="footer-block">
+                        <a el="stocks" hover>Акции и предложения</a>
+                        @if (await UserManager.IsEmailConfirmedAsync(user) is false)
+                        {
+                            <div class="n_confirm">
+                                <button hover title="Подтвердите ваш Email в профиле"
+                                    data-function="send-confirmation-email">Ваш Email не подтвержден!</button>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="confirm">
+                                <span el="confirm_email" title="Ваш Email подтверждён. 👍" hover></span>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="block footer">
+                <div class="l_block">
+                    <a href="@Url.Action("Profile", "Profile")" class="link" hover>Личный кабинет</a>
+                    <a tribute err-w hover class="link">Tribute</a>
+                </div>
+                <div class="r_block">
+                    <form asp-action="Logout" asp-controller="Account" method="post" class="logout-form">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="logout-btn" hover>Выход</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="js-window hidden" js-window-send-confirmation-email>
+        <div class="description" hover>
+            <h2>Проверьте вашу почту</h2>
+            <a hover data-style="hyper-button" data-function="close-sendConfirmationEmail-btn"><span>Продолжить</span></a>
+        </div>
+    </div>
+    <script src="~/../js/windows/js-window.profile-w.js" defer></script>
+    <script src="~/../js/windows/js-window.send-email.js" defer></script>
+}
+
+<script src="@(Url.Content("~/js/windows/js-window.err-w.js"))" defer></script>

@@ -1,0 +1,66 @@
+@model CodeSparkNET.WEB.ViewModels.Account.LoginViewModel
+
+@{
+  ViewData["Title"] = "Вход";
+  ViewData["App"] = "CodeSpark";
+}
+
+@section Styles {
+  <link rel="stylesheet" href="~/css/Style/login.css" asp-append-version="true">
+}
+
+<div class="__container login">
+  <header>
+    <a href="@Url.Action("Index", "Home")" banner>
+      <img src="~/../assets/img/banner-tag.webp" alt="head-banner">
+    </a>
+  </header>
+
+  <form asp-action="Login" asp-controller="Account" method="post" class="form_controller">
+    @Html.AntiForgeryToken()
+
+    <div class="description">
+      <h2>Войти</h2>
+      <h3>Нет аккаунта? <a href="@Url.Action("Register", "Account")" login hover data-style="link">Создать
+          аккаунт</a></h3>
+    </div>
+    <div asp-validation-summary="ModelOnly" class="error_message_form"></div>
+    <div class="input_block">
+      <div class="email-block">
+        <span asp-validation-for="Email"></span>
+        <label asp-for="Email"></label>
+        <input asp-for="Email" id="email" type="text" required hover>
+      </div>
+      <div class="password-block">
+        <span asp-validation-for="Password"></span>
+        <label asp-for="Password">Пароль</label>
+        <input asp-for="Password" id="password" type="password" required hover>
+      </div>
+      <div class="checkbox_rm-block cb-container">
+        <label asp-for="RememberMe" hover>
+          <input asp-for="RememberMe" type="checkbox">
+          <span>Запомнить меня.</span>
+        </label>
+      </div>
+    </div>
+    <button type="submit" data-style="hyper-button" hover>Войти</button>
+    <div class="fogot-block">
+      <span>
+        Не удаётся войти?
+      </span>
+      <a asp-action="ForgotPassword" asp-controller="Account" hover data-style="link-underline">
+        Восстановить аккаунт
+      </a>
+    </div>
+  </form>
+
+  <footer>
+    <section>
+      <a href="@Url.Action("License", "Documents")" hover data-style="link">Лицензионное соглашение</a>
+      <a href="@Url.Action("Privacy", "Documents")" hover data-style="link">Политика конфиденциальности</a>
+    </section>
+    <section>
+      © Code Spark, 2025. Все права на объекты прав третьих лиц принадлежат их законным правообладателям.
+    </section>
+  </footer>
+</div>

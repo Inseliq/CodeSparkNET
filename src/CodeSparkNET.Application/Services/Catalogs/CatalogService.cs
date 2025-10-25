@@ -1,0 +1,154 @@
+using CodeSparkNET.Application.Dtos.Catalog;
+using CodeSparkNET.Application.Services.Cache;
+using Microsoft.Extensions.Logging;
+
+namespace CodeSparkNET.Application.Services.Catalogs
+{
+    /// <summary>
+    /// Service for handling catalog-related operations such as retrieving catalog names, products, and details.
+    /// </summary>
+    public class CatalogService : ICatalogService
+    {
+        private readonly ICacheService _cacheService;
+        private readonly ILogger<CatalogService> _logger;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CatalogService"/> class.
+        /// </summary>
+        /// <param name="catalogRepository">Repository for accessing catalog data.</param>
+        /// <param name="logger">Logger for logging errors and information.</param>
+        public CatalogService(
+            ICacheService cacheService,
+            ILogger<CatalogService> logger)
+        {
+            _logger = logger;
+            _cacheService = cacheService;
+        }
+
+        /// <summary>
+        /// Retrieves a list of catalog names with their slugs.
+        /// </summary>
+        /// <returns>A list of <see cref="CatalogNamesDto"/>.</returns>
+        public async Task<List<CatalogNamesDto>> GetCatalogNamesAsync()
+        {
+            try
+            {
+                var catalogs = await _cacheService.GetCachedCatalogNamesAsync();
+
+                if (catalogs == null)
+                    return new List<CatalogNamesDto>();
+
+                return catalogs;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while retrieving catalog names.");
+                return new List<CatalogNamesDto>();
+            }
+        }
+
+        /// <summary>
+        /// Retrieves a list of products for a given catalog slug.
+        /// </summary>
+        /// <param name="catalogSlug">The slug of the catalog.</param>
+        /// <returns>A list of <see cref="CatalogProductsDto"/>.</returns>
+        public async Task<List<CatalogProductsDto>> GetCatalogProductsAsync(string catalogSlug)
+        {
+            try
+            {
+                var catalog = await _cacheService.GetCachedCatalogBySlugAsync(catalogSlug);
+
+                if (catalog == null || catalog.Products == null)
+                    return new List<CatalogProductsDto>();
+
+                return catalog.Products
+                    .Select(p => new CatalogProductsDto
+                    {
+                        Name = p.Name,
+                        Slug = p.Slug,
+                        ShortDescription = p.ShortDescription,
+                        Price = p.Price,
+                        Currency = p.Currency,
+                        InStock = p.InStock,
+                        ProductType = p.ProductType,
+                        ProductImages = p.ProductImages.Select(pi => new CatalogProductImageDto
+                        {
+                            Name = pi.Name,
+                            IsMain = pi.IsMain,
+                            Url = pi.Url
+                        }).ToList()
+                    }).ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while retrieving products for catalog slug {catalogSlug}.", catalogSlug);
+                return new List<CatalogProductsDto>();
+            }
+        }
+
+        /// <summary>
+        /// Retrieves detailed information about a specific product in a catalog.
+        /// </summary>
+        /// <param name="catalogSlug">The slug of the catalog.</param>
+        /// <param name="productSlug">The slug of the product.</param>
+        /// <returns>A <see cref="CatalogProductDetailsDto"/> containing product details.</returns>
+        public async Task<CatalogProductDetailsDto> GetCatalogProductDetailsAsync(string catalogSlug, string productSlug)
+        {
+            try
+            {
+                var catalog = await _cacheService.GetCachedCatalogBySlugAsync(catalogSlug);
+                var productDetails = catalog?.Products?.Find(p => p.Slug == productSlug);
+
+                if (productDetails == null)
+                    return null;
+
+                return new CatalogProductDetailsDto
+                {
+                    Name = productDetails.Name,
+                    Slug = productDetails.Slug,
+                    FullDescription = productDetails.FullDescription,
+                    Price = productDetails.Price,
+                    Currency = productDetails.Currency,
+                    InStock = productDetails.InStock,
+                    ProductType = productDetails.ProductType,
+                    HasPrice = productDetails.Price != 0m,
+                    Images = productDetails.ProductImages?
+                        .Select(img => new CatalogProductImageDto
+                        {
+                            Name = img.Name,
+                            Url = img.Url,
+                            IsMain = img.IsMain
+                        }).ToList()
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while retrieving product details for catalog {catalogSlug}, product {productSlug}.", catalogSlug, productSlug);
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Retrieves catalog information by its slug, including products.
+        /// </summary>
+        /// <param name="catalogSlug">The slug of the catalog.</param>
+        /// <returns>A <see cref="CatalogDto"/> with catalog details and products.</returns>
+        public async Task<CatalogDto> GetCatalogBySlugAsync(string catalogSlug)
+        {
+            try
+            {
+                var catalog = await _cacheService.GetCachedCatalogBySlugAsync(catalogSlug);
+
+                if (catalog == null)
+                    return new CatalogDto();
+
+                return catalog;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while retrieving catalog by slug {catalogSlug}.", catalogSlug);
+                return new CatalogDto();
+            }
+        }
+    }
+}

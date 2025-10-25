@@ -1,0 +1,81 @@
+@model CodeSparkNET.WEB.ViewModels.Account.RegisterViewModel
+
+@{
+  ViewData["Title"] = "Регистрация";
+  ViewData["App"] = "CodeSpark";
+}
+
+@section Styles {
+  <link rel="stylesheet" href="~/css/Style/register.css" asp-append-version="true">
+}
+
+<div class="__container register">
+  <header>
+    <a href="@Url.Action("Index", "Home")" banner>
+      <img src="~/../assets/img/banner-tag.webp" alt="head-banner">
+    </a>
+  </header>
+
+  <form asp-action="Register" asp-controller="Account" method="post" class="form_controller">
+    @Html.AntiForgeryToken()
+
+    <div class="description">
+      <h2>Регистрируйся!</h2>
+      <h3>Уже есть аккаунт?<a href="@Url.Action("Login", "Account")" data-style="link" login hover>Войти</a></h3>
+    </div>
+    <div asp-validation-summary="All" class="error_message_form"></div>
+    <div class="input_block">
+      <div class="names-block">
+        <span asp-validation-for="UserName"></span>
+        <label asp-for="UserName">Имя пользователя</label>
+        <input asp-for="UserName" id="names" type="text" required hover>
+      </div>
+      <div class="email-block not_margin_top">
+        <span asp-validation-for="Email" class="not_margin_top"></span>
+        <label asp-for="Email">Email</label>
+        <input asp-for="Email" id="email" type="email" required hover>
+      </div>
+      <div class="password-block">
+        <span asp-validation-for="Password"></span>
+        <label asp-for="Password" for="password">Пароль</label>
+        <input asp-for="Password" name="password" id="password" type="password" required hover
+          autocomplete="new-password">
+      </div>
+      <div class="confirm_password-block">
+        <span asp-validation-for="ConfirmPassword"></span>
+        <label asp-for="ConfirmPassword">Подтверждение пароля</label>
+        <input asp-for="ConfirmPassword" id="confirm_password" type="password" required hover
+          autocomplete="new-password">
+      </div>
+      <div class="req_checkbox_pp-block cb-container">
+        <span asp-validation-for="ConfirmToS"></span>
+        <label asp-for="ConfirmToS" class="form-check-label" hover>
+          <input asp-for="ConfirmToS" type="checkbox" hover>
+          <span>
+            Я принимаю условия <a href="@Url.Action("License", "Documents")" hover data-style="link">Лицензионного
+              соглашения</a>, <br>
+            <a href="@Url.Action("Privacy", "Documents")" data-style="link" hover>Политики конфиденциальности</a> и даю
+            согласие на обработку данных.
+          </span>
+        </label>
+      </div>
+      <div class="checkbox_ads-block cb-container">
+        <label asp-for="ConfirmAd" class="form-check-label" hover>
+          <input asp-for="ConfirmAd" type="checkbox" checked hover>
+          <span>Я даю согласие на получение рекламных сообщений и предложений.</span>
+        </label>
+      </div>
+    </div>
+    <button type="submit" data-style="hyper-button" hover>Зарегистрироваться</button>
+  </form>
+
+  <footer>
+    <section>
+      <a href="@Url.Action("License", "Documents")" hover data-style="link">Лицензионное соглашение</a>
+      <a href="@Url.Action("Privacy", "Documents")" hover data-style="link">Политика конфиденциальности</a>
+    </section>
+    <section>
+      © Code Spark, 2025. Все права на объекты прав третьих лиц принадлежат их законным правообладателям.
+    </section>
+  </footer>
+</div>

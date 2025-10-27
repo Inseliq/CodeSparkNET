@@ -36,10 +36,10 @@ else
                         <h2 hover>CodeSpark <span>Prime</span></h2>
                     </div>
                     <div class="body-block">
-                        <button notify err-w hover>
+                        <button notify err-w hidden="!" hover>
                             $notify
                         </button>
-                        <button prime-time err-w hover>
+                        <button prime-time err-w hidden="!" hover>
                             $time
                         </button>
                         <a help data-style="on-hover" hover href="@Url.Action("AllSupport", "Help")">
@@ -67,7 +67,7 @@ else
             <div class="block footer">
                 <div class="l_block">
                     <a href="@Url.Action("Profile", "Profile")" class="link" hover>Личный кабинет</a>
-                    <a tribute err-w hover class="link">Tribute</a>
+                    <a tribute err-w hidden="!" hover class="link">Tribute</a>
                 </div>
                 <div class="r_block">
                     <form asp-action="Logout" asp-controller="Account" method="post" class="logout-form">

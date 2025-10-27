@@ -1,99 +1,108 @@
 (() => {
   const appsMap = {
-    "js-app-course": {
+    "js-app-shedule": {
       img: { src: "https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/icons/header-menu/iq.tag.png?raw=true", alt: "Курсы" },
       windowBg: "url(https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/images/banner.png?raw=true)",
-      headline: "Онлайн-курсы",
-      description: "Краткое описание раздела Курсы.",
+      headline: "Шаблоны",
+      description: "Заготовки для сайтов. Шаблоны сайтов.",
       links: [
-        { href: "/courses/frontend", title: "Фронтенд" },
-        { href: "/courses/backend", title: "Бэкенд" }
+        { href: "/", title: "..." },
+        { href: "/", title: "..." }
       ]
     },
     "js-app-course-work": {
       img: { src: "https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/icons/header-menu/iq.tag.png?raw=true", alt: "Курсовые работы" },
       windowBg: "url(https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/images/banner.png?raw=true)",
       headline: "Курсовые работы",
-      description: "Описание курсовых работ.",
+      description: "Выполнение курсовых и дипломных работ.",
       links: [
-        { href: "/works/assignment1", title: "Задание 1" }
+        { href: "/", title: "Курсовые работы" },
+        { href: "/", title: " Дипломные работы" }
       ]
     },
     "js-app-library": {
       img: { src: "https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/icons/header-menu/iq.tag.png?raw=true", alt: "Библиотека" },
       windowBg: "url(https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/images/banner.png?raw=true)",
       headline: "Библиотека знаний",
-      description: "Материалы и статьи.",
+      description: "Материалы и руководства по программированию.",
       links: [
         { href: "/Catalogs/Catalog/library", title: "Перейти в библиотеку" },
-        { href: "/Catalog/ProductDetails/library/keras-tutorial", title: "Keras" }
+        { href: "/Catalog/ProductDetails/library/keras-tutorial", title: "Keras" },
+        { href: "/Catalog/ProductDetails/library/mlnet-tutorial", title: "ML.NET" }
       ]
     },
-    "js-app-ai": {
-      img: { src: "https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/icons/header-menu/iq.tag.png?raw=true", alt: "AI" },
-      windowBg: "url(https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/images/banner.png?raw=true)",
-      headline: "Искусственный интеллект",
-      description: "Инструменты на базе ИИ.",
-      links: [
-        { href: "/ai/tools", title: "Инструменты" }
-      ]
-    },
+    // "js-app-ai": {
+    //   img: { src: "https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/icons/header-menu/iq.tag.png?raw=true", alt: "AI" },
+    //   windowBg: "url(https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/images/banner.png?raw=true)",
+    //   headline: "Искусственный интеллект",
+    //   description: "Инструменты на базе ИИ.",
+    //   links: [
+    //     { href: "/ai/tools", title: "Инструменты" }
+    //   ]
+    // },
     "js-app-create-site": {
       img: { src: "https://raw.githubusercontent.com/Inseliq/CodeSpark/07f260353cd0c4ed02804a8b29254a67a17b4f71/blob-assets/icons/header-menu/icon.create-site.svg", alt: "Создание сайтов" },
       windowBg: "url(https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/images/banner.png?raw=true)",
       headline: "Создание сайтов",
-      description: "Сервисы и туториалы по созданию сайтов.",
+      description: "Разработка сайтов под ключ. Фронтенд. Бэкенд. Дизайн.",
       links: [
-        { href: "/site/starter", title: "Starter Kit" },
-        { href: "/site/services", title: "Услуги" }
+        { href: "/", title: "Каталог услуг" },
+        { href: "/", title: "Сайт под ключ" },
+        { href: "/", title: "Лендинг" },
+        { href: "/", title: "Дизайн сайта" },
+        { href: "/", title: "Вёрстка" }
       ]
     }
   };
 
   const servicesMap = {
-    "js-service-prime-store": {
-      img: { src: "https://raw.githubusercontent.com/Inseliq/CodeSpark/07f260353cd0c4ed02804a8b29254a67a17b4f71/blob-assets/icons/header-menu/icon.prime-shop.svg", alt: "Премиум магазин" },
-      windowBg: "url(https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/images/banner.png?raw=true)",
-      headline: "Премиум магазин",
-      description: "Эксклюзивные товары и наборы.",
-      links: [
-        { href: "/store/premium", title: "Открыть магазин" }
-      ]
-    },
-    "js-service-prime": {
-      img: { src: "https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/icons/header-menu/iq.tag.png?raw=true", alt: "Prime подписка" },
-      windowBg: "url(https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/images/banner.png?raw=true)",
-      headline: "Prime подписка",
-      description: "Подписка с дополнительными преимуществами.",
-      links: [
-        { href: "/prime/subscription", title: "Оформить" }
-      ]
-    },
+    // "js-service-prime-store": {
+    //   img: { src: "https://raw.githubusercontent.com/Inseliq/CodeSpark/07f260353cd0c4ed02804a8b29254a67a17b4f71/blob-assets/icons/header-menu/icon.prime-shop.svg", alt: "Премиум магазин" },
+    //   windowBg: "url(https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/images/banner.png?raw=true)",
+    //   headline: "Премиум магазин",
+    //   description: "Эксклюзивные товары и наборы.",
+    //   links: [
+    //     { href: "/store/premium", title: "Открыть магазин" }
+    //   ]
+    // },
+    // "js-service-prime": {
+    //   img: { src: "https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/icons/header-menu/iq.tag.png?raw=true", alt: "Prime подписка" },
+    //   windowBg: "url(https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/images/banner.png?raw=true)",
+    //   headline: "Prime подписка",
+    //   description: "Подписка с дополнительными преимуществами.",
+    //   links: [
+    //     { href: "/prime/subscription", title: "Оформить" }
+    //   ]
+    // },
     "js-service-pattern": {
       img: { src: "https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/icons/header-menu/iq.tag.png?raw=true", alt: "Шаблоны сайтов" },
       windowBg: "url(https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/images/banner.png?raw=true)",
-      headline: "Шаблоны сайтов",
+      headline: "Заготовки сайтов",
       description: "Коллекция шаблонов для быстрого старта.",
       links: [
-        { href: "/templates", title: "Просмотреть шаблоны" }
+        { href: "/", title: "Просмотреть шаблоны" }
       ]
     },
-    "js-service-library-pack": {
-      img: { src: "https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/icons/header-menu/iq.tag.png?raw=true", alt: "Библиотеки" },
-      windowBg: "url(https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/images/banner.png?raw=true)",
-      headline: "Библиотеки",
-      description: "Пакеты и наборы библиотек.",
-      links: [
-        { href: "/libraries/packs", title: "Пакеты" }
-      ]
-    },
+    // "js-service-library-pack": {
+    //   img: { src: "https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/icons/header-menu/iq.tag.png?raw=true", alt: "Библиотеки" },
+    //   windowBg: "url(https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/images/banner.png?raw=true)",
+    //   headline: "Библиотеки",
+    //   description: "Пакеты и наборы библиотек.",
+    //   links: [
+    //     { href: "/libraries/packs", title: "Пакеты" }
+    //   ]
+    // },
     "js-service-documets": {
       img: { src: "https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/icons/header-menu/iq.tag.png?raw=true", alt: "Документация" },
       windowBg: "url(https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/images/banner.png?raw=true)",
       headline: "Документация",
-      description: "Полная документация по API и SDK.",
+      description: "Полная документация CodeSpark™",
       links: [
-        { href: "/docs", title: "Открыть документацию" }
+        { href: "/", title: "Документация" },
+        { href: "/", title: "О нас" },
+        { href: "/", title: "Политика конфи..." },
+        { href: "/", title: "Руководство пользователя" },
+        { href: "/", title: "Лицензионное соглашение" }
       ]
     }
   };

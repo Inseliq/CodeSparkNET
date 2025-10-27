@@ -29,14 +29,14 @@
                 <h3 hover el="user-name" title="Имя пользователя">@Model.PersonalProfile.UserName</h3>
                 @if (UserManager.IsEmailConfirmedAsync(user).Result is false)
                 {
-                    <button class="edit" disabled data-style="link" hover
+                    <button class="edit" disabled data-style="link-profile" hover
                         title="Для изменения имени необходимо подтвердить почту.">
                         Изменить
                     </button>
                 }
                 else
                 {
-                    <button class="edit" data-function="edit-username" data-style="link" hover>
+                    <button class="edit" data-function="edit-username" data-style="link-profile" hover>
                         Изменить
                     </button>
                 }
@@ -45,20 +45,25 @@
                 <h3 hover el="role" title="Роль">@((string?)Model.PersonalProfile.Roles ?? "—")</h3>
             </div>
             <div class="block body">
+                <h3 hover el="user-guide" title="Руководство пользователя">Руководство пользователя</h3>
+                <button class="see" err-w hover data-style="link-profile">Посмотреть</button>
+                @* data-function="connectTribute" *@
+            </div>
+            @* <div class="block body">
                 <h3 hover el="p-time" title="Время до окончания подписки">$prime-time</h3>
             </div>
             <div class="block body">
                 <h3 hover el="country" title="Страна проживания">$country</h3>
-            </div>
-            <div class="block footer">
+            </div> *@
+            @* <div class="block footer">
                 <h2>Активация кода</h2>
                 <form class="input_block" action="#">
                     <input type="text" code placeholder="Введите код" hover>
                     <button type="submit" err-w data-style="hyper-button" hover><span>Активировать код</span></button>
-                    @* data-function="alert-code-ok" *@
-                    @* data-function="alert-code-err" *@
+                    // data-function="alert-code-ok"
+                    // data-function="alert-code-err"
                 </form>
-            </div>
+            </div> *@
         </div>
         <div class="r_block" hover>
             <div class="block header">
@@ -71,7 +76,7 @@
                         <h3 title="Подтвердите адрес электронной почты">@Model.PersonalProfile.Email</h3>
                         <span>Ваш Email не подтвержден!</span>
                     </div>
-                    <button data-function="send-confirmation-email" class="btn right" data-style="link" hover
+                    <button data-function="send-confirmation-email" class="btn right" data-style="link-profile" hover
                         data-time="">Подтвердить</button>
                 </div>
             }
@@ -84,48 +89,43 @@
                         <span>@(Model.PersonalProfile.EmailConfirmedAt == DateTime.MinValue ? "" : $"Email подтвержден: {Model.PersonalProfile.EmailConfirmedAt}")</span>
                         <span>@(Model.PersonalProfile.EmailChangedAt == DateTime.MinValue ? "" : $"Email изменен: {Model.PersonalProfile.EmailChangedAt}")</span>
                     </div>
-                    <button data-function="editEmailBtn" class="btn right" data-style="link" hover>Изменить</button>
+                    <button data-function="editEmailBtn" class="btn right" data-style="link-profile" hover>Изменить</button>
                 </div>
             }
             <div class="block body">
                 <h3 hover el="password" title="Ваш пароль">Пароль добавлен: <span>$data-edit-password</span></h3>
                 @if (UserManager.IsEmailConfirmedAsync(user).Result is false)
                 {
-                    <button class="edit pass" disabled hover data-style="link" title="Для изменения пароля необходимо подтвердить почту.">Изменить</button>
+                    <button class="edit pass" disabled hover data-style="link-profile" title="Для изменения пароля необходимо подтвердить почту.">Изменить</button>
                 }
                 else
                 {
-                    <button class="edit pass" data-function="editPasswordBtn" hover data-style="link">Изменить</button>
+                    <button class="edit pass" data-function="editPasswordBtn" hover data-style="link-profile">Изменить</button>
                 }
             </div>
-            <div class="block body">
+            @* <div class="block body">
                 <h3 hover el="2FA" title="Двуфакторная аутентификация. 2FA">Двуфакторная аутентификация</h3>
-                <button class="connect" err-w hover data-style="link">Подключить</button>
-                @* data-function="connect2FA" *@
-            </div>
+                <button class="connect" err-w hover data-style="link-profile">Подключить</button>
+                // data-function="connect2FA"
+            </div> *@
             <div class="block body">
                 <h3 hover el="Cookie" title="Настройки файлов-Cookie">Правила использования Cookie</h3>
-                <button class="tune" err-w hover data-style="link">Настройки</button>
+                <button class="tune" err-w hover data-style="link-profile">Настройки</button>
                 @* data-function="tuneCookie" *@
             </div>
-            <div class="block body">
+            @* <div class="block body">
                 <h3 hover el="tribute" title="Подключение подписки. Tribute">$tribute</h3>
-                <button class="connect" err-w hover data-style="link">Подключить</button>
-                @* data-function="connectTribute" *@
-            </div>
-            <div class="block body">
+                <button class="connect" err-w hover data-style="link-profile">Подключить</button>
+                // data-function="connectTribute"
+            </div> *@
+            @* <div class="block body">
                 <h3 hover el="debug" title="Нашли ошибки? Сообщите нам!">Сообщить об ошибке</h3>
-                <button class="send" err-w hover data-style="link">Отправить</button>
-                @* data-function="sendMessageAboutBug" *@
-            </div>
-            <div class="block body">
-                <h3 hover el="user-guide" title="Руководство пользователя">Руководство пользователя</h3>
-                <button class="see" err-w hover data-style="link">Посмотреть</button>
-                @* data-function="connectTribute" *@
-            </div>
+                <button class="send" err-w hover data-style="link-profile">Отправить</button>
+                // data-function="sendMessageAboutBug"
+            </div> *@
         </div>
     </div>
-    <div class="long block management">
+    @* <div class="long block management">
         <div class="block session" hover>
             <h2>$Сеансы</h2>
         </div>
@@ -146,10 +146,10 @@
                 <span>$desc</span>
             </div>
             <div class="right">
-                <button class="tune" hover data-style="link">Управление данными</button>
+                <button class="tune" hover data-style="link-profile">Управление данными</button>
             </div>
         </div>
-    </div>
+    </div> *@
 </div>
 
 @if (UserManager.IsEmailConfirmedAsync(user).Result is false)
@@ -168,7 +168,7 @@ else
                 <div class="button-block">
                     <button hover data-style="hyper-button"
                         data-function="next-step-JS-UPName"><span>Продолжить</span></button>
-                    <button class="backlink" hover data-style="link" type="button"
+                    <button class="backlink" hover data-style="link-profile" type="button"
                         data-function="close-js-window-update-profile-name">Отмена</button>
                 </div>
             </div>
@@ -187,7 +187,7 @@ else
                     </div>
                     <div class="block-button">
                         <button type="submit" data-style="hyper-button" hover>Сохранить</button>
-                        <button class="backlink" hover data-style="link" type="button"
+                        <button class="backlink" hover data-style="link-profile" type="button"
                             data-function="close-js-window-update-profile-name">Отмена</button>
                     </div>
 
@@ -210,7 +210,7 @@ else
                 <div class="button-block">
                     <button hover data-style="hyper-button"
                         data-function="next-step-JS-Email"><span>Продолжить</span></button>
-                    <button class="backlink" hover data-style="link" type="button"
+                    <button class="backlink" hover data-style="link-profile" type="button"
                         data-function="close-js-window-update-profile-email">Отмена</button>
                 </div>
             </div>
@@ -228,7 +228,7 @@ else
                     </div>
                     <div class="block-button">
                         <button type="submit" data-style="hyper-button" hover>Сохранить</button>
-                        <button class="backlink" hover data-style="link" type="button"
+                        <button class="backlink" hover data-style="link-profile" type="button"
                             data-function="close-js-window-update-profile-email">Отмена</button>
                     </div>
 
@@ -249,7 +249,7 @@ else
                 <div class="button-block">
                     <button hover data-style="hyper-button"
                         data-function="next-step-JS-Password"><span>Продолжить</span></button>
-                    <button class="backlink" hover data-style="link" type="button"
+                    <button class="backlink" hover data-style="link-profile" type="button"
                         data-function="close-js-window-update-profile-password">Отмена</button>
                 </div>
             </div>
@@ -277,7 +277,7 @@ else
                     </div>
                     <div class="block-button">
                         <button type="submit" data-style="hyper-button" hover>Сохранить</button>
-                        <button class="backlink" hover data-style="link" type="button"
+                        <button class="backlink" hover data-style="link-profile" type="button"
                             data-function="close-js-window-update-profile-password">Отмена</button>
                     </div>
                 </form>

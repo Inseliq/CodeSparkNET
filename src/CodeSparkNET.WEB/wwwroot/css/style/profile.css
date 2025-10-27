@@ -105,6 +105,12 @@ html[cross-browser] {
           .block.body {
             position: relative;
 
+            &:last-child {
+              &::after {
+                background: none;
+              }
+            }
+
             &::after {
               background: var(--palette-acient);
             }
@@ -163,6 +169,13 @@ html[cross-browser] {
               }
             }
 
+            h3[el="user-guide"] {
+              &::after {
+                mask: url(../../../assets/icon/profile.guide.svg) center / cover no-repeat;
+                -webkit-mask: url(../../../assets/icon/profile.guide.svg) center / cover no-repeat;
+              }
+            }
+
             h3.hover {
               color: var(--palette-text-inv);
 
@@ -178,7 +191,7 @@ html[cross-browser] {
               }
             }
 
-            .edit {
+            .edit, .see {
               position: absolute;
               right: 25px;
               top: 50%;
@@ -406,10 +419,6 @@ html[cross-browser] {
               right: 25px;
               top: 50%;
               transform: translateY(-40%);
-            }
-
-            .see {
-              right: calc(25px + 19px);
             }
 
             .edit.pass[disabled] {

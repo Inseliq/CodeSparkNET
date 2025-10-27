@@ -80,6 +80,36 @@ html[cross-browser][data-theme-color="dark"] {
       background: var(--palette-main);
     }
 
+    [data-style="link-profile"] {
+      background: none;
+      color: var(--palette-acient);
+      transition: var(--transition-time);
+      font-weight: normal;
+      border: none;
+      text-decoration: none;
+      word-spacing: nowrap;
+      position: relative;
+
+      &::after {
+        content: "";
+        position: absolute;
+        width: 0%;
+        height: 2px;
+        bottom: -0.5px;
+        left: 0;
+        background: var(--palette-acient);
+        transition: var(--transition-time);
+      }
+    }
+
+    [data-style="link-profile"].hover {
+      color: var(--palette-custom);
+
+      &::after {
+        width: 100%;
+      }
+    }
+
     [data-style="link"] {
       background: none;
       color: var(--palette-acient);

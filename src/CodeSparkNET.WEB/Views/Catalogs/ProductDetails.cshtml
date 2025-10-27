@@ -59,7 +59,7 @@
         <div class="info">
             <h1 id="product-title" class="product-title">@Model?.Name</h1>
 
-            @if (Model.ProductType != "Course" && !Model.HasPrice)
+            @if (Model.ProductType != "Course" && Model.HasPrice)
             {
                 <div class="product-meta-row">
                     <div class="price">

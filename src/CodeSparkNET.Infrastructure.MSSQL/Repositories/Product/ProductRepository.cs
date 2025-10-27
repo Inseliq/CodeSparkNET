@@ -118,7 +118,7 @@ namespace CodeSparkNET.Infrastructure.Repositories.Product
 
             return module;
         }
-        
+
         public async Task<Lesson> GetLessonByIdAsync(string lessonId)
         {
             if (string.IsNullOrWhiteSpace(lessonId)) return null;
@@ -411,6 +411,89 @@ namespace CodeSparkNET.Infrastructure.Repositories.Product
             {
                 return false;
             }
+        }
+
+
+        public async Task<Template> CreateTemplateAsync(Template model)
+        {
+            _context.Products.Add(model);
+            await _context.SaveChangesAsync();
+            return model;
+        }
+        public async Task<Template> GetTemplateByIdAsync(string id)
+        {
+            return await _context.Products
+                .OfType<Template>()
+                .Include(t => t.ProductImages)
+                .FirstOrDefaultAsync(t => t.Id == id);
+        }
+        public async Task<Template> GetTemplateBySlugAsync(string slug)
+        {
+            return await _context.Products
+                .OfType<Template>()
+                .Include(t => t.ProductImages)
+                .FirstOrDefaultAsync(t => t.Slug == slug);
+        }
+        public async Task<Template> GetTemplateByIdOrSlugAsync(string query)
+        {
+            var template = GetTemplateByIdAsync(query);
+            if (template != null)
+                return await template;
+            return await GetTemplateBySlugAsync(query);
+        }
+        public async Task<IEnumerable<Template>> GetAllTemplatesAsync()
+        {
+            return await _context.Products
+                .OfType<Template>()
+                .Include(t => t.ProductImages)
+                .ToListAsync();
+        }
+        public async Task<bool> UpdateTemplateAsync(Template model)
+        {
+            var existingTemplate = await _context.Products
+                .OfType<Template>()
+                .FirstOrDefaultAsync(t => t.Id == model.Id);
+            if (existingTemplate == null)
+                return false;
+            existingTemplate.Name = model.Name;
+            existingTemplate.Slug = model.Slug;
+            existingTemplate.ShortDescription = model.ShortDescription;
+            existingTemplate.FullDescription = model.FullDescription;
+            existingTemplate.Price = model.Price;
+            existingTemplate.Currency = model.Currency;
+            existingTemplate.IsPublished = model.IsPublished;
+            existingTemplate.InStock = model.InStock;
+            existingTemplate.CatalogId = model.CatalogId;
+            existingTemplate.ProductImages = model.ProductImages;
+
+            var catalog = await _context.Catalogs.FirstOrDefaultAsync(c => c.Id == model.CatalogId);
+            if (catalog != null)
+                existingTemplate.Catalog = catalog;
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        public async Task<bool> DeleteTemplateByIdAsync(string id)
+        {
+            var template = await _context.Products
+                .OfType<Template>()
+                .FirstOrDefaultAsync(t => t.Id == id);
+            if (template == null)
+                return false;
+            _context.Products.Remove(template);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        public async Task<bool> DeleteTemplateBySlugAsync(string slug)
+        {
+            var template = await _context.Products
+                .OfType<Template>()
+                .FirstOrDefaultAsync(t => t.Slug == slug);
+            if (template == null)
+                return false;
+            _context.Products.Remove(template);
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }

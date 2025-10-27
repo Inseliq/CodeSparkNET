@@ -63,14 +63,16 @@ namespace CodeSparkNET.Infrastructure
         private static IServiceCollection AddRedis(this IServiceCollection services, IConfiguration configuration)
         {
             // Регистрируем IConnectionMultiplexer лениво через фабрику, чтобы не делать Connect сразу при старте контейнера.
-            var redisConnString = configuration["Redis:ConnectionString"];
-            if (!string.IsNullOrWhiteSpace(redisConnString))
-            {
-                services.AddSingleton<IConnectionMultiplexer>(sp =>
-                {
-                    return ConnectionMultiplexer.Connect(redisConnString);
-                });
-            }
+            //var redisConnString = configuration["Redis:ConnectionString"];
+            //if (!string.IsNullOrWhiteSpace(redisConnString))
+            //{
+            //    services.AddSingleton<IConnectionMultiplexer>(sp =>
+            //    {
+            //        return ConnectionMultiplexer.Connect(redisConnString);
+            //    });
+            //}
+
+            services.AddDistributedMemoryCache();
 
             services.AddScoped<ICacheService, CacheService>();
 

@@ -24,5 +24,14 @@ namespace CodeSparkNET.Application.Services
         Task<Lesson> AddLessonAsync(AddLessonDto model);
         Task<bool> UpdateLessonAsync(UpdateLessonDto model);
         Task<bool> DeleteLessonAsync(string lessonId);
+
+        Task<Template> CreateTemplateAsync(Template model);
+        Task<Template> GetTemplateByIdAsync(string id);
+        Task<Template> GetTemplateBySlugAsync(string slug);
+        Task<Template> GetTemplateByIdOrSlugAsync(string query);
+        Task<IEnumerable<Template>> GetAllTemplatesAsync();
+        Task<bool> UpdateTemplateAsync(Template model);
+        Task<bool> DeleteTemplateByIdAsync(string id);
+        Task<bool> DeleteTemplateBySlugAsync(string slug);
     }
 }

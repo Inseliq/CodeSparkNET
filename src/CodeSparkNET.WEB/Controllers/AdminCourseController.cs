@@ -3,10 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
 using CodeSparkNET.Application.Services.Courses;
 using CodeSparkNET.WEB.ViewModels.AdminCourse;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CodeSparkNET.WEB.Controllers
 {
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     [AutoValidation]
     public class AdminCourseController : Controller
     {

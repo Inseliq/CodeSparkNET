@@ -2,6 +2,7 @@
 using CodeSparkNET.Application.Services.Catalogs;
 using CodeSparkNET.Application.Services.Common.Email;
 using CodeSparkNET.Application.Services.Courses;
+using CodeSparkNET.Application.Services.Templates;
 using CodeSparkNET.Application.Services.User;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -20,7 +21,7 @@ namespace CodeSparkNET.Application
         {
             services.AddCache()
                     .AddCatalog()
-                    .AddCourse()
+                    .AddProducts()
                     .AddUser();
 
             return services;
@@ -40,9 +41,10 @@ namespace CodeSparkNET.Application
             return services;
         }
 
-        private static IServiceCollection AddCourse(this IServiceCollection services)
+        private static IServiceCollection AddProducts(this IServiceCollection services)
         {
             services.AddScoped<ICourseService, CourseService>();
+            services.AddScoped<ITemplateService, TemplateService>();
 
             return services;
         }

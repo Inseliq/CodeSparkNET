@@ -121,10 +121,6 @@ html[cross-browser][data-theme-color="dark"] {
       position: relative;
       margin-right: 17px;
 
-      &:last-child {
-        margin-right: 0;
-      }
-
       &::after {
         content: "";
         position: absolute;

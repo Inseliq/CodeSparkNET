@@ -6,18 +6,12 @@
     var user = await UserManager.GetUserAsync(User);
 }
 
-@*
-    data-load-priority="main" - вместе, или
-    data-load-priority="addition" - асинхронно,
-    управляют приоритетами в partial
-*@
-
 @if (User?.Identity?.IsAuthenticated is false)
 {
     <a help data-style="on-hover" hover href="@Url.Action("AllSupport", "Help")">Поддержка</a>
     <a login-async href="@Url.Action("Login", "Account")" data-style="on-hover" hover>Войти</a>
     <a register-async href="@Url.Action("Register", "Account")" data-style="on-hover" hover>Регистрация</a>
-    <script src="~/../js/style/async.replace-btn.js" defer></script>
+    <script src="@(Url.Content("~/js/style/async.replace-btn.js"))" defer></script>
 }
 else
 {
@@ -84,8 +78,8 @@ else
             <a hover data-style="hyper-button" data-function="close-sendConfirmationEmail-btn"><span>Продолжить</span></a>
         </div>
     </div>
-    <script src="~/../js/windows/js-window.profile-w.js" defer></script>
-    <script src="~/../js/windows/js-window.send-email.js" defer></script>
+    <script src="@(Url.Content("~/js/windows/js-window.profile-w.js"))" defer></script>
+    <script src="@(Url.Content("~/js/windows/js-window.send-email.js"))" defer></script>
 }
 
 <script src="@(Url.Content("~/js/windows/js-window.err-w.js"))" defer></script>

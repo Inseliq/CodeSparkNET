@@ -1,7 +1,7 @@
 (() => {
   const appsMap = {
     "js-app-shedule": {
-      img: { src: "https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/icons/header-menu/iq.tag.png?raw=true", alt: "Курсы" },
+      img: { src: "https://raw.githubusercontent.com/Inseliq/CodeSpark/8633b29b08a4bd886344157ee4ee0b5aca5705a4/blob-assets/icons/header-menu/canvas.site.app-shedule-temp.svg", alt: "Курсы" },
       windowBg: "url(https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/images/banner.png?raw=true)",
       headline: "Шаблоны",
       description: "Заготовки для сайтов. Шаблоны сайтов.",
@@ -11,7 +11,7 @@
       ]
     },
     "js-app-course-work": {
-      img: { src: "https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/icons/header-menu/iq.tag.png?raw=true", alt: "Курсовые работы" },
+      img: { src: "https://raw.githubusercontent.com/Inseliq/CodeSpark/34f7ef0985499b70c41040dab31a501380cf0ca9/blob-assets/icons/header-menu/canvas.site.app-course-work-temp.svg", alt: "Курсовые работы" },
       windowBg: "url(https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/images/banner.png?raw=true)",
       headline: "Курсовые работы",
       description: "Выполнение курсовых и дипломных работ.",
@@ -21,7 +21,7 @@
       ]
     },
     "js-app-library": {
-      img: { src: "https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/icons/header-menu/iq.tag.png?raw=true", alt: "Библиотека" },
+      img: { src: "https://raw.githubusercontent.com/Inseliq/CodeSpark/34f7ef0985499b70c41040dab31a501380cf0ca9/blob-assets/icons/header-menu/canvas.site.app-library-temp.svg", alt: "Библиотека" },
       windowBg: "url(https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/images/banner.png?raw=true)",
       headline: "Библиотека знаний",
       description: "Материалы и руководства по программированию.",
@@ -41,7 +41,7 @@
     //   ]
     // },
     "js-app-create-site": {
-      img: { src: "https://raw.githubusercontent.com/Inseliq/CodeSpark/07f260353cd0c4ed02804a8b29254a67a17b4f71/blob-assets/icons/header-menu/icon.create-site.svg", alt: "Создание сайтов" },
+      img: { src: "https://raw.githubusercontent.com/Inseliq/CodeSpark/34f7ef0985499b70c41040dab31a501380cf0ca9/blob-assets/icons/header-menu/canvas.site.app-create-site-temp.svg", alt: "Создание сайтов" },
       windowBg: "url(https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/images/banner.png?raw=true)",
       headline: "Создание сайтов",
       description: "Разработка сайтов под ключ. Фронтенд. Бэкенд. Дизайн.",

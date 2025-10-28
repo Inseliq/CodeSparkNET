@@ -1,23 +1,85 @@
 ﻿@model CodeSparkNET.Application.Dtos.ErrorDto;
 
 @{
-    ViewData["Title"] = "Error";
+    ViewData["Title"] = "CodeSpark, Ошибка";
+    ViewData["App"] = @Model.StatusCode;
 }
 
-<h1 class="text-danger">Error.</h1>
-<h2 class="text-danger">An error occurred while processing your request.</h2>
+@section Styles {
+    <link rel="stylesheet" href="~/css/Style/errStyle.css">
+}
 
-    <p>
-        <strong>Request ID:</strong> <code>@Model.StatusCode</code>
-    </p>
+<div class="background-animation">
+    <div class="gradient-blob blob-1"></div>
+    <div class="gradient-blob blob-2"></div>
+    <div class="gradient-blob blob-3"></div>
+</div>
 
-<h3>Development Mode</h3>
-<p>
-    Swapping to <strong>Development</strong> environment will display more detailed information about the error that occurred.
-</p>
-<p>
-    <strong>The Development environment shouldn't be enabled for deployed applications.</strong>
-    It can result in displaying sensitive information from exceptions to end users.
-    For local debugging, enable the <strong>Development</strong> environment by setting the <strong>ASPNETCORE_ENVIRONMENT</strong> environment variable to <strong>Development</strong>
-    and restarting the app.
-</p>
+<div class="particles" id="particles"></div>
+
+<div class="error-container">
+    <div class="icon-wrapper">
+        <svg class="error-icon" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Голова робота -->
+            <rect x="30" y="25" width="60" height="50" rx="5" fill="#9780e5" opacity="0.8" />
+            <rect x="35" y="30" width="50" height="40" rx="3" fill="#1f1f1f" />
+
+            <!-- Глаза с анимацией -->
+            <circle cx="48" cy="50" r="8" fill="#da6ad0">
+                <animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite" />
+            </circle>
+            <circle cx="72" cy="50" r="8" fill="#da6ad0">
+                <animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite" />
+            </circle>
+
+            <!-- Рот грустный -->
+            <path d="M 45 65 Q 60 58 75 65" stroke="#9780e5" stroke-width="3" fill="none" stroke-linecap="round" />
+
+            <!-- Антенна -->
+            <line x1="60" y1="25" x2="60" y2="15" stroke="#da6ad0" stroke-width="3" stroke-linecap="round" />
+            <circle cx="60" cy="12" r="4" fill="#ffd23f">
+                <animate attributeName="r" values="4;6;4" dur="1.5s" repeatCount="indefinite" />
+            </circle>
+
+            <!-- Тело -->
+            <rect x="40" y="75" width="40" height="30" rx="3" fill="#9780e5" opacity="0.8" />
+
+            <!-- Символ ошибки на теле -->
+            <text x="60" y="95" font-size="20" fill="#ffffff" text-anchor="middle" font-weight="bold">!</text>
+
+            <!-- Руки -->
+            <rect x="20" y="80" width="15" height="8" rx="4" fill="#b9aaee" opacity="0.9" />
+            <rect x="85" y="80" width="15" height="8" rx="4" fill="#b9aaee" opacity="0.9" />
+
+            <!-- Искры вокруг -->
+            <circle cx="15" cy="45" r="2" fill="#ffd23f">
+                <animate attributeName="opacity" values="0;1;0" dur="1s" repeatCount="indefinite" />
+            </circle>
+            <circle cx="105" cy="50" r="2" fill="#ffd23f">
+                <animate attributeName="opacity" values="0;1;0" dur="1.2s" repeatCount="indefinite" />
+            </circle>
+            <circle cx="25" cy="70" r="2" fill="#da6ad0">
+                <animate attributeName="opacity" values="0;1;0" dur="0.8s" repeatCount="indefinite" />
+            </circle>
+            <circle cx="95" cy="75" r="2" fill="#da6ad0">
+                <animate attributeName="opacity" values="0;1;0" dur="1.1s" repeatCount="indefinite" />
+            </circle>
+        </svg>
+    </div>
+
+    <div class="glitch-wrapper">
+        <div class="error-code" data-text="@Model.StatusCode">@Model.StatusCode</div>
+    </div>
+
+    <h1>Упс! Что-то сломалось</h1>
+    <h2>Наш робот немного запутался в коде... Давайте попробуем снова!</h2>
+
+    <div class="button-group">
+        <a href="@Model.ActionUrl" data-style="hyper-button" hover>@Model.ActionText</a>
+    </div>
+</div>
+
+
+@section ScriptsAdditions {
+    <script src="@(Url.Content("~/js/style/errScript.js"))" defer type="text/plain"></script>
+}

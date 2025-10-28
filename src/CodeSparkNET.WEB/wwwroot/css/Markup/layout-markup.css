@@ -1792,6 +1792,12 @@ html[cross-browser] {
               mask-image: url(../../assets/icon/canvas.stie.service-prime-shop.svg);
             }
           }
+
+          button[js-service-prime-store] {
+            &::before {
+              mask-image: url(../../assets/icon/canvas.stie.service-prime-shop.svg);
+            }
+          }
         }
 
         .bottom-block {
@@ -1960,86 +1966,117 @@ html[cross-browser] {
 
           button[js-app-create-site] {
             &::before {
+              mask-image: url(../../assets/icon/canvas.site.app-create-site-main.svg);
+            }
+          }
+
+          button[js-app-shedule] {
+            &::before {
+              mask-image: url(../../assets/icon/canvas.site.app-shedule-main.svg);
+            }
+          }
+
+          button[js-app-course-work] {
+            &::before {
+              mask-image: url(../../assets/icon/canvas.site.app-course-work-main.svg);
+            }
+          }
+
+          button[js-app-ai] {
+            &::before {
               mask-image: url(../../assets/icon/canvas.stie.app-create-site.svg);
             }
           }
+
+          button[js-app-library] {
+            &::before {
+              mask-image: url(../../assets/icon/canvas.site.app-library-main.svg);
+            }
+          }
+
+          button.active[js-app-course-work] {
+            &::before {
+              mask-image: url(../../assets/icon/canvas.site.app-course-work-active.svg);
+            }
+          }
         }
+      }
 
-        .bottom-block {
-          max-width: 1440px;
+      .bottom-block {
+        max-width: 1440px;
+        width: 100%;
+        display: flex;
+        justify-content: space-evenly;
+        flex-wrap: wrap;
+        align-items: stretch;
+        gap: 25px;
+        padding-block: 20px;
+        padding-inline: 20px;
+        background-color: #19191940;
+
+        .first-block {
+          max-height: 100px;
+          height: 25vh;
+          max-width: 100px;
           width: 100%;
+          justify-content: center;
+          align-items: center;
           display: flex;
-          justify-content: space-evenly;
-          flex-wrap: wrap;
-          align-items: stretch;
-          gap: 25px;
-          padding-block: 20px;
-          padding-inline: 20px;
-          background-color: #19191940;
 
-          .first-block {
+          img {
             max-height: 100px;
             height: 25vh;
             max-width: 100px;
-            width: 100%;
-            justify-content: center;
-            align-items: center;
             display: flex;
-
-            img {
-              max-height: 100px;
-              height: 25vh;
-              max-width: 100px;
-              display: flex;
-              object-fit: cover;
-            }
-
+            object-fit: cover;
           }
 
-          .second-block {
-            max-width: 300px;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        }
 
-            h3 {
-              text-transform: uppercase;
-              font-weight: 700;
-              font-size: calc(var(--fs-h2) * 0.9);
-            }
+        .second-block {
+          max-width: 300px;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
 
-            p {
-              font-size: var(--fs-small);
-              color: var(--palette-text-shadow);
-            }
+          h3 {
+            text-transform: uppercase;
+            font-weight: 700;
+            font-size: calc(var(--fs-h2) * 0.9);
           }
 
-          .third-block {
-            display: flex;
-            flex-direction: column;
-            gap: 7.5px;
-            max-width: 200px;
-            align-items: start;
-            justify-content: start;
+          p {
+            font-size: var(--fs-small);
+            color: var(--palette-text-shadow);
           }
         }
-      }
 
-      .js-window[js-window-select-app].hidden {
-        opacity: 0;
-        visibility: hidden;
-        transform: translateY(-110%);
+        .third-block {
+          display: flex;
+          flex-direction: column;
+          gap: 7.5px;
+          max-width: 200px;
+          align-items: start;
+          justify-content: start;
+        }
       }
+    }
 
-      .js-window[js-window-select-app].visible {
-        opacity: 1;
-        visibility: visible;
-        transform: translate(0%);
-      }
+    .js-window[js-window-select-app].hidden {
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-110%);
+    }
+
+    .js-window[js-window-select-app].visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(0%);
     }
   }
 }
+
 
 @media screen and (max-width: 560px) {
   html[cross-browser] {

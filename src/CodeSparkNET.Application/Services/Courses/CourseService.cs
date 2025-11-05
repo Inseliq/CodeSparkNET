@@ -29,8 +29,9 @@ namespace CodeSparkNET.Application.Services.Courses
                     .Select(pi => new ProductImageDto
                     {
                         Url = pi.Url ?? pi.Name ?? "",
-                        AltText = pi.Name,
-                        IsMain = pi.IsMain
+                        AltText = pi.AltText,
+                        IsMain = pi.IsMain,
+                        Name = pi.Name ?? ""
                     })
                     .ToList(),
                 Modules = course.Modules
@@ -118,8 +119,9 @@ namespace CodeSparkNET.Application.Services.Courses
                 Images = course.ProductImages?.OrderBy(pi => pi.Position).Select(pi => new ProductImageDto
                 {
                     Url = pi.Url ?? pi.Name ?? "",
-                    AltText = pi.Name,
-                    IsMain = pi.IsMain
+                    AltText = pi.AltText,
+                    IsMain = pi.IsMain,
+                    Name = pi.Name ?? ""
                 }).ToList() ?? new List<ProductImageDto>(),
                 Modules = new List<ModuleDto>()
             };
@@ -268,8 +270,9 @@ namespace CodeSparkNET.Application.Services.Courses
                 Images = course.ProductImages?.OrderBy(pi => pi.Position).Select(pi => new ProductImageDto
                 {
                     Url = pi.Url ?? pi.Name ?? "",
-                    AltText = pi.Name,
-                    IsMain = pi.IsMain
+                    AltText = pi.AltText,
+                    IsMain = pi.IsMain,
+                    Name = pi.Name ?? ""
                 }).ToList() ?? new List<ProductImageDto>(),
                 Modules = course.Modules?.OrderBy(m => m.Position).Select(m => new ModuleDto
                 {

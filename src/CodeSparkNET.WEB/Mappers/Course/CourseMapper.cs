@@ -38,7 +38,8 @@ namespace CodeSparkNET.WEB.Mappers.Course
                 {
                     Url = i.Url,
                     AltText = i.AltText,
-                    IsMain = i.IsMain
+                    IsMain = i.IsMain,
+                    Name = i.Name ?? ""
                 }).ToList()
             };
         }
@@ -78,7 +79,8 @@ namespace CodeSparkNET.WEB.Mappers.Course
                 {
                     Url = i.Url,
                     AltText = i.AltText,
-                    IsMain = i.IsMain
+                    IsMain = i.IsMain,
+                    Name = i.Name ?? ""
                 }).ToList() ?? new List<ProductImageViewModel>()
             };
         }

@@ -9,7 +9,7 @@ namespace CodeSparkNET.Application.Services.Templates
         Task<TemplateDto> GetTemplateBySlugAsync(string slug);
         Task<TemplateDto> GetTemplateByIdOrSlugAsync(string query);
         Task<IEnumerable<TemplateDto>> GetAllTemplatesAsync();
-        Task<TemplateDto> UpdateTemplateAsync(UpdateTemplateDto model);
+        Task<bool> UpdateTemplateAsync(UpdateTemplateDto model);
         Task<bool> DeleteTemplateByIdAsync(string id);
         Task<bool> DeleteTemplateBySlugAsync(string slug);
     }

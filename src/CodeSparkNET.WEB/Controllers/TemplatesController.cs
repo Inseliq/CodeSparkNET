@@ -65,13 +65,12 @@ namespace CodeSparkNET.Web.Controllers
             var created = await _templateService.CreateTemplateAsync(model);
             if (created == null) return StatusCode(500, "Failed to create template.");
 
-            // Возвращаем 201 и Location на получение по slug (GetTemplateByIdOrSlug)
             return CreatedAtAction(nameof(GetTemplateByIdOrSlug), new { query = created.Slug }, created);
         }
 
         // JSON API: обновить шаблон по id
         // PUT /templates/{id}
-        [HttpPut("templates")]
+        [HttpPut("templates")] // TODO
         public async Task<IActionResult> UpdateTemplate([FromBody] UpdateTemplateDto model)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -80,13 +79,6 @@ namespace CodeSparkNET.Web.Controllers
             var existing = await _templateService.GetTemplateBySlugAsync(model.Slug);
             if (existing == null) return NotFound();
 
-            // Если в модели не передан slug — используем существующий (важно для поиска в сервисе)
-            if (string.IsNullOrWhiteSpace(model.Slug))
-            {
-                model.Slug = existing.Slug;
-            }
-
-            // При желании можно также синхронизировать model.Id = id; но UpdateTemplateAsync использует slug
             try
             {
                 var updated = await _templateService.UpdateTemplateAsync(model);
@@ -95,7 +87,6 @@ namespace CodeSparkNET.Web.Controllers
             }
             catch (Exception ex)
             {
-                // Возвращаем 400/500 по типу ошибки — здесь простой ответ
                 return StatusCode(500, ex.Message);
             }
         }

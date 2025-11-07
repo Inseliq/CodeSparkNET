@@ -452,9 +452,12 @@ namespace CodeSparkNET.Infrastructure.Repositories.Product
         {
             var existingTemplate = await _context.Products
                 .OfType<Template>()
+                .Include(t => t.ProductImages)
                 .FirstOrDefaultAsync(t => t.Id == model.Id);
+
             if (existingTemplate == null)
                 return false;
+
             existingTemplate.Name = model.Name;
             existingTemplate.Slug = model.Slug;
             existingTemplate.ShortDescription = model.ShortDescription;
@@ -464,14 +467,90 @@ namespace CodeSparkNET.Infrastructure.Repositories.Product
             existingTemplate.IsPublished = model.IsPublished;
             existingTemplate.InStock = model.InStock;
             existingTemplate.CatalogId = model.CatalogId;
-            existingTemplate.ProductImages = model.ProductImages;
 
             var catalog = await _context.Catalogs.FirstOrDefaultAsync(c => c.Id == model.CatalogId);
             if (catalog != null)
                 existingTemplate.Catalog = catalog;
 
-            await _context.SaveChangesAsync();
-            return true;
+            if (model.ProductImages != null && model.ProductImages.Any())
+            {
+                // 1. Удаляем изображения, которых нет в DTO
+                var dtoIds = model.ProductImages.Where(pi => !string.IsNullOrWhiteSpace(pi.Id))
+                                                .Select(pi => pi.Id)
+                                                .ToHashSet();
+                var imagesToRemove = existingTemplate.ProductImages
+                    .Where(pi => !dtoIds.Contains(pi.Id))
+                    .ToList();
+
+                if (imagesToRemove.Any())
+                {
+                    _context.ProductImages.RemoveRange(imagesToRemove);
+                }
+
+                // 2. Обновляем существующие и добавляем новые
+                var maxPos = existingTemplate.ProductImages.Any()
+                    ? existingTemplate.ProductImages.Max(pi => pi.Position)
+                    : -1;
+
+                foreach (var img in model.ProductImages)
+                {
+                    ProductImage existingImg = null;
+                    if (!string.IsNullOrWhiteSpace(img.Id))
+                    {
+                        existingImg = existingTemplate.ProductImages.FirstOrDefault(pi => pi.Id == img.Id);
+                    }
+
+                    if (existingImg != null)
+                    {
+                        // Обновляем существующее
+                        existingImg.Url = img.Url;
+                        existingImg.AltText = img.AltText;
+                        existingImg.IsMain = img.IsMain;
+                        existingImg.Name = img.Name;
+                        if (img.Position >= 0)
+                            existingImg.Position = img.Position;
+                    }
+                    else
+                    {
+                        // Добавляем новое
+                        maxPos++;
+                        var newImg = new ProductImage
+                        {
+                            Id = string.IsNullOrWhiteSpace(img.Id) ? Guid.NewGuid().ToString() : img.Id,
+                            Url = img.Url,
+                            AltText = img.AltText,
+                            IsMain = img.IsMain,
+                            Name = img.Name,
+                            Position = img.Position >= 0 ? img.Position : maxPos,
+                            Product = existingTemplate,
+                            ProductId = existingTemplate.Id
+                        };
+                        existingTemplate.ProductImages.Add(newImg);
+                    }
+                }
+            }
+            else
+            {
+                // Если DTO не содержит изображений — удаляем все
+                if (existingTemplate.ProductImages.Any())
+                {
+                    _context.ProductImages.RemoveRange(existingTemplate.ProductImages);
+                }
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return false;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
         public async Task<bool> DeleteTemplateByIdAsync(string id)
         {

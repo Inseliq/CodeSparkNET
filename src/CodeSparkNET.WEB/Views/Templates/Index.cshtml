@@ -710,12 +710,39 @@
 
                 <div class="images-section">
                     <label>Product Images</label>
+
+                    <!-- Upload method selector -->
+                    <div class="form-group">
+                        <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                <input type="radio" name="uploadMethod" value="file" checked onchange="templatesManager.switchUploadMethod('file')" />
+                                <span>Upload from device</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                <input type="radio" name="uploadMethod" value="url" onchange="templatesManager.switchUploadMethod('url')" />
+                                <span>Add by URL</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- File upload area -->
                     <div class="image-upload-area" id="imageUploadArea">
                         <div class="upload-icon">📁</div>
                         <p>Click or drag images here to upload</p>
                         <small>Supports JPG, PNG, GIF</small>
                     </div>
                     <input type="file" id="imageFileInput" accept="image/*" multiple style="display: none;" />
+
+                    <!-- URL input area -->
+                    <div id="imageUrlArea" style="display: none; margin-bottom: 1rem;">
+                        <div style="display: flex; gap: 0.5rem;">
+                            <input type="url" id="imageUrlInput" placeholder="https://example.com/image.jpg"
+                                   style="flex: 1; padding: 0.75rem; border: 1px solid var(--color-border); border-radius: var(--radius-md);" />
+                            <button type="button" class="btn btn-primary" onclick="templatesManager.addImageFromUrl()">Add</button>
+                        </div>
+                        <small style="display: block; margin-top: 0.5rem; color: var(--color-text-light);">Enter image URL and click Add</small>
+                    </div>
+
                     <div class="images-grid" id="imagesGrid"></div>
                 </div>
 
@@ -778,6 +805,47 @@
                 this.setupAutoSlugGeneration();
                 this.setupImageUpload();
             }
+
+                    switchUploadMethod(method) {
+            const uploadArea = document.getElementById('imageUploadArea');
+            const urlArea = document.getElementById('imageUrlArea');
+
+            if (method === 'url') {
+                uploadArea.style.display = 'none';
+                urlArea.style.display = 'block';
+            } else {
+                uploadArea.style.display = 'block';
+                urlArea.style.display = 'none';
+            }
+        }
+
+        addImageFromUrl() {
+            const urlInput = document.getElementById('imageUrlInput');
+            const url = urlInput.value.trim();
+
+            if (!url) {
+                this.showError('Please enter an image URL');
+                return;
+            }
+
+            if (!this.isValidImageUrl(url)) {
+                this.showError('Please enter a valid image URL');
+                return;
+            }
+
+            const fileName = url.split('/').pop().split('?')[0] || 'image';
+            this.addImage(url, fileName, '');
+            urlInput.value = '';
+        }
+
+        isValidImageUrl(url) {
+            try {
+                new URL(url);
+                return /\.(jpg|jpeg|png|gif|webp|svg)(\?.*)?$/i.test(url) || url.includes('image');
+            } catch {
+                return false;
+            }
+        }
 
             setupEventListeners() {
                 document.getElementById('btnCreateNew').addEventListener('click', () => {
@@ -867,15 +935,17 @@
                     if (file.type.startsWith('image/')) {
                         const reader = new FileReader();
                         reader.onload = (e) => {
-                            this.addImage(e.target.result, '');
+                            const fileName = file.name;
+                            this.addImage(e.target.result, fileName, '');
                         };
                         reader.readAsDataURL(file);
                     }
                 });
             }
 
-            addImage(url, altText = '', isMain = false) {
+            addImage(url, name = '', altText = '', isMain = false) {
                 this.productImages.push({
+                    name: name,
                     url: url,
                     altText: altText,
                     isMain: isMain || this.productImages.length === 0

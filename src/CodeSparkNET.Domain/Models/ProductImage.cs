@@ -14,7 +14,7 @@ namespace CodeSparkNET.Domain.Models
         /// <summary>
         /// Foreign key referencing the related product.
         /// </summary>
-        public string ProductId { get; set; } = null!;
+        public string ProductId { get; set; }
 
         /// <summary>
         /// Optional name or label for the image (e.g., original file name).

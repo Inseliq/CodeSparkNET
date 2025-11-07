@@ -35,7 +35,7 @@
 
             @if (p.ProductImages?.Any() == true && !string.IsNullOrEmpty(p.ProductImages.First().Url))
             {
-              <img src="@p.ProductImages.First().Url" alt="@p.Name" />
+              <img src="@p.ProductImages.Where(i => i.IsMain).FirstOrDefault().Url" alt="@p.Name" />
             }
             else
             {

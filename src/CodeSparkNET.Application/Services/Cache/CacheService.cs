@@ -256,8 +256,9 @@ namespace CodeSparkNET.Application.Services.Cache
                         .Select(pi => new ProductImageDto
                         {
                             Url = pi.Url ?? pi.Name ?? "",
-                            AltText = pi.Name,
-                            IsMain = pi.IsMain
+                            AltText = pi.AltText,
+                            IsMain = pi.IsMain,
+                            Name = pi.Name ?? ""
                         })
                         .ToList(),
                     Modules = course.Modules

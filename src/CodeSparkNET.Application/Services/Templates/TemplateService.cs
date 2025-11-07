@@ -40,7 +40,8 @@ namespace CodeSparkNET.Application.Services.Templates
                 AltText = pi.AltText,
                 IsMain = pi.IsMain,
                 Product = template,
-                ProductId = template.Id
+                ProductId = template.Id,
+                Name = pi.Name
             }).ToList();
 
             var res = await _productRepository.CreateTemplateAsync(template);
@@ -62,7 +63,8 @@ namespace CodeSparkNET.Application.Services.Templates
                 {
                     Url = pi.Url,
                     AltText = pi.AltText,
-                    IsMain = pi.IsMain
+                    IsMain = pi.IsMain,
+                    Name = pi.Name ?? ""
                 }).ToList()
             };
         }
@@ -88,7 +90,8 @@ namespace CodeSparkNET.Application.Services.Templates
                 {
                     Url = pi.Url,
                     AltText = pi.AltText,
-                    IsMain = pi.IsMain
+                    IsMain = pi.IsMain,
+                    Name = pi.Name ?? ""
                 }).ToList()
             };
         }
@@ -114,7 +117,8 @@ namespace CodeSparkNET.Application.Services.Templates
                 {
                     Url = pi.Url,
                     AltText = pi.AltText,
-                    IsMain = pi.IsMain
+                    IsMain = pi.IsMain,
+                    Name = pi.Name ?? ""
                 }).ToList()
             };
         }
@@ -146,39 +150,52 @@ namespace CodeSparkNET.Application.Services.Templates
                 {
                     Url = pi.Url,
                     AltText = pi.AltText,
-                    IsMain = pi.IsMain
+                    IsMain = pi.IsMain,
+                    Name = pi.Name ?? ""
                 }).ToList()
             });
         }
 
-        public async Task<TemplateDto> UpdateTemplateAsync(UpdateTemplateDto model)
+        public async Task<bool> UpdateTemplateAsync(UpdateTemplateDto dto)
         {
-            var existingTemplate = await _productRepository.GetTemplateBySlugAsync(model.Slug);
-            if (existingTemplate == null)
-                throw new Exception("Template not found.");
-            existingTemplate.Name = model.Name;
-            existingTemplate.Slug = model.Slug;
-            existingTemplate.ShortDescription = model.ShortDescription;
-            existingTemplate.FullDescription = model.FullDescription;
-            existingTemplate.Price = model.Price;
-            existingTemplate.Currency = model.Currency;
-            existingTemplate.IsPublished = model.IsPublished;
-            existingTemplate.InStock = model.InStock;
-            existingTemplate.CatalogId = model.CatalogId;
-            existingTemplate.ProductType = model.ProductType;
-            existingTemplate.ProductImages = model.ProductImages.Select(pi => new ProductImage
-            {
-                Url = pi.Url,
-                AltText = pi.AltText,
-                IsMain = pi.IsMain,
-                ProductId = existingTemplate.Id
-            }).ToList();
+            if (dto == null) throw new ArgumentNullException(nameof(dto));
+            if (string.IsNullOrWhiteSpace(dto.Name)) throw new ArgumentException("Template Name is required", nameof(dto.Name));
+            var currTemplate = await _productRepository.GetTemplateBySlugAsync(dto.Slug);
+            if (currTemplate is null)
+                return false;
 
-            // Update images logic can be added here
-            var updated = await _productRepository.UpdateTemplateAsync(existingTemplate);
-            if (!updated)
-                throw new Exception("Failed to update template.");
-            return await GetTemplateBySlugAsync(model.Slug);
+            var template = new Template
+            {
+                Id = currTemplate.Id,
+                Name = dto.Name,
+                Slug = dto.Slug,
+                Price = dto.Price,
+                Currency = string.IsNullOrWhiteSpace(dto.Currency) ? "RUB" : dto.Currency,
+                InStock = dto.InStock,
+                ProductType = dto.ProductType,
+                CatalogId = dto.CatalogId,
+                ShortDescription = dto.ShortDescription,
+                FullDescription = dto.FullDescription,
+                IsPublished = dto.IsPublished
+            };
+
+            // Маппинг изображений вручную
+            if (dto.ProductImages != null && dto.ProductImages.Any())
+            {
+                template.ProductImages = dto.ProductImages.Select((imgDto, index) => new ProductImage
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Name = imgDto.Name,
+                    Url = imgDto.Url,
+                    AltText = imgDto.AltText,
+                    IsMain = imgDto.IsMain,
+                    Position = index,
+                    Product = currTemplate,
+                    ProductId = currTemplate.Id
+                }).ToList();
+            }
+
+            return await _productRepository.UpdateTemplateAsync(template);
         }
 
         public async Task<bool> DeleteTemplateByIdAsync(string id)

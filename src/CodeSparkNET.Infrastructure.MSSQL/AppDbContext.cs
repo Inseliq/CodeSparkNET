@@ -147,8 +147,7 @@ namespace CodeSparkNET.Infrastructure
 
                 entity.HasOne(pi => pi.Product)
                       .WithMany(p => p.ProductImages)
-                      .HasForeignKey(pi => pi.ProductId)
-                      .OnDelete(DeleteBehavior.Restrict);
+                      .HasForeignKey(pi => pi.ProductId);
             });
 
             // --- CourseModule ---

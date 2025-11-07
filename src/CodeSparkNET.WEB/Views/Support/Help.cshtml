@@ -1,0 +1,17 @@
+@{
+  ViewData["Title"] = "Помощь";
+  ViewData["App"] = "CodeSpark";
+}
+@section Styles {
+  <link rel="stylesheet" href="~/css/Style/layout-header.css" asp-append-version="true">
+  <link rel="stylesheet" href="~/css/Style/layout-footer.css" asp-append-version="true">
+  <link rel="stylesheet" href="~/css/Style/help-page.css" asp-append-version="true">
+}
+
+<partial name="_WebApp_Navbar_header" />
+
+<section class="help __container" data-app="root"></section>
+
+<script src="@(Url.Content("~/js/api/helpController.js"))" defer></script>
+
+<partial name="_WebApp_Navbar_footer" />

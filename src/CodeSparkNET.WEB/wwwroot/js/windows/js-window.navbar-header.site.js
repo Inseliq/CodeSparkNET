@@ -74,13 +74,16 @@
     //     { href: "/prime/subscription", title: "Оформить" }
     //   ]
     // },
-    "js-service-pattern": {
-      img: { src: "https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/icons/header-menu/iq.tag.png?raw=true", alt: "Шаблоны сайтов" },
+    "js-service-help": {
+      img: { src: "https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/icons/header-menu/iq.tag.png?raw=true", alt: "Помощь" },
       windowBg: "url(https://github.com/Inseliq/CodeSpark/blob/main/blob-assets/images/banner.png?raw=true)",
-      headline: "Заготовки сайтов",
-      description: "Коллекция шаблонов для быстрого старта.",
+      headline: "Поддержка",
+      description: "Используется для вопросов и обращений, связанных с поддержкой и решением проблем при работе с приложением.",
       links: [
-        { href: "/", title: "Просмотреть шаблоны" }
+        { href: "/Support/Help/index", title: "Страница поддержки" },
+        { href: "/Support/Help/client", title: "Клиентская поддержка" },
+        { href: "/Support/Help/debug", title: "Техническая поддержка" },
+        { href: "/Support/Help/faq", title: "Вопрос – ответ" }
       ]
     },
     // "js-service-library-pack": {

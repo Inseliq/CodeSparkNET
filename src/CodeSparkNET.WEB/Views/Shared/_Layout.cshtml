@@ -122,15 +122,13 @@
             animation-timing-function: linear;
         }
 
-        @@keyframes
-        load-main {
+        @@keyframes load-main {
             100% {
                 transform: rotate(.5turn)
             }
         }
 
-        @@keyframes
-        load-not_conntecion {
+        @@keyframes load-not_conntecion {
             100% {
                 background-size: 120% 100%
             }
@@ -178,7 +176,7 @@
                     <div class="top-block">
                         @* <button hover js-service-prime-store>Премиум магазин</button> *@
                         @* <button hover js-service-prime>Prime подписка</button> *@
-                        <button hover js-service-pattern>Заготовки сайтов</button>
+                        <button hover js-service-help>Поддержка</button>
                         @* <button hover js-service-library-pack>Библиотеки</button> *@
                         <button hover js-service-documets>Документация</button>
                     </div>
@@ -248,7 +246,7 @@
     <div id="page-scriptsAdditions-container">
         @await RenderSectionAsync("ScriptsAdditions", required: false)
     </div>
-    <script src="@(Url.Content("~/js/windows/js-window.navbar-header.site.js"))"  defer></script>
+    <script src="@(Url.Content("~/js/windows/js-window.navbar-header.site.js"))" defer></script>
 </body>
 
 </html>

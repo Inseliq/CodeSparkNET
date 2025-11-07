@@ -1783,13 +1783,13 @@ html[cross-browser] {
             --default-async-bg-mask: var(--default-active-color);
           }
 
-          button[js-service-prime-store] {
+          button[js-service-prime-help] {
             &::before {
-              mask-image: url(../../assets/icon/canvas.stie.service-prime-shop.svg);
+              mask-image: url(../../assets/icon/canvas.stie.service-help.svg);
             }
           }
 
-          button[js-service-prime-store] {
+          button[js-service-documets] {
             &::before {
               mask-image: url(../../assets/icon/canvas.stie.service-prime-shop.svg);
             }

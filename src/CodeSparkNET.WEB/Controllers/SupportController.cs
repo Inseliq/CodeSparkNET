@@ -4,19 +4,24 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CodeSparkNET.WEB.Controllers
 {
-    public class HomeController : Controller
+    public class SupportController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<SupportController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public SupportController(ILogger<SupportController> logger)
         {
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public IActionResult Help()
         {
             return View();
         }
+
+        // TODO: create metod
+        // public IActionResult GetEmail() {
+
+        // }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

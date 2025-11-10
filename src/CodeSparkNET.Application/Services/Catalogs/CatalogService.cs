@@ -71,6 +71,8 @@ namespace CodeSparkNET.Application.Services.Catalogs
                         Currency = p.Currency,
                         InStock = p.InStock,
                         ProductType = p.ProductType,
+                        HasPrice = p.Price != 0m,
+                        Group = p.Group,
                         ProductImages = p.ProductImages.Select(pi => new CatalogProductImageDto
                         {
                             Name = pi.Name,

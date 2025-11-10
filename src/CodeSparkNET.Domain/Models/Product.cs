@@ -64,6 +64,8 @@ namespace CodeSparkNET.Domain.Models
         public Catalog Catalog { get; set; }
         public string ProductType { get; set; }
 
+        public string Group { get; set; }
+
         /// <summary>
         /// Collection of images associated with the product.
         /// </summary>

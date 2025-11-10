@@ -143,6 +143,7 @@ namespace CodeSparkNET.Application.Services.Cache
                         InStock = p.InStock,
                         ProductType = p.ProductType,
                         HasPrice = p.Price != 0m,
+                        Group = p.Group,
                         ProductImages = p.ProductImages?.Select(img => new CatalogProductImageDto
                         {
                             Name = img.Name,
@@ -201,6 +202,7 @@ namespace CodeSparkNET.Application.Services.Cache
                                 InStock = p.InStock,
                                 ProductType = p.ProductType,
                                 HasPrice = p.Price != 0m,
+                                Group = p.Group,
                                 ProductImages = p.ProductImages?.Select(img => new CatalogProductImageDto
                                 {
                                     Name = img.Name,

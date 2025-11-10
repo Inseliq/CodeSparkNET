@@ -1,0 +1,18 @@
+@{
+  ViewData["Title"] = "Документация";
+  ViewData["App"] = "CodeSpark";
+}
+
+@section Styles {
+  <link rel="stylesheet" href="~/css/Style/layout-header.css" asp-append-version="true">
+  <link rel="stylesheet" href="~/css/Style/layout-footer.css" asp-append-version="true">
+  <link rel="stylesheet" href="~/css/Style/docs-page.css" asp-append-version="true">
+}
+
+<partial name="_WebApp_Navbar_header" />
+
+<section class="docs __container" data-app="root"></section>
+
+<script src="@(Url.Content("~/js/api/documentationsController.js"))" defer></script>
+
+<partial name="_WebApp_Navbar_footer" />

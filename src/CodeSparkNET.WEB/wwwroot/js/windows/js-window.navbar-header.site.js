@@ -101,11 +101,11 @@
       headline: "Документация",
       description: "Полная документация CodeSpark™",
       links: [
-        { href: "/", title: "Документация" },
-        { href: "/", title: "О нас" },
-        { href: "/", title: "Политика конфи..." },
-        { href: "/", title: "Руководство пользователя" },
-        { href: "/", title: "Лицензионное соглашение" }
+        { href: "/Documents/Documentations/index", title: "Документация" },
+        { href: "/Documents/Documentations/about", title: "О нас" },
+        { href: "/Documents/Documentations/use-policy", title: "Политика использования" },
+        { href: "/Documents/Documentations/user-guide", title: "Руководство пользователя" },
+        { href: "/Documents/Documentations/licence-agreement", title: "Лицензионное соглашение" }
       ]
     }
   };

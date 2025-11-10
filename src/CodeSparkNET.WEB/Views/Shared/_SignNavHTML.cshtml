@@ -8,7 +8,7 @@
 
 @if (User?.Identity?.IsAuthenticated is false)
 {
-    <a help data-style="on-hover" hover href="@Url.Action("AllSupport", "Help")">Поддержка</a>
+    <a help data-style="on-hover" hover href="/Support/Help/index">Поддержка</a>
     <a login-async href="@Url.Action("Login", "Account")" data-style="on-hover" hover>Войти</a>
     <a register-async href="@Url.Action("Register", "Account")" data-style="on-hover" hover>Регистрация</a>
     <script src="@(Url.Content("~/js/style/async.replace-btn.js"))" defer></script>
@@ -36,7 +36,7 @@ else
                         <button prime-time err-w hidden="!" hover>
                             $time
                         </button>
-                        <a help data-style="on-hover" hover href="@Url.Action("AllSupport", "Help")">
+                        <a help data-style="on-hover" hover href="/Support/Help/index">
                             Поддержка
                         </a>
                     </div>

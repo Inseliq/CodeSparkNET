@@ -18,36 +18,6 @@ namespace CodeSparkNET.WEB.Controllers
             return View();
         }
 
-        public IActionResult PrivacyPolicy()
-        {
-            return View();
-        }
-
-        public IActionResult UserGuide()
-        {
-            return View();
-        }
-
-        public IActionResult About()
-        {
-            return View();
-        }
-
-        public IActionResult LicenseAgreement()
-        {
-            return View();
-        }
-
-        public IActionResult UsePolicy()
-        {
-            return View();
-        }
-
-        public IActionResult Copyright()
-        {
-            return View();
-        }
-
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

@@ -130,10 +130,6 @@ namespace CodeSparkNET.Application.Services.Cache
                 {
                     Name = catalog.Name,
                     Slug = catalog.Slug,
-                    IsVisible = catalog.IsVisible,
-                    IsLinkOnly = catalog.IsLinkOnly,
-                    PageController = catalog.PageController,
-                    PageName = catalog.PageName,
                     Products = catalog.Products.Select(p => new CatalogProductsDto
                     {
                         Name = p.Name,
@@ -191,10 +187,6 @@ namespace CodeSparkNET.Application.Services.Cache
                         {
                             Name = catalog.Name,
                             Slug  = catalog.Slug,
-                            IsVisible = catalog.IsVisible,
-                            IsLinkOnly = catalog.IsLinkOnly,
-                            PageController = catalog.PageController,
-                            PageName = catalog.PageName,
                             Products = catalog.Products.Select(p => new CatalogProductsDto
                             {
                                 Name = p.Name,

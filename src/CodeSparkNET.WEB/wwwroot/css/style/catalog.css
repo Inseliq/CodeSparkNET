@@ -7,15 +7,95 @@ html[cross-browser] {
 
     .__container.catalog {
       display: flex;
+      flex-direction: column;
       width: 100%;
       margin-top: 85px;
-      gap: 100px;
+      gap: 50px;
 
       .name-catalog {
         display: flex;
         width: 100%;
         padding-top: 10px;
         padding-left: 10px;
+
+        h1 {
+          margin: 0;
+        }
+
+        h1.catalog-loading {
+          opacity: 0.6;
+        }
+      }
+
+      .catalog-content {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        gap: 60px;
+      }
+
+      .product-group {
+        display: flex;
+        flex-direction: column;
+        padding: 25px;
+        border-radius: 8px;
+        border: var(--palette-acient) 2px solid;
+        width: 100%;
+        gap: 30px;
+
+        .group-header {
+          font-size: var(--fs-h2, 2rem);
+          padding-left: 10px;
+          margin: 0;
+          color: var(--palette-text, #fff);
+        }
+      }
+
+      .no-products,
+      .error-message {
+        text-align: center;
+        padding: 40px 20px;
+        font-size: var(--fs-p, 1rem);
+        color: var(--palette-text, #fff);
+      }
+
+      .error-message {
+        font-size: var(--fs-h2);
+        color: #ff6b6b;
+      }
+
+      .load-more-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        padding: 20px 0;
+
+        .load-more-btn {
+          color: var(--palette-text-inv);
+          border: 2px solid var(--palette-acient);
+          background: linear-gradient(135deg, var(--color-gradient-for-hyperbutton_start), var(--color-gradient-for-hyperbutton_end));
+          font-family: 'Jost__static', sans-serif;
+          text-transform: uppercase;
+          padding: 15px;
+          display: inline-flex;
+          justify-content: center;
+          align-items: center;
+          transition: --color-gradient-for-hyperbutton_start 0.4s, --color-gradient-for-hyperbutton_end 0.4s, transform 0.3s ease;
+          font-size: calc(var(--fs-btn) * 0.85);
+          font-weight: 700;
+          border-radius: 8px;
+          z-index: 3;
+        }
+
+        .load-more-btn.hover {
+          --color-gradient-for-hyperbutton_start: #1f1f1fff;
+          --color-gradient-for-hyperbutton_end: #1f1f1fff;
+          transform: translateY(-3px);
+          color: var(--palette-text-inv);
+          border: 2px solid var(--palette-acient);
+          background: linear-gradient(135deg, var(--color-gradient-for-hyperbutton_start), var(--color-gradient-for-hyperbutton_end));
+        }
       }
 
       .grid {
@@ -32,7 +112,7 @@ html[cross-browser] {
           align-items: center;
           max-width: 390px;
           width: 100%;
-          min-width: 300px;
+          min-width: 285px;
           max-height: 275px;
           height: 100%;
           min-height: 195px;
@@ -44,7 +124,7 @@ html[cross-browser] {
             flex-direction: column;
             max-width: 390px;
             width: 100%;
-            min-width: 300px;
+            min-width: 275px;
             max-height: 275px;
             height: 100%;
             min-height: 195px;
@@ -58,7 +138,7 @@ html[cross-browser] {
               display: flex;
               max-width: 390px;
               width: 100%;
-              min-width: 300px;
+              min-width: 275px;
               max-height: 250px;
               height: 100%;
               min-height: 195px;
@@ -98,6 +178,8 @@ html[cross-browser] {
                 font-size: var(--fs-p);
                 color: var(--text-color-async);
                 transition: .3s ease;
+                padding: 0 10px;
+                text-align: center;
               }
 
               h3.cent {
@@ -140,13 +222,36 @@ html[cross-browser][data-device="mobile"] {
     }
 
     .__container.catalog {
-      gap: 50px;
+      margin-top: 60px;
+      gap: 30px;
 
       .name-catalog {
         display: flex;
         width: 100%;
         padding-top: 0px;
         padding-left: 0px;
+      }
+
+      .catalog-content {
+        gap: 40px;
+      }
+
+      .product-group {
+        gap: 20px;
+
+        .group-header {
+          font-size: var(--fs-h2, 1.5rem);
+          padding-left: 0;
+        }
+      }
+
+      .load-more-wrapper {
+        padding: 15px 0;
+
+        .load-more-btn {
+          padding: 10px 30px;
+          font-size: var(--fs-small, 0.9rem);
+        }
       }
 
       .grid {

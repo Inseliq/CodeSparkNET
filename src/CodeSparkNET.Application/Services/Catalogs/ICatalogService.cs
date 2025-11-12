@@ -6,6 +6,7 @@ namespace CodeSparkNET.Application.Services.Catalogs
     {
         Task<List<CatalogNamesDto>> GetCatalogNamesAsync();
         Task<List<CatalogProductsDto>> GetCatalogProductsAsync(string catalogSlug);
+        Task<List<CatalogProductsDto>> GetCatalogProductsByGroupAsync(string catalogSlug, string group);
         Task<CatalogProductDetailsDto> GetCatalogProductDetailsAsync(string catalogSlug, string productSlug);
         Task<CatalogDto> GetCatalogBySlugAsync(string catalogSlug);
     }

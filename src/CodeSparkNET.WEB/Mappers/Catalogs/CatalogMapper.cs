@@ -14,8 +14,6 @@ namespace CodeSparkNET.WEB.Mappers.Catalogs
             {
                 Name = viewModel.Name?.Trim(),
                 Slug = viewModel.Slug?.Trim().ToLower(),
-                IsVisible = viewModel.IsVisible,
-                IsLinkOnly = viewModel.IsLinkOnly,
                 Products = (viewModel.Products ?? Enumerable.Empty<CatalogProductsViewModel>())
                     .Select(MapProduct)
                     .Where(p => p != null)
@@ -67,8 +65,6 @@ namespace CodeSparkNET.WEB.Mappers.Catalogs
             {
                 Name = dto.Name,
                 Slug = dto.Slug,
-                IsVisible = dto.IsVisible,
-                IsLinkOnly = dto.IsLinkOnly,
                 Products = (dto.Products ?? Enumerable.Empty<CatalogProductsDto>())
                     .Select(MapProductToViewModel)
                     .Where(p => p != null)

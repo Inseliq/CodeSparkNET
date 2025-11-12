@@ -2,6 +2,7 @@ using CodeSparkNET.Application.Services.Catalogs;
 using CodeSparkNET.Application.Services.User;
 using CodeSparkNET.WEB.Mappers.Catalogs;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CodeSparkNET.WEB.Controllers
@@ -58,21 +59,29 @@ namespace CodeSparkNET.WEB.Controllers
         }
 
         [HttpGet("/Catalogs/Catalog/{catalogSlug}")]
-        public async Task<IActionResult> Catalog(string catalogSlug)
+        public async Task<IActionResult> GetCatalogBySlug(string catalogSlug)
         {
             try
             {
                 var catalog = await _catalogService.GetCatalogBySlugAsync(catalogSlug);
 
-                var catalogViewModel = catalog.ToViewModel();
+                //TODO: Сделать новое DTO и написать новый метод GetCatalogProductsByGroup
 
-                return View(catalogViewModel);
+                return Ok(catalog);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error while requestiong catalog {Slug} by slug", catalogSlug);
                 return View();
             }
+        }
+
+        [HttpGet("/Catalogs/Catalog/{catalogSlug}/{group}")]
+        public async Task<IActionResult> GetCatalogProductsByGroup(string catalogSlug, string group)
+        {
+            var products = await _catalogService.GetCatalogProductsByGroupAsync(catalogSlug, group);
+
+            return Ok(products);
         }
 
         [Authorize]

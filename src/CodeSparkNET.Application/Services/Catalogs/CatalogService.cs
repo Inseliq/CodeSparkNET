@@ -71,6 +71,8 @@ namespace CodeSparkNET.Application.Services.Catalogs
                         Currency = p.Currency,
                         InStock = p.InStock,
                         ProductType = p.ProductType,
+                        HasPrice = p.Price != 0m,
+                        Group = p.Group,
                         ProductImages = p.ProductImages.Select(pi => new CatalogProductImageDto
                         {
                             Name = pi.Name,
@@ -84,6 +86,36 @@ namespace CodeSparkNET.Application.Services.Catalogs
                 _logger.LogError(ex, "Error while retrieving products for catalog slug {catalogSlug}.", catalogSlug);
                 return new List<CatalogProductsDto>();
             }
+        }
+
+        public async Task<List<CatalogProductsDto>> GetCatalogProductsByGroupAsync(string catalogSlug, string group)
+        {
+            var catalog = await _cacheService.GetCachedCatalogBySlugAsync(catalogSlug);
+
+            if (catalog is null || catalog.Products is null)
+                return new List<CatalogProductsDto>();
+
+            return catalog.Products
+                .Where(p => p.Group == group)
+                .Select(p => new CatalogProductsDto
+                {
+                    Name = p.Name,
+                    Slug = p.Slug,
+                    ShortDescription = p.ShortDescription,
+                    Price = p.Price,
+                    Currency = p.Currency,
+                    InStock = p.InStock,
+                    ProductType = p.ProductType,
+                    HasPrice = p.Price != 0m,
+                    Group = p.Group,
+                    ProductImages = p.ProductImages.Select(pi => new CatalogProductImageDto
+                    {
+                        Name = pi.Name,
+                        IsMain = pi.IsMain,
+                        Url = pi.Url
+                    }).ToList()
+                })
+                .ToList();
         }
 
         /// <summary>

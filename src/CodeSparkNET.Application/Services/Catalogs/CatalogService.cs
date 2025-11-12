@@ -88,36 +88,6 @@ namespace CodeSparkNET.Application.Services.Catalogs
             }
         }
 
-        public async Task<List<CatalogProductsDto>> GetCatalogProductsByGroupAsync(string catalogSlug, string group)
-        {
-            var catalog = await _cacheService.GetCachedCatalogBySlugAsync(catalogSlug);
-
-            if (catalog is null || catalog.Products is null)
-                return new List<CatalogProductsDto>();
-
-            return catalog.Products
-                .Where(p => p.Group == group)
-                .Select(p => new CatalogProductsDto
-                {
-                    Name = p.Name,
-                    Slug = p.Slug,
-                    ShortDescription = p.ShortDescription,
-                    Price = p.Price,
-                    Currency = p.Currency,
-                    InStock = p.InStock,
-                    ProductType = p.ProductType,
-                    HasPrice = p.Price != 0m,
-                    Group = p.Group,
-                    ProductImages = p.ProductImages.Select(pi => new CatalogProductImageDto
-                    {
-                        Name = pi.Name,
-                        IsMain = pi.IsMain,
-                        Url = pi.Url
-                    }).ToList()
-                })
-                .ToList();
-        }
-
         /// <summary>
         /// Retrieves detailed information about a specific product in a catalog.
         /// </summary>

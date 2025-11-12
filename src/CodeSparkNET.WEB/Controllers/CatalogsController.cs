@@ -76,14 +76,6 @@ namespace CodeSparkNET.WEB.Controllers
             }
         }
 
-        [HttpGet("/Catalogs/Catalog/{catalogSlug}/{group}")]
-        public async Task<IActionResult> GetCatalogProductsByGroup(string catalogSlug, string group)
-        {
-            var products = await _catalogService.GetCatalogProductsByGroupAsync(catalogSlug, group);
-
-            return Ok(products);
-        }
-
         [Authorize]
         [HttpGet("/Catalog/ProductDetails/{catalogSlug}/{productSlug}")]
         public async Task<IActionResult> ProductDetails(string catalogSlug, string productSlug)

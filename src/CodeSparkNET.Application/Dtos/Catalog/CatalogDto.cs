@@ -6,6 +6,8 @@ namespace CodeSparkNET.Application.Dtos.Catalog
         public string? Slug { get; set; }
         public bool? IsVisible { get; set; }
         public bool IsLinkOnly { get; set; }
+        public string? PageName { get; set; }
+        public string? PageController { get; set; }
         public List<CatalogProductsDto>? Products { get; set; }
     }
 }

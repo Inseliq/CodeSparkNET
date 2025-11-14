@@ -6,17 +6,11 @@
 
   const groupVisibleItems = {};
 
-  /**
-   * Получить slug каталога из URL
-   */
   function getCatalogSlugFromUrl() {
     const params = new URLSearchParams(window.location.search);
     return params.get('catalogSlug');
   }
 
-  /**
-   * Загрузить данные каталога с сервера
-   */
   async function loadCatalogData(catalogSlug) {
     try {
       const response = await fetch(`/Catalogs/Catalog/${catalogSlug}`);
@@ -30,9 +24,6 @@
     }
   }
 
-  /**
-   * Группировать продукты по полю Group
-   */
   function groupProductsByGroup(products) {
     const grouped = {};
 
@@ -47,9 +38,6 @@
     return grouped;
   }
 
-  /**
-   * Создать HTML для карточки продукта
-   */
   function createProductCard(product, catalogSlug) {
     const mainImage = product.productImages?.find(img => img.isMain);
     const imageUrl = mainImage?.url || product.productImages?.[0]?.url;
@@ -61,7 +49,6 @@
     const link = document.createElement('a');
     link.href = `/Catalogs/ProductDetails/${catalogSlug}/${product.slug}`;
 
-    // Обработчик наведения
     link.addEventListener('mouseenter', function () {
       this.classList.add('hover');
     });
@@ -69,7 +56,6 @@
       this.classList.remove('hover');
     });
 
-    // Изображение
     const img = document.createElement('img');
     if (imageUrl) {
       img.src = imageUrl;
@@ -80,7 +66,6 @@
       img.classList.add('no-image');
     }
 
-    // Оверлей с информацией
     const overview = document.createElement('div');
     overview.className = 'overview-bg';
 
@@ -94,7 +79,6 @@
     overview.appendChild(nameEl);
     overview.appendChild(descEl);
 
-    // Цена (если есть)
     if (product.hasPrice) {
       const priceEl = document.createElement('h3');
       priceEl.className = 'cent';
@@ -109,9 +93,6 @@
     return card;
   }
 
-  /**
-   * Создать кнопку "Показать ещё"
-   */
   function createLoadMoreButton(groupName, totalItems) {
     const buttonWrapper = document.createElement('div');
     buttonWrapper.className = 'load-more-wrapper';
@@ -130,9 +111,6 @@
     return buttonWrapper;
   }
 
-  /**
-   * Показать больше элементов в группе
-   */
   function showMoreItems(groupName, totalItems) {
     const currentVisible = groupVisibleItems[groupName] || INITIAL_ITEMS;
     const newVisible = Math.min(currentVisible + LOAD_MORE_ITEMS, totalItems);
@@ -149,7 +127,6 @@
       }
     });
 
-    // Убрать кнопку, если все элементы показаны
     if (newVisible >= totalItems) {
       const loadMoreBtn = groupSection.querySelector('.load-more-wrapper');
       if (loadMoreBtn) {
@@ -158,9 +135,6 @@
     }
   }
 
-  /**
-   * Отрендерить группу продуктов
-   */
   function renderProductGroup(groupName, products, catalogSlug) {
     const groupSection = document.createElement('div');
     groupSection.className = 'product-group';
@@ -173,14 +147,11 @@
     const grid = document.createElement('div');
     grid.className = 'grid';
 
-    // Инициализировать счетчик видимых элементов
     groupVisibleItems[groupName] = INITIAL_ITEMS;
 
-    // Создать карточки продуктов
     products.forEach((product, index) => {
       const card = createProductCard(product, catalogSlug);
 
-      // Скрыть карточки после первых INITIAL_ITEMS
       if (index >= INITIAL_ITEMS) {
         card.style.display = 'none';
       }
@@ -191,7 +162,6 @@
     groupSection.appendChild(groupHeader);
     groupSection.appendChild(grid);
 
-    // Добавить кнопку "Показать ещё", если продуктов больше INITIAL_ITEMS
     if (products.length > INITIAL_ITEMS) {
       const loadMoreBtn = createLoadMoreButton(groupName, products.length);
       groupSection.appendChild(loadMoreBtn);
@@ -200,9 +170,6 @@
     return groupSection;
   }
 
-  /**
-   * Отрендерить весь каталог
-   */
   function renderCatalog(catalogData) {
     const container = document.getElementById('CatalogSectionOn');
     if (!container) return;
@@ -240,9 +207,6 @@
     }
   }
 
-  /**
-   * Показать ошибку
-   */
   function showError(layout, message) {
     const container = document.getElementById('CatalogSectionOn');
 
@@ -266,9 +230,6 @@
     createElement
   }
 
-  /**
-   * Инициализация
-   */
   async function init() {
     try {
       const catalogSlug = getCatalogSlugFromUrl();
@@ -284,7 +245,6 @@
     }
   }
 
-  // Запустить после загрузки DOM
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {

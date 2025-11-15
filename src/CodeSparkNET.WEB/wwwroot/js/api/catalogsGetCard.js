@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  const INITIAL_ITEMS = 3;
+  const INITIAL_ITEMS = 4;
   const LOAD_MORE_ITEMS = 12;
 
   const groupVisibleItems = {};
